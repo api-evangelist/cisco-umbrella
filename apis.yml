@@ -16,12 +16,10 @@ x-type: company
 x-source: cisco-family-buildout:2026-08-19
 x-parent: cisco
 x-relationship: acquisition
-x-contract-status: published
-x-contract-note: '26 first-party OpenAPI 3.0.x documents (256 operations) were harvested on 2026-08-19 from Cisco''s
-  own pubhub.devnetcloud.com media host, the CDN that serves developer.cisco.com/docs/cloud-security/. Every document
-  names servers[] https://api.umbrella.com/{basePath} and info.contact "Cloud Security Developer Community". The
-  earlier "no contract" finding was wrong: api.umbrella.com/openapi.json really is a 404, but the specs are linked
-  from the docs nav config at /media/cloud-security-apis-in-eft/docs/umbrella-config.json.'
+x-contract-status: real
+x-contract-note: api.umbrella.com/openapi.json really is a 404, but Cisco's docs-nav config at pubhub.devnetcloud.com
+  lists 26 first-party OpenAPI 3.0 documents (256 operations, all servers[] https://api.umbrella.com/{basePath}).
+  Byte-identity reconfirmed by SHA-256.
 specificationVersion: '0.23'
 created: '2026-08-19'
 modified: '2026-08-19'
