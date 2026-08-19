@@ -1,0 +1,63 @@
+generated: '2026-08-19'
+method: searched
+source: npm, PyPI, RubyGems, crates.io, NuGet, Maven Central, pkg.go.dev, Terraform Registry, Ansible Galaxy and
+  https://developer.cisco.com/docs/cloud-security/umbrella-api-sample-scripts-overview/
+package_count: 0
+official_count: 0
+packages: []
+registries_checked:
+- registry: npm
+  query: cisco-umbrella, @cisco/umbrella
+  result: cisco-umbrella was unpublished 2022-02-12; @cisco/umbrella 404. No first-party package.
+  version: null
+- registry: pypi
+  query: cisco-umbrella, umbrella-api, umbrella
+  result: cisco-umbrella and umbrella-api 404. pypi.org/project/umbrella 0.1 is an unrelated third-party project
+    with no Cisco author.
+  version: null
+- registry: terraform
+  query: CiscoDevNet/umbrella
+  result: 404. CiscoDevNet/ciscosecureaccess 1.1.0 exists but targets Cisco Secure Access (api.sse.cisco.com), a
+    sibling product, not api.umbrella.com.
+  version: null
+- registry: ansible-galaxy
+  query: cisco.umbrella
+  result: '404.'
+  version: null
+- registry: github
+  query: org:CiscoDevNet umbrella
+  result: 0 repositories.
+  version: null
+distribution_note: 'Cisco ships no packaged, registry-published Umbrella SDK in any language. What Cisco calls the
+  "Umbrella API Client Library" is a copy-and-paste Python source file printed inside the Samples Overview documentation
+  page (Cisco Sample Code License 1.1) that the developer is instructed to save as cisco/umbrella.py in a local
+  directory. It has no registry entry, no version and no release date, so there is no publication currency to record
+  for it: version: null is checked-and-absent, not unchecked.'
+sample_code:
+  name: Umbrella API Client (documentation source listing)
+  language: python
+  registry: null
+  version: null
+  published: null
+  official: true
+  url: https://developer.cisco.com/docs/cloud-security/umbrella-api-sample-scripts-overview/
+  license: Cisco Sample Code License, Version 1.1
+  install: copy the source listing from the docs page to cisco/umbrella.py
+  dependencies:
+  - requests==2.32.3
+  - requests-oauthlib==2.0.0
+  - oauthlib==3.2.2
+  - python-dotenv==1.0.1
+  - requests-toolbelt==1.0.0
+  - pandas==2.2.3
+  - matplotlib==3.10.1
+  - urllib3==2.2.3
+  - certifi==2024.8.30
+  - charset-normalizer==3.4.0
+  - idna==3.10
+postman:
+  available: true
+  url: https://github.com/CiscoDevNet/cloud-security/tree/master/Umbrella/PostmanExamples
+  note: Postman example collections are distributed from the CiscoDevNet/cloud-security GitHub repository, not from
+    a public Postman workspace.
+note: 'No SDKs pointer is emitted in apis.yml: there is no installable first-party client library to point at.'

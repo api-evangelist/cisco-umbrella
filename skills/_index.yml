@@ -1,0 +1,103 @@
+generated: '2026-08-19'
+method: generated
+source: openapi/*.yml (operationIds verified against the harvested Cisco specs) + the Umbrella API guides on developer.cisco.com
+format: Agent Skills (frontmatter + markdown)
+skill_count: 5
+skills:
+- name: cisco-umbrella-authenticate
+  file: cisco-umbrella-authenticate.md
+  description: Exchange a Cisco Umbrella API key ID and secret for an OAuth 2.0 access token, and keep it fresh
+    for the one hour it lives.
+  api: cisco-umbrella:auth-token
+  operations:
+  - createAuthToken
+  scopes: []
+- name: cisco-umbrella-investigate-a-domain
+  file: cisco-umbrella-investigate-a-domain.md
+  description: Enrich a domain, IP or file hash with Cisco Umbrella Investigate threat intelligence — categorization,
+    risk score, passive DNS, WHOIS and related samples.
+  api: cisco-umbrella:investigate-investigate
+  operations:
+  - getDomainsCategorization
+  - postDomainsCategorization
+  - getDomainsRiskScore
+  - getSecurityName
+  - getPassiveDNSName
+  - getPassiveDNSIp
+  - getWhois
+  - getWhoisHistory
+  - getSubDomains
+  - getSamplesDestination
+  - getSampleHash
+  - getTimeline
+  scopes:
+  - investigate.investigate:read
+  - investigate.bulk:read
+- name: cisco-umbrella-manage-destination-lists
+  file: cisco-umbrella-manage-destination-lists.md
+  description: Create, inspect and edit Umbrella destination lists (the allow/block lists policies are built from),
+    including the paginated destinations inside them.
+  api: cisco-umbrella:policies-destination-lists
+  operations:
+  - getDestinationLists
+  - createDestinationList
+  - getDestinationList
+  - updateDestinationLists
+  - deleteDestinationList
+  - getDestinations
+  - createDestinations
+  - deleteDestinations
+  scopes:
+  - policies.destinationLists:read
+  - policies.destinationLists:write
+  - policies.destinations:read
+  - policies.destinations:write
+- name: cisco-umbrella-provision-network-tunnels
+  file: cisco-umbrella-provision-network-tunnels.md
+  description: Stand up and monitor IPsec network tunnels from a customer edge into Umbrella's Secure Internet Gateway,
+    including datacenter selection, credential rotation and tunnel state.
+  api: cisco-umbrella:deployments-network-tunnels
+  operations:
+  - getDatacenters
+  - listTunnels
+  - addTunnel
+  - getTunnel
+  - updateTunnel
+  - deleteTunnel
+  - updateTunnelCredentials
+  - getTunnelPolicies
+  - getOrgTunnelState
+  - getTunnelState
+  - getTunnelErrorEvents
+  scopes:
+  - deployments.tunnels:read
+  - deployments.tunnels:write
+  - deployments.datacenters:read
+- name: cisco-umbrella-pull-activity-reports
+  file: cisco-umbrella-pull-activity-reports.md
+  description: Pull DNS, proxy, firewall and intrusion activity plus top-N and summary aggregations out of the Cisco
+    Umbrella Reporting API.
+  api: cisco-umbrella:reports-reporting
+  operations:
+  - getActivities
+  - getActivityDns
+  - getActivityProxy
+  - getActivityFirewall
+  - getActivityIntrusion
+  - getSummary
+  - getSummaryByType
+  - getTopDestinations
+  - getTopIdentities
+  - getTopCategories
+  - getTopThreats
+  - getTotalRequests
+  - getRequestsByTimerange
+  - getIdentities
+  - getCategories
+  scopes:
+  - reports.granularEvents:read
+  - reports.aggregations:read
+  - reports.utilities:read
+  - reports.summariesByRule:read
+note: Cisco publishes no skills/ or AGENTS.md for the Umbrella API; these are API Evangelist-authored, and every
+  operationId listed exists in a harvested Cisco OpenAPI document.

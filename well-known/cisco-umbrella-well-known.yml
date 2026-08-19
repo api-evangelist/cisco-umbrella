@@ -1,0 +1,139 @@
+generated: '2026-08-19'
+method: probed
+source: live GET of every /.well-known/ path on every apis.yml and OpenAPI servers[] host
+hosts_probed:
+- https://api.umbrella.com
+- https://umbrella.cisco.com
+- https://developer.cisco.com
+- https://api.cloudlock.com
+- https://www.cisco.com
+hit_count: 2
+documents:
+- host: https://api.umbrella.com
+  path: /.well-known/security.txt
+  status: 404
+  note: JSON 404 body from the API gateway — a real, falsifiable 404, not an SPA shell.
+- host: https://api.umbrella.com
+  path: /.well-known/openid-configuration
+  status: 404
+- host: https://api.umbrella.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+- host: https://api.umbrella.com
+  path: /.well-known/oauth-protected-resource
+  status: 404
+- host: https://api.umbrella.com
+  path: /.well-known/api-catalog
+  status: 404
+- host: https://api.umbrella.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+- host: https://api.umbrella.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://api.umbrella.com
+  path: /.well-known/agent.json
+  status: 404
+- host: https://api.umbrella.com
+  path: /llms.txt
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/security.txt
+  status: 404
+  note: HTML 404 page.
+- host: https://umbrella.cisco.com
+  path: /.well-known/openid-configuration
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/oauth-protected-resource
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/api-catalog
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /.well-known/agent.json
+  status: 404
+- host: https://umbrella.cisco.com
+  path: /llms.txt
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/security.txt
+  status: 404
+  note: HTML 404 page.
+- host: https://developer.cisco.com
+  path: /.well-known/openid-configuration
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/oauth-protected-resource
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/api-catalog
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://developer.cisco.com
+  path: /.well-known/agent.json
+  status: 404
+- host: https://developer.cisco.com
+  path: /llms.txt
+  status: 404
+- host: https://api.cloudlock.com
+  path: /.well-known/security.txt
+  status: 403
+  note: Edge returns 403 for every unauthenticated path, including /.well-known/*.
+- host: https://api.cloudlock.com
+  path: /.well-known/openid-configuration
+  status: 403
+- host: https://api.cloudlock.com
+  path: /.well-known/oauth-authorization-server
+  status: 403
+- host: https://api.cloudlock.com
+  path: /.well-known/oauth-protected-resource
+  status: 403
+- host: https://api.cloudlock.com
+  path: /.well-known/api-catalog
+  status: 403
+- host: https://api.cloudlock.com
+  path: /.well-known/ai-plugin.json
+  status: 403
+- host: https://api.cloudlock.com
+  path: /.well-known/agent-card.json
+  status: 403
+- host: https://api.cloudlock.com
+  path: /.well-known/agent.json
+  status: 403
+- host: https://api.cloudlock.com
+  path: /llms.txt
+  status: 403
+- host: https://www.cisco.com
+  path: /.well-known/security.txt
+  status: 200
+  file: cisco-umbrella-security.txt
+  note: RFC 9116 security.txt, PGP-signed, served at the Cisco corporate apex. umbrella.cisco.com is a cisco.com
+    host, so this policy covers Cisco Umbrella; api.umbrella.com itself serves nothing at /.well-known/.
+- host: https://www.cisco.com
+  path: /.well-known/csaf/provider-metadata.json
+  status: 200
+  file: cisco-umbrella-csaf-provider-metadata.json
+  note: CSAF 2.0 provider metadata referenced from security.txt.
+note: 'Neither api.umbrella.com nor umbrella.cisco.com serves any /.well-known/ document — every path returns a
+  real 404 (api.umbrella.com answers with a JSON 404 body, so this is falsifiable and not an SPA catch-all). No
+  api-catalog, no OIDC/OAuth discovery document (the token endpoint https://api.umbrella.com/auth/v2/token is documented
+  in prose and in OpenAPI only), no ai-plugin, no llms.txt and no agent card. The only real hits are at the Cisco
+  corporate apex: an RFC 9116 security.txt and the CSAF 2.0 provider metadata it points at.'

@@ -1,0 +1,27 @@
+generated: '2026-08-19'
+method: searched
+source: https://pubhub.devnetcloud.com/media/cloud-security/docs/resources/sandbox.md
+x-evidence:
+- fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security/docs/resources/sandbox.md
+  http_status: 200
+- fetched: '2026-08-19'
+  url: https://developer.cisco.com/site/sandbox/
+  http_status: 200
+kind: reserved-environment
+name: Cisco Umbrella Secure Internet Gateway (SIG) Sandbox
+url: https://devnetsandbox.cisco.com/RM/Topology?c=a6f8430c-5b24-439d-b28a-effb42d4c20c
+catalog: https://developer.cisco.com/site/sandbox/
+cost: zero-cost, reservation-based
+test_mode_keys:
+  separate_test_credentials: false
+  note: There is no test/live key split. The sandbox issues real Umbrella API keys against a reserved sandbox organization;
+    the same api.umbrella.com host and the same OAuth 2.0 client-credentials flow are used.
+test_values:
+  published: false
+  note: Cisco publishes no magic test domains, test identities or fixture values for the Umbrella API. Nothing is
+    invented here.
+time_simulation:
+  supported: false
+note: A reservation is required, so this is a gated sandbox rather than an anonymous playground; the reservation
+  itself is free and self-serve through the DevNet Sandbox catalog.

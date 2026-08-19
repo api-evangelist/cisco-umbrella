@@ -1,0 +1,37 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Providers Console Report
+  version: 1.0.0
+extends: cisco-umbrella-reports-provider-consoles-openapi.yml
+x-provenance:
+  generated: '2026-08-19'
+  method: generated
+  source: apis.yml + repo artifacts (authentication/, scopes/, rate-limits/, errors/, conventions/, lifecycle/)
+  note: Never mutate the harvested Cisco specification. This overlay carries only API Evangelist annotations.
+actions:
+- target: $.info
+  update:
+    x-apis-io:
+      provider: cisco-umbrella
+      profile: https://apis.io/providers/cisco-umbrella/
+      harvested_from: https://developer.cisco.com/docs/cloud-security/
+      first_party: true
+- target: $.info
+  update:
+    x-runtime-semantics:
+      authentication: authentication/cisco-umbrella-authentication.yml
+      scopes: scopes/cisco-umbrella-scopes.yml
+      rate_limits: rate-limits/cisco-umbrella-rate-limits.yml
+      errors: errors/cisco-umbrella-problem-types.yml
+      conventions: conventions/cisco-umbrella-conventions.yml
+      lifecycle: lifecycle/cisco-umbrella-lifecycle.yml
+- target: $.info
+  update:
+    x-agent-notes:
+      token: POST https://api.umbrella.com/auth/v2/token with HTTP Basic (API key id/secret); access tokens live
+        1 hour.
+      idempotency: None published. Treat every POST/PUT/PATCH/DELETE as non-replay-safe.
+      rate_limit_signal: HTTP 429 only — no RateLimit-* or Retry-After headers are published. Back off one second
+        and retry.
+      error_envelope: '{"error": string, "message": string, "statusCode": integer} as application/json — not RFC
+        9457.'

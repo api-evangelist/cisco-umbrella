@@ -1,0 +1,114 @@
+generated: '2026-08-19'
+method: derived
+status: candidate
+source: openapi/*.yml (26 documents, 256 operations)
+deployment:
+  mode: none
+  auth: oauth
+  verified: searched
+  note: Cisco publishes no MCP server for Cisco Umbrella. No hosted endpoint, no stdio package, nothing in the CiscoDevNet
+    GitHub org matching "umbrella".
+candidate_tools:
+  basis: one tool per OpenAPI operationId
+  total: 256
+  by_scope:
+  - scope: admin
+    operation_count: 50
+    sample_operations:
+    - getAPIKeys
+    - createAPIKeys
+    - getAPIKey
+    - deleteAPIKey
+    - patchAPIKey
+    - refreshApiKey
+    - createManagedProviderCustomer
+    - listManagedProviderCustomers
+  - scope: auth
+    operation_count: 1
+    sample_operations:
+    - createAuthToken
+  - scope: cloudlock
+    operation_count: 22
+    sample_operations:
+    - listActivities
+    - listApplications
+    - listApplicationAccessScopes
+    - updateAppsClassification
+    - listApplicationInstallations
+    - listEntities
+    - listIncidentEntities
+    - listIncidents
+  - scope: deployments
+    operation_count: 60
+    sample_operations:
+    - createInternalDomain
+    - listInternalDomains
+    - getInternalDomain
+    - updateInternalDomain
+    - deleteInternalDomain
+    - createInternalNetwork
+    - listInternalNetworks
+    - getInternalNetwork
+  - scope: investigate
+    operation_count: 28
+    sample_operations:
+    - getDomainsCategorization
+    - postDomainsCategorization
+    - getDomainVolume
+    - getRecommendationsName
+    - getPassiveDNSName
+    - getPassiveDNSDomain
+    - getPassiveDNSIp
+    - getPassiveDNSRaw
+  - scope: policies
+    operation_count: 14
+    sample_operations:
+    - getApplicationLists
+    - createApplicationList
+    - getApplicationList
+    - putApplicationList
+    - deleteApplicationList
+    - updateUsageApplications
+    - getDestinationLists
+    - createDestinationList
+  - scope: reports
+    operation_count: 81
+    sample_operations:
+    - getAPIUsageRequests
+    - getAPIUsageResponses
+    - getAPIUsageKeys
+    - getAPIUsageSummary
+    - getApplicationsAppDiscovery
+    - patchApplications
+    - getApplication
+    - updateApplication
+related_servers:
+- name: secure-access-mcp-community
+  owner: CiscoDevNet
+  url: https://github.com/CiscoDevNet/secure-access-mcp-community
+  license: Apache-2.0
+  tools: 72
+  transport: Streamable HTTP
+  default_url: http://127.0.0.1:8000/mcp
+  last_push: '2026-07-08'
+  targets_api_base: https://api.sse.cisco.com
+  credited_to_umbrella: false
+  why_not: 'This server is published by Cisco but it is a Cisco SECURE ACCESS server, not an Umbrella one: cisco_secure_access_mcp/client.py
+    hard-codes API_BASE_URL = "https://api.sse.cisco.com" and .env.example asks for SECURE_ACCESS_API_KEY/SECRET
+    against https://api.sse.cisco.com/auth/v2/token. Umbrella''s own base is https://api.umbrella.com. The tool
+    surface (destination lists, investigate, reports) rhymes with Umbrella''s because Secure Access is the successor
+    product, but crediting it to Umbrella would assert an agent surface Umbrella does not ship. Recorded here, deliberately
+    not wired as a type: MCPServer pointer.'
+- name: cisco-umbrella-mcp
+  owner: MSPbotsAI
+  url: https://github.com/MSPbotsAI/cisco-umbrella-mcp
+  credited_to_umbrella: false
+  why_not: Third-party, not published by Cisco.
+- name: umbrella_mcp
+  owner: demon0110
+  url: https://github.com/demon0110/umbrella_mcp
+  credited_to_umbrella: false
+  why_not: Third-party, not published by Cisco.
+note: 'mode: none is the honest reading — this file is a derived candidate tool inventory, not evidence of a server.
+  A prior round wired type: MCPServer in apis.yml pointing at CiscoDevNet/secure-access-mcp-community; that pointer
+  has been removed because the server calls api.sse.cisco.com, a different product host.'

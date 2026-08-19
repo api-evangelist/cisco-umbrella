@@ -1,0 +1,560 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/cloud-security/umbrella-api-oauth-scopes/
+docs: https://developer.cisco.com/docs/cloud-security/umbrella-api-oauth-scopes/
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/guides/scopes.md
+  http_status: 200
+model: OAuth 2.0 client credentials; scopes are attached to the Umbrella API key at creation time in the Umbrella
+  dashboard, not requested per-token.
+token_url: https://api.umbrella.com/auth/v2/token
+groups:
+- admin
+- deployments
+- investigate
+- policies
+- reports
+scope_count: 61
+scopes:
+- scope: admin.apikeys:delete
+  description: Delete an API key.
+  group: admin
+  endpoints:
+  - DELETE /admin/v2/apiKeys/{apiKeyId}
+  in_spec: true
+- scope: admin.apikeys:update
+  description: Update an API key.
+  group: admin
+  endpoints:
+  - PATCH /admin/v2/apiKeys/{apiKeyId}
+  in_spec: true
+- scope: admin.apikeys:refresh
+  description: Refresh an API key.
+  group: admin
+  endpoints:
+  - POST /admin/v2/apiKeys/{apiKeyId}/refresh
+  in_spec: true
+- scope: admin.apikeys:read
+  description: View an API key.
+  group: admin
+  endpoints:
+  - GET /admin/v2/apiKeys
+  - GET /admin/v2/apiKeys/{apiKeyId}
+  in_spec: true
+- scope: admin.apikeys:create
+  description: Create an API key.
+  group: admin
+  endpoints:
+  - POST /admin/v2/apiKeys
+  in_spec: true
+- scope: admin.users:read
+  description: View the user accounts.
+  group: admin
+  endpoints:
+  - GET /admin/v2/users
+  - GET /admin/v2/users/{userId}
+  in_spec: true
+- scope: admin.users:write
+  description: Create and delete the user accounts.
+  group: admin
+  endpoints:
+  - POST /admin/v2/users
+  - DELETE /admin/v2/users/{userId}
+  in_spec: true
+- scope: admin.roles:read
+  description: View the user roles.
+  group: admin
+  endpoints:
+  - GET /admin/v2/roles
+  in_spec: true
+- scope: admin.iam:write
+  description: Rotate the Cisco-managed S3 bucket key.
+  group: admin
+  endpoints:
+  - POST /admin/v2/iam/rotateKey
+  in_spec: true
+- scope: admin.passwordreset:write
+  description: Update the customer's password.
+  group: admin
+  endpoints:
+  - POST /admin/v2/passwordResets/{customerId}
+  in_spec: true
+- scope: admin.organizations:read
+  description: View the organizations.
+  group: admin
+  endpoints:
+  - GET /admin/v2/organizations
+  in_spec: false
+- scope: admin.customers:read
+  description: View the customers.
+  group: admin
+  endpoints:
+  - GET /admin/v2/providers/customers
+  - GET /admin/v2/providers/customers/{customerId}
+  - GET /admin/v2/providers/customers/{customerId}/accessRequests/{accessRequestId}
+  - GET /admin/v2/providers/customers/{customerId}/trialStrengths
+  - GET /admin/v2/providers/customers/packages
+  - GET /admin/v2/managed/customers
+  - GET /admin/v2/managed/customers/{customerId} | POST /admin/v2/providers/customers/{customerId}/trialExtensions
+  in_spec: true
+- scope: admin.customers:write
+  description: Create, update, and delete the customers.
+  group: admin
+  endpoints:
+  - POST /admin/v2/providers/customers
+  - DELETE /admin/v2/providers/customers/{customerId}
+  - PUT /admin/v2/providers/customers/{customerId}
+  - PUT /admin/v2/providers/customers/{customerId}/trialconversions
+  - POST /admin/v2/providers/customers/{customerId}/accessRequests
+  - PUT /admin/v2/providers/customers/{customerId}/accessRequests/{accessRequestId}
+  - POST /admin/v2/managed/customers
+  - DELETE /admin/v2/managed/customers/{customerId}
+  - PUT /admin/v2/managed/customers/{customerId}
+  in_spec: true
+- scope: admin.customerSearch:read
+  description: List the customers by the email addresses.
+  group: admin
+  endpoints:
+  - GET /admin/v2/providers/customerAddresses
+  in_spec: true
+- scope: admin.customerdeals:read
+  description: View the customer deals.
+  group: admin
+  endpoints:
+  - GET /admin/v2/providers/customerDeals/{dealId}
+  in_spec: false
+- scope: admin.customerdeals:write
+  description: Update the customer deals.
+  group: admin
+  endpoints:
+  - PUT /admin/v2/providers/customerDeals/{dealId}
+  in_spec: false
+- scope: admin.config:read
+  description: View the configured logos, cnames, and contacts.
+  group: admin
+  endpoints:
+  - GET /admin/v2/config/cnames
+  - GET /admin/v2/config/cnames/{cnameId}
+  - GET /admin/v2/config/contacts
+  - GET /admin/v2/config/contacts/{contactId}
+  - GET /admin/v2/config/logos/{logoId}
+  - GET /admin/v2/config/logos
+  in_spec: true
+- scope: admin.config:write
+  description: Create, update, and delete the configured logos, cnames, and contacts.
+  group: admin
+  endpoints:
+  - POST /admin/v2/config/cnames
+  - PUT /admin/v2/config/cnames/{cnameId}
+  - DELETE /admin/v2/config/cnames/{cnameId}
+  - POST /admin/v2/config/contacts
+  - PUT /admin/v2/config/contacts/{contactId}
+  - DELETE /admin/v2/config/contacts/{contactId}
+  - POST /admin/v2/config/logos
+  - PUT /admin/v2/config/logos/{logoId}
+  - DELETE /admin/v2/config/logos/{logoId}
+  in_spec: true
+- scope: deployments.networks:read
+  description: View the networks.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/networks
+  - GET /deployments/v2/networks/{networkId}
+  - GET /deployments/v2/networks/{networkId}/policies
+  in_spec: true
+- scope: deployments.networks:write
+  description: Create, update, and delete the networks.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/networks
+  - PUT /deployments/v2/networks/{networkId}
+  - DELETE /deployments/v2/networks/{networkId}
+  in_spec: true
+- scope: deployments.internalnetworks:read
+  description: View the internal networks.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/internalnetworks
+  - GET /deployments/v2/internalnetworks/{internalNetworkId}
+  - GET /deployments/v2/internalnetworks/{internalNetworkId}/policies
+  in_spec: true
+- scope: deployments.internalnetworks:write
+  description: Create, update, and delete the internal networks.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/internalnetworks
+  - PUT /deployments/v2/internalnetworks/{internalNetworkId}
+  - DELETE /deployments/v2/internalnetworks/{internalNetworkId}
+  in_spec: true
+- scope: deployments.internaldomains:read
+  description: View the internal domains.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/internaldomains
+  - GET /deployments/v2/internaldomains/{internalDomainId}
+  in_spec: true
+- scope: deployments.internaldomains:write
+  description: Create, update, and delete the internal domains.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/internaldomains
+  - PUT /deployments/v2/internaldomains/{internalDomainId}
+  - DELETE /deployments/v2/internaldomains/{internalDomainId}
+  in_spec: true
+- scope: deployments.datacenters:read
+  description: View the data centers for the network tunnels.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/datacenters
+  in_spec: true
+- scope: deployments.tunnels:read
+  description: View the network tunnels.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/tunnels
+  - GET /deployments/v2/tunnels/{id}
+  - GET /deployments/v2/tunnels/{id}/policies
+  - GET /deployments/v2/tunnelsState
+  - GET /deployments/v2/tunnels/{id}/state
+  - GET /deployments/v2/tunnels/{id}/events
+  - GET /deployments/v2/tunnels/{id}/globalEvents/sourceIp/{ip}
+  in_spec: true
+- scope: deployments.tunnels:write
+  description: Create, update, and delete the network tunnels.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/tunnels
+  - PUT /deployments/v2/tunnels/{id}
+  - DELETE /deployments/v2/tunnels/{id}
+  - POST /deployments/v2/tunnels/{id}/keys
+  in_spec: true
+- scope: deployments.roamingcomputers:read
+  description: View the roaming computers.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/roamingcomputers
+  - GET /deployments/v2/roamingcomputers/{deviceId}
+  in_spec: true
+- scope: deployments.roamingcomputers:write
+  description: View, update, and delete the roaming computers.
+  group: deployments
+  endpoints:
+  - PUT /deployments/v2/roamingcomputers/{deviceId}
+  - DELETE /deployments/v2/roamingcomputers/{deviceId}
+  in_spec: true
+- scope: deployments.roamingcomputersOrgInfo:read
+  description: View the OrgInfo.json properties for roaming computers.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/roamingcomputers/orgInfo
+  in_spec: true
+- scope: deployments.tags:read
+  description: View the tags.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/tags
+  in_spec: true
+- scope: deployments.tags:write
+  description: Create the tags.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/tags
+  in_spec: true
+- scope: deployments.tagDevices:read
+  description: View the tagged devices.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/tags/{tagId}/devices
+  in_spec: true
+- scope: deployments.tagDevices:write
+  description: Create and delete the tagged devices.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/tags/{tagId}/devices
+  - DELETE /deployments/v2/tags/{tagId}/devices
+  in_spec: true
+- scope: deployments.policies:read
+  description: View the policies for the deployments.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/policies
+  in_spec: true
+- scope: deployments.policies:write
+  description: Update and delete the policies for the deployments.
+  group: deployments
+  endpoints:
+  - PUT /deployments/v2/policies/{policyId}/identities/{originId}
+  - DELETE /deployments/v2/policies/{policyId}/identities/{originId}
+  in_spec: true
+- scope: deployments.sites:read
+  description: View the sites.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/sites
+  - GET /deployments/v2/sites/{siteId}
+  in_spec: true
+- scope: deployments.sites:write
+  description: Create, update, and delete the sites.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/sites
+  - PUT /deployments/v2/sites/{siteId}
+  - DELETE /deployments/v2/sites/{siteId}
+  in_spec: true
+- scope: deployments.virtualappliances:read
+  description: View the virtual appliances.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/virtualappliances
+  - GET /deployments/v2/virtualappliances/{virtualApplianceId}
+  in_spec: true
+- scope: deployments.virtualappliances:write
+  description: Update and delete the virtual appliances.
+  group: deployments
+  endpoints:
+  - PUT /deployments/v2/virtualappliances/{virtualApplianceId}
+  - DELETE /deployments/v2/virtualappliances/{virtualApplianceId}
+  in_spec: true
+- scope: deployments.networkdevices:read
+  description: View the network devices.
+  group: deployments
+  endpoints:
+  - GET /deployments/v2/networkdevices
+  - GET /deployments/v2/networkdevices/{originId}
+  in_spec: true
+- scope: deployments.networkdevices:write
+  description: Create, update, and delete the network devices.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/networkdevices
+  - PATCH /deployments/v2/networkdevices/{originId}
+  - DELETE /deployments/v2/networkdevices/{originId}
+  in_spec: true
+- scope: deployments.devices.swg:read
+  description: View the secure web gateway override settings on the devices.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/deviceSettings/SWGEnabled/list
+  in_spec: true
+- scope: deployments.devices.swg:write
+  description: Update and delete secure web gateway settings on the devices.
+  group: deployments
+  endpoints:
+  - POST /deployments/v2/deviceSettings/SWGEnabled/set
+  - POST /deployments/v2/deviceSettings/SWGEnabled/remove
+  in_spec: true
+- scope: investigate.investigate:read
+  description: View the information about a domain.
+  group: investigate
+  endpoints:
+  - GET /investigate/v2/domains/categorization/{domain}
+  - GET /investigate/v2/domains/volume/{domain}
+  - GET /investigate/v2/recommendations/name/{domain}.json
+  - GET /investigate/v2/pdns/name/{domain}
+  - GET /investigate/v2/pdns/domain/{domain}
+  - GET /investigate/v2/pdns/ip/{ip}
+  - GET /investigate/v2/pdns/raw/{anystring}
+  - GET /investigate/v2/links/name/{domain}
+  - GET /investigate/v2/security/name/{domain}
+  - GET /investigate/v2/domains/risk-score/{domain}
+  - GET /investigate/v2/bgp_routes/ip/{ip}/as_for_ip.json
+  - GET /investigate/v2/bgp_routes/asn/{asn}/prefixes_for_asn.json
+  - GET /investigate/v2/whois/{domain}
+  - GET /investigate/v2/whois/{domain}/history
+  - GET /investigate/v2/whois/nameservers/{nameserver}
+  - GET /investigate/v2/whois/nameservers
+  - GET /investigate/v2/whois/emails/{email}
+  - GET /investigate/v2/whois/search/{searchField}/{regexExpression}
+  - GET /investigate/v2/search/{expression}
+  - GET /investigate/v2/topmillion
+  - GET /investigate/v2/samples/{destination}
+  - GET /investigate/v2/sample/{hash}
+  - GET /investigate/v2/sample/{hash}/artifacts
+  - GET /investigate/v2/sample/{hash}/connections
+  - GET /investigate/v2/sample/{hash}/behaviors
+  - GET /investigate/v2/timeline/{name}
+  - GET /investigate/v2/subdomains/{domain}
+  in_spec: true
+- scope: investigate.bulk:read
+  description: View the information about multiple domains.
+  group: investigate
+  endpoints:
+  - POST /investigate/v2/domains/categorization
+  in_spec: true
+- scope: policies.destinationLists:read
+  description: View the destination lists.
+  group: policies
+  endpoints:
+  - GET /policies/v2/destinationlists
+  - GET /policies/v2/destinationlists/{destinationListId}
+  in_spec: true
+- scope: policies.destinationLists:write
+  description: Create, update, and delete a destination list.
+  group: policies
+  endpoints:
+  - POST /policies/v2/destinationlists
+  - PATCH /policies/v2/destinationlists/{destinationListId}
+  - DELETE /policies/v2/destinationlists/{destinationListId}
+  in_spec: true
+- scope: policies.destinations:read
+  description: View the destinations in a destination list.
+  group: policies
+  endpoints:
+  - GET /policies/v2/destinationlists/{destinationListId}/destinations
+  in_spec: true
+- scope: policies.destinations:write
+  description: Add and delete destinations in a destination list.
+  group: policies
+  endpoints:
+  - POST /policies/v2/destinationlists/{destinationListId}/destinations
+  - DELETE /policies/v2/destinationlists/{destinationListId}/destinations/remove
+  in_spec: true
+- scope: policies.applicationlists:read
+  description: View the application lists.
+  group: policies
+  endpoints:
+  - GET /policies/v2/applicationLists
+  - GET /policies/v2/applications/usage
+  in_spec: true
+- scope: policies.applicationlists:write
+  description: Create, update, and delete the application lists.
+  group: policies
+  endpoints:
+  - POST /policies/v2/applicationLists
+  - PUT /policies/v2/applicationLists/{applicationListId}
+  - DELETE /policies/v2/applicationLists/{applicationListId}
+  in_spec: true
+- scope: reports.aggregations:read
+  description: View the aggregated events.
+  group: reports
+  endpoints:
+  - GET /reports/v2/top-identities
+  - GET /reports/v2/top-identities/{type}
+  - GET /reports/v2/identity-distribution
+  - GET /reports/v2/identity-distribution/{type}
+  - GET /reports/v2/top-destinations
+  - GET /reports/v2/top-destinations/{type}
+  - GET /reports/v2/top-urls
+  - GET /reports/v2/top-categories
+  - GET /reports/v2/top-categories/{type}
+  - GET /reports/v2/top-eventtypes
+  - GET /reports/v2/top-dns-query-types
+  - GET /reports/v2/top-files
+  - GET /reports/v2/total-requests
+  - GET /reports/v2/total-requests/{type}
+  - GET /reports/v2/top-threats
+  - GET /reports/v2/top-threats/{type}
+  - GET /reports/v2/top-threat-types
+  - GET /reports/v2/top-threat-types/{type}
+  - GET /reports/v2/top-ips
+  - GET /reports/v2/top-ips/internal
+  - GET /reports/v2/summary
+  - GET /reports/v2/summary/{type}
+  - GET /reports/v2/summaries-by-category
+  - GET /reports/v2/summaries-by-category/{type}
+  - GET /reports/v2/summaries-by-destination
+  - GET /reports/v2/summaries-by-destination/{type}
+  - GET /reports/v2/requests-by-hour
+  - GET /reports/v2/requests-by-hour/{type}
+  - GET /reports/v2/requests-by-timerange
+  - GET /reports/v2/requests-by-timerange/{type}
+  - GET /reports/v2/categories-by-hour
+  - GET /reports/v2/categories-by-hour/{type}
+  - GET /reports/v2/categories-by-timerange
+  - GET /reports/v2/categories-by-timerange/{type}
+  - GET /reports/v2/deployment-status
+  - GET /reports/v2/bandwidth-by-hour
+  - GET /reports/v2/bandwidth-by-timerange
+  in_spec: true
+- scope: reports.granularEvents:read
+  description: View the granular events.
+  group: reports
+  endpoints:
+  - GET /reports/v2/activity
+  - GET /reports/v2/activity/dns
+  - GET /reports/v2/activity/proxy
+  - GET /reports/v2/activity/firewall
+  - GET /reports/v2/activity/intrusion
+  - GET /reports/v2/activity/ip
+  - GET /reports/v2/activity/amp-retrospective
+  in_spec: true
+- scope: reports.summariesByRule:read
+  description: View the summaries by rules events.
+  group: reports
+  endpoints:
+  - GET /reports/v2/summaries-by-rule/intrusion
+  in_spec: true
+- scope: reports.utilities:read
+  description: View the reference information for the reports.
+  group: reports
+  endpoints:
+  - GET /reports/v2/applications
+  - GET /reports/v2/categories
+  - GET /reports/v2/identities
+  - GET /reports/v2/identities/{identityid}
+  - GET /reports/v2/threat-types
+  - GET /reports/v2/threat-types/{threattypeid}
+  - GET /reports/v2/threat-names
+  - GET /reports/v2/threat-names/{threatnameid}
+  - POST /reports/v2/identities
+  in_spec: true
+- scope: reports.appDiscovery:read
+  description: View the application discovery events.
+  group: reports
+  endpoints:
+  - GET /reports/v2/appDiscovery/applications
+  - GET /reports/v2/appDiscovery/applications/{applicationId}
+  - GET /reports/v2/appDiscovery/applications/{applicationId}/risk
+  - GET /reports/v2/appDiscovery/applications/{applicationId}/identities
+  - GET /reports/v2/appDiscovery/applications/{applicationId}/attributes
+  - GET /reports/v2/appDiscovery/protocols
+  - GET /reports/v2/appDiscovery/protocols/{protocolId}
+  - GET /reports/v2/appDiscovery/protocols/{protocolId}/identities
+  - GET /reports/v2/appDiscovery/applicationCategories
+  - GET /reports/v2/appDiscovery/applications/info
+  in_spec: true
+- scope: reports.appDiscovery:write
+  description: Update the label for the applications.
+  group: reports
+  endpoints:
+  - PATCH /reports/v2/appDiscovery/applications
+  - PATCH /reports/v2/appDiscovery/applications/{applicationId}
+  in_spec: true
+- scope: reports.apiusage:read
+  description: View the API key usage.
+  group: reports
+  endpoints:
+  - GET /reports/v2/apiUsage/requests
+  - GET /reports/v2/apiUsage/responses
+  - GET /reports/v2/apiUsage/keys
+  - GET /reports/v2/apiUsage/summary
+  in_spec: true
+- scope: reports.customers:read
+  description: View the events for the customers.
+  group: reports
+  endpoints:
+  - GET /reports/v2/providers/deployments
+  - GET /reports/v2/providers/requests-by-hour
+  - GET /reports/v2/providers/requests-by-timerange
+  - GET /reports/v2/providers/requests-by-org
+  - GET /reports/v2/providers/requests-by-category
+  - GET /reports/v2/providers/requests-by-destination
+  - GET /reports/v2/providers/category-requests-by-org
+  - GET /reports/v2/providers/category-requests-by-org
+  - GET /reports/v2/providers/consoles
+  - GET /reports/v2/providers/customers/downloadReportRequests
+  in_spec: true
+- scope: reports.customers:write
+  description: View the events by the request types.
+  group: reports
+  endpoints:
+  - POST /reports/v2/providers/customers/{customerId}/securityReportRequests
+  in_spec: true
+spec_only_scopes:
+- admin.customerDeals:read
+- admin.customerDeals:write
+- admin.organizations:write
+note: 'Cisco documents 61 granular OAuth 2.0 scopes across five groups. The scopes reference page also documents
+  coarse admin:read / admin:write style grants. Scopes present in the OpenAPI securitySchemes are flagged in_spec:
+  true.'

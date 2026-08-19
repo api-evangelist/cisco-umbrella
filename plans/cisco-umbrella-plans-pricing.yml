@@ -1,0 +1,36 @@
+generated: '2026-08-19'
+method: searched
+source: https://umbrella.cisco.com/products/packages
+x-evidence:
+- fetched: '2026-08-19'
+  url: https://umbrella.cisco.com/products/packages
+  http_status: 200
+- fetched: '2026-08-19'
+  url: https://signup.umbrella.com/
+  http_status: 200
+pricing_published: false
+model: quote-only
+plan_count: 0
+plans: []
+named_packages:
+- Umbrella DNS
+- Secure Access - DNS Defense
+- Secure Access SIA (Secure Internet Access)
+- Secure Access SPA (Secure Private Access)
+- DNS Security Essentials
+- DNS Security Advantage
+- SIG Essentials
+- SIG Advantage
+- Umbrella Enhanced Support
+- Cisco Umbrella for Government
+trial:
+  available: true
+  url: https://signup.umbrella.com/
+  note: Free trial signup is public.
+api_entitlement: The Umbrella API is licensed with the package. Cisco's own troubleshooting guide tells failing
+  callers to "check that your Umbrella package includes a license for the Umbrella API and its endpoints." The Investigate
+  API is further tiered — Integration, Tier 1, Tier 2, Tier 3 — and the tier sets the rate limit, so entitlement
+  is a runtime constraint, not just a billing one.
+note: 'plan_count is 0 because Cisco names packages but publishes no price, no included quota and no overage for
+  any of them: every tier routes to "contact us" or a partner quote. The package names are recorded separately so
+  the absence is legible.'

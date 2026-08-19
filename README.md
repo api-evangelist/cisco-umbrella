@@ -42,7 +42,9 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Cisco Umbrella, built on the OpenDNS platform Cisco acquired in 2015 and now part of Cisco Secure Access, is Cisco's cloud-delivered security service: DNS-layer security, secure web gateway, cloud-delivered firewall, CASB and remote browser isolation. Cisco documents the Umbrella and Secure Access APIs under the Cloud Security section of DevNet, covering deployments, policies, reporting and threat intelligence investigation. No anonymously fetchable OpenAPI document is published: api.umbrella.com/openapi.json returns a real 404.
+Cisco Umbrella, built on the OpenDNS platform Cisco acquired in 2015 and now sold within Cisco Secure
+Access, is Cisco's cloud-delivered security service: DNS-layer security, secure web gateway,
+cloud-delivered firewall, CASB (Cisco Cloudlock) and remote browser isolation.
 
 ## Ownership
 
@@ -50,15 +52,67 @@ Part of the Cisco family (acquired 2015).
 
 ## Contract status
 
-No anonymously fetchable machine-readable contract was found on 2026-08-19 (probed; real 404s). API Evangelist has not authored a substitute.
+**Published — 26 first-party OpenAPI documents, 256 operations.** Harvested 2026-08-19 from Cisco's own
+docs CDN (`pubhub.devnetcloud.com`), which serves
+[developer.cisco.com/docs/cloud-security/](https://developer.cisco.com/docs/cloud-security/). Every
+document names `servers[] https://api.umbrella.com/{basePath}` and
+`info.contact "Cloud Security Developer Community"`.
+
+Pristine downloads are in `openapi/_original/`; the working copies in `openapi/` are byte-identical
+except for an appended `x-provenance` / `x-evidence` block recording where each came from.
+
+> **Correction to an earlier round.** This repository previously recorded
+> `x-contract-status: none` on the basis that `https://api.umbrella.com/openapi.json` returns a real
+> 404. That probe was correct and the conclusion was wrong: Cisco does not serve the spec from the API
+> host. The specs are listed in the docs navigation config at
+> `https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json` and
+> downloadable from `.../docs/reference/**.yaml`.
+
+## API surface
+
+| Scope | Base | Documents | Operations |
+|---|---|---|---|
+| `auth` | `https://api.umbrella.com/auth/v2` | 1 | 1 |
+| `admin` | `https://api.umbrella.com/admin/v2` | 6 | 50 |
+| `deployments` | `https://api.umbrella.com/deployments/v2` | 11 | 60 |
+| `investigate` | `https://api.umbrella.com/investigate/v2` | 1 | 28 |
+| `policies` | `https://api.umbrella.com/policies/v2` | 2 | 14 |
+| `reports` | `https://api.umbrella.com/reports/v2` | 4 | 81 |
+| Cloudlock (CASB) | `https://api.cloudlock.com/api/v2` | 1 | 22 |
+
+Authorization is OAuth 2.0 client credentials against `POST https://api.umbrella.com/auth/v2/token`,
+with 61 documented scopes across the five non-auth scope groups. Access tokens live one hour.
+
+## Not published by Cisco for Umbrella
+
+Recorded as honest absences, not as unchecked fields:
+
+- **No MCP server.** `CiscoDevNet/secure-access-mcp-community` is a Cisco-published MCP server, but it
+  targets `https://api.sse.cisco.com` (Cisco Secure Access), a sibling product on a different API host.
+  It is recorded in `mcp/` and deliberately **not** credited to Umbrella.
+- **No A2A agent card** at `/.well-known/agent-card.json` or `/.well-known/agent.json` on any host.
+- **No `/.well-known/` surface on `api.umbrella.com`** — no api-catalog, no OIDC/OAuth server metadata,
+  no `llms.txt`. All real 404s with JSON bodies.
+- **No idempotency contract.** No idempotency key or header is documented anywhere.
+- **No rate-limit response headers.** Exhaustion is a bare HTTP 429.
+- **No webhooks, events or AsyncAPI surface.**
+- **No installable SDK in any registry.** The "Umbrella API Client" is a Python source listing printed
+  inside the documentation.
+- **No published prices.** Every package is quote-only.
 
 ## Verified links
 
-- [Portal](https://umbrella.cisco.com/)
-- [Documentation](https://developer.cisco.com/docs/cloud-security/)
-- [APIReference](https://developer.cisco.com/docs/cloud-security/)
-- [ParentCompany](https://apis.io/providers/cisco/)
-- [MCPServer](https://github.com/CiscoDevNet/secure-access-mcp-community)
-- [Portal](https://developer.cisco.com/)
+- [Developer portal / API reference](https://developer.cisco.com/docs/cloud-security/)
+- [Getting started](https://developer.cisco.com/docs/cloud-security/umbrella-api-getting-started/)
+- [Authentication](https://developer.cisco.com/docs/cloud-security/umbrella-api-authentication/)
+- [OAuth 2.0 scopes](https://developer.cisco.com/docs/cloud-security/umbrella-api-oauth-scopes/)
+- [Rate limits](https://developer.cisco.com/docs/cloud-security/umbrella-api-rate-limits/)
+- [Changelog](https://developer.cisco.com/docs/cloud-security/umbrella-api-changelog/)
+- [Status page](https://status.umbrella.com/)
+- [Product documentation](https://docs.umbrella.com/)
+- [Pricing / packages](https://umbrella.cisco.com/products/packages)
+- [Postman examples](https://github.com/CiscoDevNet/cloud-security/tree/master/Umbrella/PostmanExamples)
+- [Cisco PSIRT security.txt](https://www.cisco.com/.well-known/security.txt)
+- [Parent company](https://apis.io/providers/cisco/)
 
 All URLs above returned HTTP 200 when probed on 2026-08-19.

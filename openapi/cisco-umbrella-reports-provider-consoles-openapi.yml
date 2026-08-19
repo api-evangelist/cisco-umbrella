@@ -1,0 +1,677 @@
+openapi: 3.0.1
+info:
+  title: Providers Console Report
+  version: 2.0.0
+  description: Providers Console Report
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously.
+      Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+tags:
+- name: Providers
+- name: Umbrella
+security:
+- oauthFlow: []
+paths:
+  /providers/consoles:
+    get:
+      tags:
+      - Providers
+      - Umbrella
+      description: Get the data available from the provider's console.
+      summary: Get Providers Console Data
+      operationId: getProvidersConsoleData
+      security:
+      - oauthFlow:
+        - reports.customers:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvidersConsole'
+              example:
+                packageName: Umbrella SIG Essentials
+                seatsTotal: 25
+                seatsUsed: 20
+                customerCount: 20
+                status: enrolled
+                rebillAt: '2022-06-13T16:07:07.222Z'
+                expiresAt: '2022-06-13T16:07:07.222Z'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerErr'
+  /providers/customers/downloadReportRequests:
+    get:
+      tags:
+      - Providers
+      - Umbrella
+      description: Get the security report for the customer of the service provider.
+      summary: Get Customer Security Report
+      operationId: getServiceProviderCustomerSecurityReport
+      security:
+      - oauthFlow:
+        - reports.customers:read
+      parameters:
+      - $ref: '#/components/parameters/outputFormatParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadReport'
+              example:
+                isReportReady: true
+                organizationId: 2345892
+                organizationTypeId: 4
+                organizationName: organization name
+                createdAt: 1594557263
+                packageId: 7
+                packageName: SIG essentials
+                users: 25
+                trialStartsAt: '2023-03-01'
+                trialEndsAt: '2023-07-01'
+                adminEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                streetAddress: 123 Circle Street
+                streetAddress2: P.O. Box 575
+                city: San Jose
+                state: CA
+                countryCode: US
+                zipCode: 01904
+                dealId: 123443c
+                ppovLifecycle:
+                  state: state of customer trial
+                  date: '2023-02-28'
+                  enabled: true
+                  lastSentDate: '2023-03-01'
+                  mailIdentifiers:
+                    noLoginDayFourMailIdentifier: customer mail identifier, no login four days
+                    noOriginDayThreeMailIdentifier: three day mail identifier, no origin
+                    noOriginDaySevenMailIdentifier: seven day mail identifer, no origin
+                  excludedLifecycleEmails:
+                  - name@acmetech.com
+                hasDistributorVisibility: true
+                isOnboardingWizardCompleted: true
+                trialId: MD5 hash
+                accountManagerEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                serviceGracePeriodEndDate: 1594557263
+                networks: 20
+                roamingClients: 10
+                VAs: 5
+                comments:
+                - A comment about the customer's trial
+                sigQuestionnaire: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+                  Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+                  Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+            text/plain:
+              schema:
+                type: string
+              example: csv data
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerErr'
+  /providers/customers/{customerId}/securityReportRequests:
+    post:
+      tags:
+      - Providers
+      - Umbrella
+      description: Create security report request for customer of service provider.
+      summary: Create Customer Security Report Request
+      operationId: createCustomerSecurityReportRequest
+      security:
+      - oauthFlow:
+        - reports.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityReportsRequest'
+              example:
+                data:
+                  body:
+                    email: user@cisco.com
+                    end_date: '2022-09-09'
+                    organization_id: '7970851'
+                    organization_name: Abc Prime Product
+                    origin_id: '585256703'
+                    start_date: '2022-09-01'
+                  header:
+                    date: 1663674125
+                    status: pending
+                  id: 2683
+                status: ok
+                task: enqueue-task
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerErr'
+components:
+  parameters:
+    customerIdParam:
+      name: customerId
+      description: The customer ID
+      schema:
+        type: integer
+      in: path
+      required: true
+    outputFormatParam:
+      name: outputFormat
+      in: query
+      description: 'The content type of the security report. Valid values are: ''cvs'' or ''json''.'
+      required: false
+      schema:
+        default: json
+        type: string
+        enum:
+        - json
+        - csv
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.customers:read: Read reports customers
+            reports.customers:write: Write reports customers
+  responses:
+    InvalidRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+    ServerErr:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+  schemas:
+    ProvidersConsole:
+      type: object
+      properties:
+        packageName:
+          type: string
+          description: The name of the service provider's subscribed package
+        seatsTotal:
+          type: integer
+          description: The number of seats allocated to the service provider
+        seatsUsed:
+          type: integer
+          description: The number of seats used by the service provider
+        customerCount:
+          type: integer
+          description: The number of customers for the service provider
+        status:
+          type: string
+          description: The status of the service provider
+        rebillAt:
+          type: string
+          format: date-time
+          description: 'The time when the service provider was rebilled.
+
+            The timestamp is specified in the ISO 8601 format.'
+        expiresAt:
+          type: string
+          format: date-time
+          description: 'The time when the service provider''s subscription expires.
+
+            The timestamp is specified in the ISO 8601 format.'
+      required:
+      - packageName
+      - seatsTotal
+      - seatsUsed
+      - customerCount
+      - status
+      - rebillAt
+      - expiresAt
+      example:
+        packageName: Umbrella SIG Essentials
+        seatsTotal: 25
+        seatsUsed: 20
+        customerCount: 20
+        status: enrolled
+        rebillAt: '2022-06-13T16:07:07.222Z'
+        expiresAt: '2022-06-13T16:07:07.222Z'
+    DownloadReport:
+      type: object
+      required:
+      - isReportReady
+      properties:
+        isReportReady:
+          type: boolean
+          default: true
+          description: Specifies whether the security report is ready to download
+          example: false
+        organizationTypeId:
+          type: integer
+          description: The type ID of the customer's organization
+        organizationName:
+          type: string
+          description: The name of the customer's organization
+        organizationId:
+          type: integer
+          description: The ID of the customer's organization
+        createdAt:
+          type: integer
+          description: The time when the report was created. Specify the time in milliseconds.
+          example: 1594557263
+        packageName:
+          type: string
+          description: The name of customer's subscription
+        users:
+          type: integer
+          description: The number of users in the subscription
+        adminEmails:
+          type: array
+          items:
+            type: string
+          description: The emails of admins for the customer's organization
+        streetAddress:
+          type: string
+          description: The customer's street address
+        streetAddress2:
+          type: string
+          description: The second street address for the customer
+        city:
+          type: string
+          description: The customer's city
+        state:
+          type: string
+          description: The customer's state
+        countryCode:
+          type: string
+          description: The customer's country
+          minLength: 2
+          maxLength: 3
+        zipCode:
+          type: string
+          description: The customer's zip code
+        dealId:
+          type: string
+          description: The ID of the CCW deal for the subscription
+        ppovLifecycle:
+          $ref: '#/components/schemas/PpovLifecycle'
+        hasDistributorVisibility:
+          type: boolean
+          description: Specify whether the distributor has visibility into the trial
+        isOnboardingWizardCompleted:
+          type: boolean
+          description: Specify whether customer has logged into the dashboard
+        trialId:
+          type: string
+          description: The MD5 value of the customer's trial ID
+        accountManagerEmails:
+          type: array
+          items:
+            type: string
+          description: The emails of the account managers
+        trialStartsAt:
+          type: string
+          format: date
+          description: The start date of the trial subscription
+          example: '2021-09-22'
+        trialEndsAt:
+          type: string
+          format: date
+          description: The end date of the trial subscription
+          example: '2021-11-22'
+        serviceGracePeriodEndDate:
+          type: integer
+          example: 1594557263
+          description: The period that extends the trial subscription
+        networks:
+          type: integer
+          description: The number of networks deployed in the customer's organization
+          example: 25
+        roamingClients:
+          type: integer
+          description: The number of roaming clients deployed in the customer's organization
+          example: 20
+        VAs:
+          type: integer
+          description: The number of virtual appliances (VAs) deployed in the customer's organization
+          example: 5
+        comments:
+          type: array
+          items:
+            type: string
+          description: The feedback about the customer's trial
+        sigQuestionnaire:
+          $ref: '#/components/schemas/sigQuestionnaire'
+      example:
+        isReportReady: true
+        organizationId: 2345892
+        organizationTypeId: 4
+        organizationName: Cisco Systems
+        createdAt: 1594557263
+        packageId: 7
+        packageName: SIG essentials
+        users: 25
+        trialStartsAt: '2023-03-01'
+        trialEndsAt: '2023-07-01'
+        adminEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        streetAddress: 123 Circle Street
+        streetAddress2: P.O. Box 575
+        city: San Jose
+        state: CA
+        countryCode: US
+        zipCode: 01904
+        dealId: 123443c
+        ppovLifecycle:
+          state: state of customer trial
+          date: '2023-02-28'
+          enabled: true
+          lastSentDate: '2023-03-01'
+          mailIdentifiers:
+            noLoginDayFourMailIdentifier: customer mail identifier, no login four days
+            noOriginDayThreeMailIdentifier: three day mail identifier, no origin
+            noOriginDaySevenMailIdentifier: seven day mail identifer, no origin
+          excludedLifecycleEmails:
+          - name@acmetech.com
+        hasDistributorVisibility: true
+        isOnboardingWizardCompleted: true
+        trialId: MD5 hash
+        accountManagerEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        serviceGracePeriodEndDate: 1594557263
+        networks: 5
+        roamingClients: 25
+        VAs: 10
+        comments:
+        - A comment about the customer's trial
+        sigQuestionnaire: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+          Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+          Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+    SecurityReportsRequest:
+      type: object
+      required:
+      - status
+      - data
+      properties:
+        data:
+          type: object
+          description: The data for the request to access the report
+          properties:
+            id:
+              type: integer
+              description: The ID of the request to generate the report
+            header:
+              type: object
+              description: The status information about the report
+              properties:
+                date:
+                  type: integer
+                  description: The date of the generated report specified in milliseconds
+                status:
+                  type: string
+                  description: The status of the report generation
+            body:
+              type: object
+              description: The details of the report
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address used to send the report
+                end_date:
+                  type: string
+                  format: date
+                  description: The report includes data that appears before the specified date
+                  example: '2022-07-13'
+                organization_id:
+                  type: string
+                  description: The ID of the customer's organization
+                organization_name:
+                  type: string
+                  description: The name of the customer's organization
+                origin_id:
+                  type: string
+                  description: The origin ID
+                start_date:
+                  type: string
+                  format: date
+                  description: The report includes data that appears after the specified date
+                  example: '2022-06-13'
+        status:
+          type: string
+          description: The status of the report generation request
+        task:
+          type: string
+          description: The task for the report generation
+      example:
+        data:
+          body:
+            email: user@cisco.com
+            end_date: '2022-09-09'
+            organization_id: '7970851'
+            organization_name: Abc Prime Product
+            origin_id: '585256703'
+            start_date: '2022-09-01'
+          header:
+            date: 1663674125
+            status: pending
+          id: 2683
+        status: ok
+        task: enqueue-task
+    PpovLifecycle:
+      type: object
+      description: The email details for a customer trial lifecycle events
+      properties:
+        state:
+          type: string
+          description: The current state of the customer trial
+        date:
+          type: string
+          format: date
+          description: ''
+          example: '2021-09-28'
+        enabled:
+          type: boolean
+          description: Specify whether lifecycle emails are enabled
+        lastSentDate:
+          type: string
+          format: date
+          description: Specify last lifecycle email sent date
+          example: '2021-10-05'
+        mailIdentifiers:
+          type: object
+          description: The information about the email identifiers for the customer
+          properties:
+            noLoginDayFourMailIdentifier:
+              type: string
+              description: The email for the customer that did not log in for four days
+              example: name@noorgin.acmetech.com
+            noOriginDayThreeMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for three days
+              example: name@noorgin.acmetech.com
+            noOriginDaySevenMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for seven days
+              example: name@noorgin.acmetech.com
+        excludedLifecycleEmails:
+          type: array
+          items:
+            type: string
+          description: The emails excluded for the lifecycle of the customer
+          example:
+          - name1@acmeTech.com
+          - name2@acmetech.com
+    sigQuestionnaire:
+      type: string
+      description: The SIG questionnaire
+      example: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+        Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+        Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+    NotFoundError:
+      description: Not Found- A resource specified in the URL was not found
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+          description: HTTP status code
+        error:
+          type: string
+          example: Not Found
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    UnauthorizedError:
+      description: Unauthorized- The authorization header is missing or the token is unauthorized
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 401
+          description: HTTP status code
+        error:
+          type: string
+          example: Unauthorized
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    ForbiddenError:
+      description: Forbidden- The token is invalid
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+          description: HTTP status code
+        error:
+          type: string
+          example: Forbidden, Invalid authentication credentials
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    BadRequestError:
+      description: Validation Error
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+          description: HTTP status code
+        error:
+          type: string
+          example: Validation Error
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+        validationErrors:
+          type: object
+          properties:
+            someProperty:
+              type: string
+              example: must not be empty
+              description: the name of the property failing validation.
+    ServerError:
+      description: Error- This request could not be processed by the server
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+          description: the http error code returned
+        error:
+          type: string
+          example: Internal Server Error
+          description: a brief description of the error
+        txId:
+          type: string
+          example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+          description: a unique hex number that can be used for debugging
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/provider-consoles.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/provider-consoles.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

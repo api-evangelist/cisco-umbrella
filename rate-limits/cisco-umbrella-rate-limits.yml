@@ -1,0 +1,133 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/cloud-security/umbrella-api-rate-limits/
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/guides/umbrella-ratelimits.md
+  http_status: 200
+exhaustion:
+  status: 429
+  status_message: Too Many Requests
+  behavior: Requests above the limit are discarded. Cisco documents a retry after waiting one second.
+  headers_published: false
+  headers_note: Cisco does not document any X-RateLimit-*, RateLimit-* or Retry-After response headers for the Umbrella
+    API. The only documented runtime signal is the HTTP 429 status itself.
+limit_count: 16
+limits:
+- scope: admin
+  applies_to: per-api-key
+  limits:
+  - 5 req/sec
+  - 14 req/min
+  - 350 req/30 min
+  note: General admin API scope.
+- scope: admin (Providers and Provider Console Config)
+  applies_to: per-api-key
+  limits:
+  - 30 req/sec
+  - 70 req/min
+  - 1000 req/30 min
+- scope: auth (Token Authorization API)
+  applies_to: per-api-key
+  limits:
+  - 20 req/min
+- scope: deployments
+  applies_to: per-api-key
+  limits:
+  - 5 req/sec
+  - 14 req/min
+  - 350 req/30 min
+  note: All deployments endpoints except Network Tunnels.
+- scope: deployments (Network Tunnels)
+  applies_to: per-api-key
+  limits:
+  - 3000 req/min
+- scope: investigate (group one endpoints)
+  applies_to: per-organization tier
+  limits:
+  - 'Integration: 3 req/sec'
+  - 'Tier 1: 3 req/sec'
+  - 'Tier 2: 12 req/sec'
+  - 'Tier 3: 12 req/sec'
+  endpoints:
+  - /domains/volume/{domain}
+  - /pdns/name/{domain}
+  - /pdns/domain/{domain}
+  - /pdns/ip/{ip}
+  - /pdns/raw/{anystring}
+  - /recommendations/name/{domain}.json
+  - /links/name/{domain}
+  - /security/name/{domain}
+  - /bgp_routes/asn/{asn}/prefixes_for_asn.json
+  - /bgp_routes/ip/{ip}/as_for_ip.json
+  - /topmillion
+  - /timeline/{name}
+  - /subdomains/{domain}
+- scope: investigate (group two endpoints)
+  applies_to: per-organization tier
+  limits:
+  - 'Integration: 3 req/sec'
+  - 'Tier 1: 3 req/sec'
+  - 'Tier 2: 12 req/sec'
+  - 'Tier 3: 48 req/sec'
+  endpoints:
+  - /samples/{domain}
+  - /samples/{ip}
+  - /samples/{url}
+  - /whois/{domain}
+  - /whois/{domain}/history
+  - /whois/nameservers
+  - /whois/nameservers/{nameservers}
+  - /whois/emails/{emails}
+- scope: investigate POST /domains/categorization
+  applies_to: per-organization tier
+  limits:
+  - 'Tier 2: 150 req/sec'
+  - 'Tier 3: 150 req/sec'
+  note: Accepts up to 1000 domains per request. Not available on Integration or Tier 1.
+- scope: investigate GET /domains/categorization
+  applies_to: per-organization tier
+  limits:
+  - 'Integration: 3 req/sec'
+  - 'Tier 1: 3 req/sec'
+  - 'Tier 2: 150 req/sec'
+  - 'Tier 3: 150 req/sec'
+- scope: investigate GET /search/{expression}
+  applies_to: per-organization tier
+  limits:
+  - 'Wildcard-prefixed (.*) searches: 3 req/min'
+  - 'All other searches: 18 req/min'
+- scope: investigate GET /whois/search/{searchField}/{regexExpression}
+  applies_to: per-organization tier
+  limits:
+  - 'All tiers: 18 req/min'
+- scope: investigate (Integration access level)
+  applies_to: per-organization
+  limits:
+  - 2000 req/day
+- scope: policies (Destination Lists)
+  applies_to: per-api-key
+  limits:
+  - 2000 req/min
+  - 6000 req/hour
+- scope: reports (Reporting)
+  applies_to: per-organization
+  limits:
+  - 5 req/sec
+- scope: reports (App Discovery)
+  applies_to: per-api-key
+  limits:
+  - 10 req/sec
+- scope: reports (API Usage)
+  applies_to: per-api-key
+  limits:
+  - 2000 req/min
+  - 6000 req/hour
+- scope: reports (Providers Consoles)
+  applies_to: per-api-key
+  limits:
+  - 5 req/sec
+  - 14 req/min
+  - 350 req/30 min
+note: Rate limits vary by API scope and by resource, and the Investigate API additionally varies by the organization's
+  Investigate access tier (Integration, Tier 1, Tier 2, Tier 3).

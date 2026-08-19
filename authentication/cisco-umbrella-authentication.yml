@@ -1,0 +1,53 @@
+generated: '2026-08-19'
+method: derived
+source: openapi/cisco-umbrella-admin-key-admin-openapi.yml, openapi/cisco-umbrella-admin-managed-providers-openapi.yml,
+  openapi/cisco-umbrella-admin-providers-openapi.yml, openapi/cisco-umbrella-admin-s3-key-rotation-openapi.yml,
+  openapi/cisco-umbrella-admin-service-providers-console-openapi.yml, openapi/cisco-umbrella-admin-users-roles-openapi.yml,
+  openapi/cisco-umbrella-auth-token-openapi.yml, openapi/cisco-umbrella-deployments-internal-domains-openapi.yml,
+  openapi/cisco-umbrella-deployments-internal-networks-openapi.yml, openapi/cisco-umbrella-deployments-network-devices-openapi.yml,
+  openapi/cisco-umbrella-deployments-network-tunnels-openapi.yml, openapi/cisco-umbrella-deployments-networks-openapi.yml
+  ...
+summary:
+  types:
+  - http
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: oauthFlow
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api.umbrella.com/auth/v2/token
+    scopes: 5
+  description: client credential flow
+  sources:
+  - openapi/cisco-umbrella-admin-key-admin-openapi.yml
+  - openapi/cisco-umbrella-admin-managed-providers-openapi.yml
+  - openapi/cisco-umbrella-admin-providers-openapi.yml
+  - openapi/cisco-umbrella-admin-s3-key-rotation-openapi.yml
+  - openapi/cisco-umbrella-admin-service-providers-console-openapi.yml
+  - openapi/cisco-umbrella-admin-users-roles-openapi.yml
+  - openapi/cisco-umbrella-deployments-internal-domains-openapi.yml
+  - openapi/cisco-umbrella-deployments-internal-networks-openapi.yml
+  - openapi/cisco-umbrella-deployments-network-devices-openapi.yml
+  - openapi/cisco-umbrella-deployments-network-tunnels-openapi.yml
+  - openapi/cisco-umbrella-deployments-networks-openapi.yml
+  - openapi/cisco-umbrella-deployments-policies-openapi.yml
+  - openapi/cisco-umbrella-deployments-roaming-computers-openapi.yml
+  - openapi/cisco-umbrella-deployments-sites-openapi.yml
+  - openapi/cisco-umbrella-deployments-swg-devices-openapi.yml
+  - openapi/cisco-umbrella-deployments-tagging-openapi.yml
+  - openapi/cisco-umbrella-deployments-virtual-appliances-openapi.yml
+  - openapi/cisco-umbrella-investigate-investigate-openapi.yml
+  - openapi/cisco-umbrella-policies-application-lists-internet-umb-openapi.yml
+  - openapi/cisco-umbrella-policies-destination-lists-openapi.yml
+  - openapi/cisco-umbrella-reports-api-usage-openapi.yml
+  - openapi/cisco-umbrella-reports-app-discovery-openapi.yml
+  - openapi/cisco-umbrella-reports-provider-consoles-openapi.yml
+  - openapi/cisco-umbrella-reports-reporting-openapi.yml
+- name: http
+  type: http
+  scheme: basic
+  sources:
+  - openapi/cisco-umbrella-auth-token-openapi.yml

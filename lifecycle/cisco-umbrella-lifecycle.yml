@@ -1,0 +1,40 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/cloud-security/umbrella-api-changelog/
+x-evidence:
+- fetched: '2026-08-19'
+  url: https://status.umbrella.com/api/v2/status.json
+  http_status: 200
+- fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/overview/changelog.md
+  http_status: 200
+versioning:
+  style: path
+  current: v2
+  see: conventions/cisco-umbrella-conventions.yml
+status_page:
+  url: https://status.umbrella.com/
+  provider: Atlassian Statuspage
+  page_name: Cloud Security Service Status
+  canonical: https://status.umbrella.cisco.com
+  machine_readable:
+  - https://status.umbrella.com/api/v2/status.json
+  - https://status.umbrella.com/api/v2/summary.json
+  - https://status.umbrella.com/history.rss
+  verified: '2026-08-19'
+deprecation:
+  policy_published: true
+  mechanism: Dated changelog entries on the Umbrella API Changelog page, plus a separate Legacy and Deprecated Umbrella
+    APIs documentation tree at https://developer.cisco.com/docs/legacy-umbrella-api/.
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: Cisco announces removals and end-of-life packages in the dated API Changelog and moves superseded APIs into
+    a Legacy/Deprecated documentation section, but publishes no Sunset or Deprecation response headers (RFC 8594)
+    and no fixed notice window for the Umbrella API.
+  deprecated_docs: https://developer.cisco.com/docs/legacy-umbrella-api/
+deprecated_operations: []
+deprecated_operations_note: 'No operation in the 26 harvested OpenAPI documents carries deprecated: true.'
+sla:
+  published: false
+  note: No public API SLA is published; availability commitments sit inside the Cisco Umbrella subscription agreement.

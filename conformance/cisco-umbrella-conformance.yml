@@ -1,0 +1,71 @@
+generated: '2026-08-19'
+method: derived
+source: openapi/*.yml + Cisco Umbrella API guides (auth, scopes, pagination, rate limits, errors)
+standards:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749) client credentials
+  conforms: true
+  evidence: Every non-auth spec declares securitySchemes.oauthFlow type oauth2 with a clientCredentials flow and
+    tokenUrl https://api.umbrella.com/auth/v2/token; the token endpoint itself uses HTTP Basic with the API key
+    ID/secret.
+- id: oauth2-scopes
+  name: OAuth 2.0 scoped authorization
+  conforms: true
+  evidence: 61 documented scopes across admin, deployments, investigate, policies and reports; scopes are bound
+    to the API key at creation, not requested per token.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: No openIdConnect securityScheme and no /.well-known/openid-configuration (404 on api.umbrella.com).
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404 on api.umbrella.com.
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource returns 404 on api.umbrella.com.
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  evidence: Errors use a vendor envelope {error, message, statusCode} with media type application/json, not application/problem+json.
+- id: rfc9116
+  name: security.txt
+  conforms: true
+  evidence: PGP-signed security.txt served at https://www.cisco.com/.well-known/security.txt (cisco.com apex), not
+    at api.umbrella.com.
+- id: csaf
+  name: Common Security Advisory Framework 2.0
+  conforms: true
+  evidence: https://www.cisco.com/.well-known/csaf/provider-metadata.json returns 200.
+- id: rfc8594
+  name: Sunset / Deprecation HTTP headers
+  conforms: false
+  evidence: No Sunset or Deprecation header is documented; deprecations are announced only in the dated changelog.
+- id: pagination
+  name: Documented pagination
+  conforms: true
+  evidence: page/limit for admin, deployments and policies; limit/offset for investigate and reports. See conventions/.
+- id: idempotency
+  name: Idempotency keys
+  conforms: false
+  evidence: No idempotency key or header is documented anywhere in the Umbrella API guides or the 26 OpenAPI documents.
+- id: json-api
+  name: JSON:API
+  conforms: false
+  evidence: Plain application/json resource representations; no JSON:API envelope.
+- id: openapi
+  name: OpenAPI 3.0
+  conforms: true
+  evidence: 26 first-party OpenAPI 3.0.0/3.0.1/3.0.2 documents published for download from Cisco DevNet.
+- id: asyncapi
+  name: AsyncAPI / event surface
+  conforms: false
+  evidence: Cisco publishes no webhook, streaming or event surface for the Umbrella API; the word webhook does not
+    appear in any harvested spec or guide.
+- id: fedramp
+  name: FedRAMP
+  conforms: true
+  evidence: Cisco Umbrella for Government is listed as a FedRAMP-authorized package on https://umbrella.cisco.com/products/packages.
+note: conforms values are judgments from evidence fetched on 2026-08-19; each row names the artifact or URL it was
+  read from.

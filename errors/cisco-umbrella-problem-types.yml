@@ -1,0 +1,89 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/cloud-security/umbrella-api-errors-troubleshooting/
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/guides/errors.md
+  http_status: 200
+format: vendor-json
+rfc9457: false
+envelope:
+  media_type: application/json
+  fields:
+  - name: error
+    type: string
+    description: A brief description of the error.
+    example: Validation Error
+  - name: message
+    type: string
+    description: Detailed error message.
+  - name: statusCode
+    type: integer
+    description: HTTP status code.
+    example: 400
+  source: components.responses.4xxError in every Umbrella OpenAPI document
+status_codes:
+- code: 400
+  title: Bad Request
+  description: Likely missing a required parameter or malformed JSON. Review the syntax of your query. Check for
+    spaces preceding, trailing, or inside the domain name being queried.
+  occurrences: 250
+- code: 401
+  title: Unauthorized
+  description: The authorization header is missing or the key and secret pair is invalid. Ensure that your API token
+    is valid.
+  remediation: Access tokens expire in one hour — request a new one from POST /auth/v2/token.
+  occurrences: 256
+- code: 403
+  title: Forbidden
+  description: The client is unauthorized to access the content.
+  remediation: Check that the API key carries the scope and permission (Read Only or Read/Write) required by the
+    endpoint.
+  occurrences: 256
+- code: 404
+  title: Not Found
+  description: The requested resource doesn't exist. Check the syntax of your query or ensure the IP and domain
+    are valid.
+  occurrences: 251
+- code: 409
+  title: Conflict
+  description: Exceeded the limit of a list, or attempted to delete an object that is in use.
+  occurrences: 2
+- code: 413
+  title: Payload Too Large
+  description: Request body exceeds the accepted size.
+  occurrences: 3
+- code: 415
+  title: Unsupported Media Type
+  description: Request Content-Type is not supported by the endpoint.
+  occurrences: 3
+- code: 429
+  title: Exceeded Limit
+  description: Too many requests made within a specific time period. You may have exceeded the rate limits for your
+    organization or package.
+  remediation: Wait one second and retry. See rate-limits/cisco-umbrella-rate-limits.yml.
+  occurrences: 3
+- code: 500
+  title: Internal Server Error
+  description: Something wrong with the server.
+  occurrences: 250
+- code: 503
+  title: Service Unavailable
+  description: Server is unable to complete the request. A dependent service may be temporarily unavailable.
+  occurrences: 6
+success_codes:
+- code: 200
+  title: OK
+  description: Success. Everything worked as expected.
+- code: 201
+  title: Created
+  description: New resource created.
+- code: 202
+  title: Accepted
+  description: Success. Action is queued.
+- code: 204
+  title: No Content
+  description: Success. Response with no message body.
+note: Occurrence counts are derived from the 26 harvested OpenAPI documents (256 operations). Cisco publishes no
+  numeric error-code registry for the Umbrella API — the HTTP status plus the error/message envelope is the whole
+  contract.

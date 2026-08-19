@@ -1,0 +1,87 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/cloud-security/umbrella-api-changelog/
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/overview/changelog.md
+  http_status: 200
+scheme: dated entries grouped by API, each listing the affected operations
+current_version: v2
+entry_count_total: 46
+latest_entry: February 23, 2026
+entries:
+- date: February 23, 2026
+  apis:
+  - Umbrella Application Lists API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: September 29, 2025
+  apis:
+  - Umbrella Providers API
+  additions: 0
+  removals_or_deprecations: 1
+  updates: 0
+- date: May 21, 2025
+  apis:
+  - Umbrella S3 Bucket Key Rotation API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: March 31, 2025
+  apis:
+  - Umbrella App Discovery API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: December 19, 2024
+  apis:
+  - Umbrella Roaming Computers API
+  additions: 2
+  removals_or_deprecations: 0
+  updates: 0
+- date: October 14, 2024
+  apis:
+  - Integration Guides
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: October 7, 2024
+  apis:
+  - Umbrella Roaming Computers API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: September 16, 2024
+  apis:
+  - Umbrella Roaming Computers API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: July 17, 2024
+  apis:
+  - Umbrella Secure Web Gateway Device Settings API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: April 25, 2024
+  apis: []
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: January 31, 2024
+  apis:
+  - Umbrella API Usage Reports API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+- date: January 25, 2024
+  apis:
+  - Umbrella Tagging API
+  additions: 1
+  removals_or_deprecations: 0
+  updates: 0
+note: Cisco publishes no RSS/Atom or machine-readable feed for the Umbrella API changelog; the page is markdown
+  rendered by DevNet PubHub. Counts are derived from the bullet verbs in each dated section. The page also carries
+  three undated Deprecated / Removed / Fixed sections at the bottom covering the legacy v1 APIs.
+oldest_entry: May 5, 2020

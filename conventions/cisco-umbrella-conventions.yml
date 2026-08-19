@@ -1,0 +1,98 @@
+generated: '2026-08-19'
+method: searched
+source: https://developer.cisco.com/docs/cloud-security/umbrella-api-pagination/
+x-evidence:
+- fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/guides/umbrella-paginate.md
+  http_status: 200
+- fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/overview/umbrella-auth.md
+  http_status: 200
+- fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/guides/errors.md
+  http_status: 200
+- fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/guides/umbrella-ratelimits.md
+  http_status: 200
+authentication:
+  style: oauth2-client-credentials
+  token_endpoint: https://api.umbrella.com/auth/v2/token
+  token_request_auth: HTTP Basic with the Umbrella API key ID and secret
+  access_token_lifetime: 1 hour
+  request_header: 'Authorization: Bearer <access_token>'
+  see: authentication/cisco-umbrella-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: Cisco publishes no idempotency key, no Idempotency-Key header, and no replay/retry-safety contract for the
+    Umbrella API. Mutating operations (POST/PUT/PATCH/DELETE) are not documented as safely retryable. Recorded as
+    an honest absence — do not read this as an unchecked field.
+pagination:
+  styles:
+  - scope: admin, deployments, policies
+    params:
+    - page
+    - limit
+    defaults:
+      page: 1
+      limit: 200
+    max_batch:
+    - endpoint: /deployments/v2/networks
+      max: 1000
+    - endpoint: /deployments/v2/roamingcomputers
+      max: 100
+    - endpoint: /policies/v2/destinationlists/{destinationListId}/destinations
+      max: 100
+    not_paginated:
+    - /admin/v2/users
+    - /admin/v2/roles
+    - /deployments/v2/virtualappliances
+  - scope: investigate
+    params:
+    - limit
+    - offset
+    note: limit+offset on pdns/whois/samples endpoints; limit only on /whois/{domain}/history, /whois/nameservers
+      and /topmillion. /topmillion returns one million records when no limit is set.
+  - scope: reports
+    params:
+    - limit
+    - offset
+    note: offset is the entry point into the collection; limit is the number of returned items.
+  response_envelope: Collections return a data array; no cursor or Link header is documented.
+field_expansion:
+  supported: false
+  note: No expand / fields / sparse-fieldset parameter is documented.
+metadata:
+  supported: false
+  note: No customer-defined metadata field is documented on Umbrella resources.
+request_id_tracing:
+  supported: false
+  note: No request-id or trace header is documented on Umbrella API responses.
+versioning:
+  style: path
+  pattern: https://api.umbrella.com/{scope}/v2
+  current: v2
+  scopes:
+  - admin/v2
+  - auth/v2
+  - deployments/v2
+  - investigate/v2
+  - policies/v2
+  - reports/v2
+  note: The Umbrella API v2 replaced the per-service legacy APIs (management.api.umbrella.com, reports.api.umbrella.com,
+    investigate.api.umbrella.com), which Cisco keeps documented separately under /docs/legacy-umbrella-api/.
+error_envelope:
+  media_type: application/json
+  fields:
+  - error
+  - message
+  - statusCode
+  rfc9457: false
+  see: errors/cisco-umbrella-problem-types.yml
+rate_limit_signaling:
+  status: 429
+  headers_published: false
+  note: No RateLimit-* or Retry-After header is documented; the only signal is HTTP 429.
+  see: rate-limits/cisco-umbrella-rate-limits.yml
+content_type: application/json on every request and response; a small number of endpoints accept multipart/form-data
+  uploads.
