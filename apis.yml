@@ -1,0 +1,50 @@
+aid: cisco-umbrella
+name: Cisco Umbrella
+description: 'Cisco Umbrella, built on the OpenDNS platform Cisco acquired in 2015 and now part of Cisco Secure
+  Access, is Cisco''s cloud-delivered security service: DNS-layer security, secure web gateway, cloud-delivered
+  firewall, CASB and remote browser isolation. Cisco documents the Umbrella and Secure Access APIs under the Cloud
+  Security section of DevNet, covering deployments, policies, reporting and threat intelligence investigation. No
+  anonymously fetchable OpenAPI document is published: api.umbrella.com/openapi.json returns a real 404.'
+url: https://raw.githubusercontent.com/api-evangelist/cisco-umbrella/refs/heads/main/apis.yml
+type: Index
+access: 3rd-Party
+position: Consumer
+x-type: company
+x-source: cisco-family-buildout:2026-08-19
+x-parent: cisco
+x-relationship: acquisition
+x-contract-status: none
+x-contract-note: No anonymously fetchable machine-readable contract was found on 2026-08-19 (probed; real 404s).
+  API Evangelist has not authored a substitute.
+specificationVersion: '0.23'
+created: '2026-08-19'
+modified: '2026-08-19'
+tags:
+- Security
+- DNS
+- Secure Web Gateway
+- Cloud Security
+- Zero Trust
+- Threat Intelligence
+apis: []
+common:
+- type: Portal
+  url: https://umbrella.cisco.com/
+- type: Documentation
+  url: https://developer.cisco.com/docs/cloud-security/
+- type: APIReference
+  url: https://developer.cisco.com/docs/cloud-security/
+- type: ParentCompany
+  url: https://apis.io/providers/cisco/
+  name: Cisco
+  x-acquired: 2015
+- type: MCPServer
+  url: https://github.com/CiscoDevNet/secure-access-mcp-community
+- type: Portal
+  url: https://developer.cisco.com/
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: APIs.json
+  email: info@apis.io
+x-acquired: 2015
