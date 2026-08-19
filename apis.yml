@@ -1,10 +1,13 @@
 aid: cisco-umbrella
 name: Cisco Umbrella
-description: 'Cisco Umbrella, built on the OpenDNS platform Cisco acquired in 2015 and now part of Cisco Secure
+description: 'Cisco Umbrella, built on the OpenDNS platform Cisco acquired in 2015 and now sold within Cisco Secure
   Access, is Cisco''s cloud-delivered security service: DNS-layer security, secure web gateway, cloud-delivered
-  firewall, CASB and remote browser isolation. Cisco documents the Umbrella and Secure Access APIs under the Cloud
-  Security section of DevNet, covering deployments, policies, reporting and threat intelligence investigation. No
-  anonymously fetchable OpenAPI document is published: api.umbrella.com/openapi.json returns a real 404.'
+  firewall, CASB (Cisco Cloudlock) and remote browser isolation. Cisco publishes a full OAuth 2.0 client-credentials
+  REST API at api.umbrella.com, split into five scopes — admin, auth, deployments, investigate, policies and reports
+  — and documents it under the Cloud Security section of Cisco DevNet, where 26 first-party OpenAPI 3.0 documents
+  covering 256 operations are published for download. The surface spans key and user administration, MSP/provider
+  consoles, network and tunnel deployment, roaming computers and virtual appliances, destination and application
+  lists, DNS/web/firewall reporting, app discovery, and the Umbrella Investigate threat-intelligence API.'
 url: https://raw.githubusercontent.com/api-evangelist/cisco-umbrella/refs/heads/main/apis.yml
 type: Index
 access: 3rd-Party
@@ -13,9 +16,12 @@ x-type: company
 x-source: cisco-family-buildout:2026-08-19
 x-parent: cisco
 x-relationship: acquisition
-x-contract-status: none
-x-contract-note: No anonymously fetchable machine-readable contract was found on 2026-08-19 (probed; real 404s).
-  API Evangelist has not authored a substitute.
+x-contract-status: published
+x-contract-note: '26 first-party OpenAPI 3.0.x documents (256 operations) were harvested on 2026-08-19 from Cisco''s
+  own pubhub.devnetcloud.com media host, the CDN that serves developer.cisco.com/docs/cloud-security/. Every document
+  names servers[] https://api.umbrella.com/{basePath} and info.contact "Cloud Security Developer Community". The
+  earlier "no contract" finding was wrong: api.umbrella.com/openapi.json really is a 404, but the specs are linked
+  from the docs nav config at /media/cloud-security-apis-in-eft/docs/umbrella-config.json.'
 specificationVersion: '0.23'
 created: '2026-08-19'
 modified: '2026-08-19'
@@ -26,25 +32,660 @@ tags:
 - Cloud Security
 - Zero Trust
 - Threat Intelligence
-apis: []
+- CASB
+- Firewall
+- Threat Investigation
+- Networking
+apis:
+- aid: cisco-umbrella:admin-key-admin
+  name: Cisco Umbrella Key Admin API
+  description: Cisco Umbrella Key Admin API — 6 operation(s) published by Cisco under the Cloud Security API documentation.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
+  baseURL: https://api.umbrella.com/admin/v2
+  tags:
+  - API Keys
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-admin-key-admin-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/key-admin.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-admin-key-admin-overlay.yaml
+- aid: cisco-umbrella:admin-managed-providers
+  name: Cicso Umbrella Managed Providers API
+  description: View, create, update, and delete the customers for the managed providers.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-managed-providers-overview/
+  baseURL: https://api.umbrella.com/admin/v2
+  tags:
+  - Managed Providers
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-admin-managed-providers-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/managed-providers.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-managed-providers-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-managed-providers-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-admin-managed-providers-overlay.yaml
+- aid: cisco-umbrella:admin-providers
+  name: Cisco Umbrella Providers API
+  description: Cisco Umbrella Providers API — 16 operation(s) published by Cisco under the Cloud Security API documentation.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-providers-overview/
+  baseURL: https://api.umbrella.com/admin/v2
+  tags:
+  - Providers
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-admin-providers-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/providers.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-providers-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-providers-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-admin-providers-overlay.yaml
+- aid: cisco-umbrella:admin-s3-key-rotation
+  name: Cisco Umbrella S3 Bucket Key Rotation API
+  description: Refresh the Cisco-managed S3 bucket key in the Umbrella organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-s3-key-rotation-overview/
+  baseURL: https://api.umbrella.com/admin/v2
+  tags:
+  - S3 Bucket Key Rotation
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-admin-s3-key-rotation-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/s3-key-rotation.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-s3-key-rotation-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-s3-key-rotation-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-admin-s3-key-rotation-overlay.yaml
+- aid: cisco-umbrella:admin-service-providers-console
+  name: Cisco Umbrella Service Providers Console API
+  description: Cisco Umbrella Service Providers Console API — 15 operation(s) published by Cisco under the Cloud
+    Security API documentation.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-managed-providers-overview/
+  baseURL: https://api.umbrella.com/admin/v2
+  tags:
+  - Cnames
+  - Contacts
+  - Logos
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-admin-service-providers-console-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-managed-providers-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-managed-providers-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-admin-service-providers-console-overlay.yaml
+- aid: cisco-umbrella:admin-users-roles
+  name: Cisco Umbrella Users and Roles API
+  description: Manage the Umbrella user accounts and roles.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-users-roles-overview/
+  baseURL: https://api.umbrella.com/admin/v2
+  tags:
+  - Roles
+  - Umbrella
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-admin-users-roles-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/users-roles.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-users-roles-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-users-roles-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-admin-users-roles-overlay.yaml
+- aid: cisco-umbrella:auth-token
+  name: Cisco Umbrella Token Authorization API
+  description: Cisco Umbrella Token Authorization API — 1 operation(s) published by Cisco under the Cloud Security
+    API documentation.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-authentication/
+  baseURL: https://api.umbrella.com/auth/v2
+  tags:
+  - Token
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-auth-token-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/auth/token.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-authentication/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-authentication/
+  - type: Overlay
+    url: overlays/cisco-umbrella-auth-token-overlay.yaml
+- aid: cisco-umbrella:cloudlock-cloudlock
+  name: Cisco Cloudlock API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  humanURL: https://developer.cisco.com/docs/cloud-security/cloudlock-api-getting-started/
+  baseURL: https://api.cloudlock.com/api/v2
+  tags:
+  - Activities
+  - Apps
+  - Entities
+  - IP Libraries
+  - Incident Aggregates
+  - Incident Entities
+  - Incidents
+  - Policies
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-cloudlock-cloudlock-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/cloudlock-api-getting-started/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/cloudlock-api-getting-started/
+  - type: Overlay
+    url: overlays/cisco-umbrella-cloudlock-cloudlock-overlay.yaml
+- aid: cisco-umbrella:deployments-internal-domains
+  name: Cisco Umbrella Internal Domains API
+  description: Manage the internal domains in your organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-internal-domains-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Internal Domains
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-internal-domains-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/internal-domains.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-internal-domains-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-internal-domains-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-internal-domains-overlay.yaml
+- aid: cisco-umbrella:deployments-internal-networks
+  name: Cisco Umbrella Internal Networks API
+  description: Manage the internal networks in your organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-internal-networks-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Internal Networks
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-internal-networks-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/internal-networks.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-internal-networks-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-internal-networks-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-internal-networks-overlay.yaml
+- aid: cisco-umbrella:deployments-network-devices
+  name: Cisco Umbrella Network Devices API
+  description: Manage the network devices in your organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-devices-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Network Devices
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-network-devices-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/network-devices.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-devices-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-devices-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-network-devices-overlay.yaml
+- aid: cisco-umbrella:deployments-network-tunnels
+  name: Cisco Umbrella Network Tunnels API
+  description: Manage the network tunnels in the organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-tunnels-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Data Center
+  - Debugging
+  - Organization Tunnel
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-network-tunnels-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/network-tunnels.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-tunnels-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-tunnels-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-network-tunnels-overlay.yaml
+- aid: cisco-umbrella:deployments-networks
+  name: Cisco Umbrella Networks API
+  description: Manage the networks in your organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-networks-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Networks
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-networks-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/networks.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-networks-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-networks-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-networks-overlay.yaml
+- aid: cisco-umbrella:deployments-policies
+  name: Cisco Umbrella Deployments Policies API
+  description: Manage the policies for the deployments in your organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-deployment-policies-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Policy
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-policies-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/policies.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-deployment-policies-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-deployment-policies-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-policies-overlay.yaml
+- aid: cisco-umbrella:deployments-roaming-computers
+  name: Cisco Umbrella Roaming Computers API
+  description: Manage the roaming computers in the organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-roaming-computers-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Organization Information
+  - Roaming Computers
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-roaming-computers-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/roaming-computers.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-roaming-computers-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-roaming-computers-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-roaming-computers-overlay.yaml
+- aid: cisco-umbrella:deployments-sites
+  name: Cisco Umbrella Sites API
+  description: Create and manage the Sites in the organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-sites-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Sites
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-sites-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/sites.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-sites-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-sites-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-sites-overlay.yaml
+- aid: cisco-umbrella:deployments-swg-devices
+  name: Cisco Umbrella Secure Web Gateway Device Settings API
+  description: Manage the Secure Web Gateway (SWG) settings for the devices in an organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-swg-devices-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - SWG Device Settings
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-swg-devices-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/swg-devices.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-swg-devices-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-swg-devices-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-swg-devices-overlay.yaml
+- aid: cisco-umbrella:deployments-tagging
+  name: Cisco Umbrella Tagging API
+  description: Manage the tags and roaming computers with tags in the Umbrella organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-tagging-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - TagDevices
+  - Tags
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-tagging-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/tagging.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-tagging-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-tagging-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-tagging-overlay.yaml
+- aid: cisco-umbrella:deployments-virtual-appliances
+  name: Cisco Umbrella Virtual Appliances API
+  description: Manage the virtual appliances in your organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-virtual-appliances-overview/
+  baseURL: https://api.umbrella.com/deployments/v2
+  tags:
+  - Umbrella
+  - Virtual Appliances
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-deployments-virtual-appliances-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/virtual-appliances.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-virtual-appliances-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-virtual-appliances-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-deployments-virtual-appliances-overlay.yaml
+- aid: cisco-umbrella:investigate-investigate
+  name: Cisco Umbrella Investigate API
+  description: The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous
+    system number (ASN) information.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-investigate-overview/
+  baseURL: https://api.umbrella.com/investigate/v2
+  tags:
+  - AS Information for a Domain
+  - Cisco Secure Malware Analytics Integration
+  - Co-occurrences for a Domain
+  - Domain Status and Categorization
+  - Domain Volume
+  - Passive DNS
+  - Popularity List-Top Million Domains
+  - Related Domains for a Domain
+  - Search Domain
+  - Security Information for a Domain
+  - Subdomains for a Domain
+  - Tagging Timeline
+  - Umbrella
+  - WHOIS Information for a Domain
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-investigate-investigate-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-investigate-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-investigate-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-investigate-investigate-overlay.yaml
+- aid: cisco-umbrella:policies-application-lists-internet-umb
+  name: Cisco Umbrella Application Lists API
+  description: Create and manage the application lists and internet destinations in the application lists for the
+    organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-application-lists-overview/
+  baseURL: https://api.umbrella.com/policies/v2
+  tags:
+  - Application Lists
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-policies-application-lists-internet-umb-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/policies/application-lists-internet-umb.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-application-lists-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-application-lists-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-policies-application-lists-internet-umb-overlay.yaml
+- aid: cisco-umbrella:policies-destination-lists
+  name: Cisco Umbrella Destination Lists API
+  description: Create and manage destination lists and destinations.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-destination-lists-overview/
+  baseURL: https://api.umbrella.com/policies/v2
+  tags:
+  - Destination Lists
+  - Destinations
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-policies-destination-lists-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/policies/destination-lists.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-destination-lists-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-destination-lists-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-policies-destination-lists-overlay.yaml
+- aid: cisco-umbrella:reports-api-usage
+  name: Cisco Umbrella API Usage Reports
+  description: Get the Umbrella API usage reports for an organization.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-api-usage-overview/
+  baseURL: https://api.umbrella.com/reports/v2
+  tags:
+  - API Usage Report
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-reports-api-usage-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/api-usage.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-api-usage-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-api-usage-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-reports-api-usage-overlay.yaml
+- aid: cisco-umbrella:reports-app-discovery
+  name: Cisco Umbrella App Discovery API
+  description: The App Discovery API provides an overall view of application and protocol activity in your environment
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-app-discovery-overview/
+  baseURL: https://api.umbrella.com/reports/v2
+  tags:
+  - Application Categories
+  - Applications
+  - Identities
+  - Protocols
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-reports-app-discovery-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-app-discovery-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-app-discovery-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-reports-app-discovery-overlay.yaml
+- aid: cisco-umbrella:reports-provider-consoles
+  name: Providers Console Report
+  description: Providers Console Report — 3 operation(s) published by Cisco under the Cloud Security API documentation.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reports-overview/
+  baseURL: https://api.umbrella.com/reports/v2
+  tags:
+  - Providers
+  - Umbrella
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-reports-provider-consoles-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/provider-consoles.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reports-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reports-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-reports-provider-consoles-overlay.yaml
+- aid: cisco-umbrella:reports-reporting
+  name: Cisco Umbrella Reporting API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reporting-overview/
+  baseURL: https://api.umbrella.com/reports/v2
+  tags:
+  - Activity
+  - Bandwidth by Hour
+  - Bandwidth by Timerange
+  - Deployment Status
+  - Identity Distribution
+  - Organization Requests by Hour
+  - Organization Requests by Hour and Category
+  - Organization Requests by Timerange
+  - Organization Requests by Timerange and Category
+  - Provider Category Requests by Organization
+  - Provider Deployment Status
+  - Provider Requests by Category
+  - Provider Requests by Destination
+  - Provider Requests by Hour
+  - Provider Requests by Organization
+  - Provider Requests by Timerange
+  - Summaries by Category
+  - Summaries by Destination
+  - Summaries by Rule (Intrusion)
+  - Summary
+  - Top Categories
+  - Top DNS Query Types
+  - Top Destinations
+  - Top Event Types
+  - Top Files
+  - Top IPs
+  - Top Identities
+  - Top Threat Types
+  - Top Threats
+  - Total Requests
+  - Umbrella
+  - Utility
+  properties:
+  - type: OpenAPI
+    url: openapi/cisco-umbrella-reports-reporting-openapi.yml
+  - type: OpenAPI Source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  - type: Documentation
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reporting-overview/
+  - type: APIReference
+    url: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reporting-overview/
+  - type: Overlay
+    url: overlays/cisco-umbrella-reports-reporting-overlay.yaml
 common:
+- type: DomainSecurity
+  url: security/cisco-umbrella-domain-security.yml
+- type: OAuthScopes
+  url: scopes/cisco-umbrella-scopes.yml
+- type: Authentication
+  url: authentication/cisco-umbrella-authentication.yml
+- type: ParentCompany
+  url: https://apis.io/providers/cisco/
+  name: Cisco
+  x-relationship: acquisition
+  x-generated-by: cisco-family:2026-08-19
+  x-acquired: 2015
 - type: Portal
   url: https://umbrella.cisco.com/
 - type: Documentation
   url: https://developer.cisco.com/docs/cloud-security/
 - type: APIReference
   url: https://developer.cisco.com/docs/cloud-security/
-- type: ParentCompany
-  url: https://apis.io/providers/cisco/
-  name: Cisco
-  x-acquired: 2015
-- type: MCPServer
-  url: https://github.com/CiscoDevNet/secure-access-mcp-community
 - type: Portal
   url: https://developer.cisco.com/
+- type: DeveloperPortal
+  url: https://developer.cisco.com/docs/cloud-security/
+- type: GettingStarted
+  url: https://developer.cisco.com/docs/cloud-security/umbrella-api-getting-started/
+- type: Authentication
+  url: https://developer.cisco.com/docs/cloud-security/umbrella-api-authentication/
+- type: StatusPage
+  url: https://status.umbrella.com/
+- type: Support
+  url: https://community.cisco.com/t5/cloud-edge/bd-p/disc-cloud-edge
+- type: HelpCenter
+  url: https://docs.umbrella.com/
+- type: Blog
+  url: https://umbrella.cisco.com/blog
+- type: GitHubOrganization
+  url: https://github.com/CiscoDevNet/cloud-security
+- type: Pricing
+  url: https://umbrella.cisco.com/products/packages
+- type: SignUp
+  url: https://signup.umbrella.com/
+- type: TermsOfService
+  url: https://www.cisco.com/c/en/us/about/legal/cloud-and-software/end_user_license_agreement.html
+- type: PrivacyPolicy
+  url: https://www.cisco.com/c/en/us/about/legal/privacy-full.html
+- type: TrustCenter
+  url: https://trustportal.cisco.com/c/r/ctp/trust-portal.html
+- type: Sandbox
+  url: sandbox/cisco-umbrella-sandbox.yml
+- type: Packages
+  url: packages/cisco-umbrella-packages.yml
+- type: LLMsTxt
+  url: llms/cisco-umbrella-llms.txt
+- type: Conventions
+  url: conventions/cisco-umbrella-conventions.yml
+- type: ChangeLog
+  url: changelog/cisco-umbrella-changelog.yml
+- type: Lifecycle
+  url: lifecycle/cisco-umbrella-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/cisco-umbrella-lifecycle.yml
+- type: Conformance
+  url: conformance/cisco-umbrella-conformance.yml
+- type: Compliance
+  url: conformance/cisco-umbrella-conformance.yml
+- type: ErrorCatalog
+  url: errors/cisco-umbrella-problem-types.yml
+- type: DataModel
+  url: data-model/cisco-umbrella-data-model.yml
+- type: RateLimits
+  url: rate-limits/cisco-umbrella-rate-limits.yml
+- type: Plans
+  url: plans/cisco-umbrella-plans-pricing.yml
+- type: Security
+  url: security/cisco-umbrella-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/cisco-umbrella-vulnerability-disclosure.yml
+- type: SecurityTxt
+  url: well-known/cisco-umbrella-security.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: PostmanCollection
+  url: https://github.com/CiscoDevNet/cloud-security/tree/master/Umbrella/PostmanExamples
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 x-acquired: 2015
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco-umbrella.png
+x-enrichment:
+  date: '2026-08-19'
+  status: enriched
+  artifacts_added: 104
+  pass: local-v1
