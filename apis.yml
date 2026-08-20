@@ -41,6 +41,9 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
   baseURL: https://api.umbrella.com/admin/v2
   tags:
+  - APIKeys
+  - Umbrella
+  tags_raw:
   - API Keys
   - Umbrella
   properties:
@@ -141,6 +144,10 @@ apis:
   tags:
   - Roles
   - Umbrella
+  - User
+  tags_raw:
+  - Roles
+  - Umbrella
   - Users
   properties:
   - type: OpenAPI
@@ -179,6 +186,15 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/cloudlock-api-getting-started/
   baseURL: https://api.cloudlock.com/api/v2
   tags:
+  - Activities
+  - Application
+  - Entities
+  - IP Libraries
+  - Incident Aggregates
+  - Incident Entities
+  - Incidents
+  - Policies
+  tags_raw:
   - Activities
   - Apps
   - Entities
@@ -261,6 +277,11 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-network-tunnels-overview/
   baseURL: https://api.umbrella.com/deployments/v2
   tags:
+  - Data-Center
+  - Debugging
+  - Organization Tunnel
+  - Umbrella
+  tags_raw:
   - Data Center
   - Debugging
   - Organization Tunnel
@@ -508,6 +529,12 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-app-discovery-overview/
   baseURL: https://api.umbrella.com/reports/v2
   tags:
+  - Application Categories
+  - Application
+  - Identities
+  - Protocols
+  - Umbrella
+  tags_raw:
   - Application Categories
   - Applications
   - Identities
