@@ -1,0 +1,237 @@
+slug: cisco-umbrella
+provider: Cisco Umbrella
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 22
+edges:
+- tag: Cisco Secure Malware Analytics Integration
+  spec_file: cisco-umbrella-cisco-secure-malware-analytics-integration-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.82
+  evidence: GET /sample/{hash}/behaviors getSampleHashBehaviors Get Samples for Hash Behaviors; 'Threat
+    intelligence samples by file hash'
+  reason: Malware sample lookups by hash with behaviours, artefacts, connections and AV results — threat
+    intelligence feeding detection and investigation/response.
+- tag: Passive DNS
+  spec_file: cisco-umbrella-passive-dns-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.8
+  evidence: '"Threat intelligence data for domains, IPs, and URLs"; GET /pdns/ip/{ip} "Get Resource Records
+    for IP"'
+  reason: Umbrella Investigate passive DNS lookups are threat-intelligence enrichment used in security
+    investigation, aligning with threat detection and response rather than any DNS-hosting or IT-operations
+    capability.
+- tag: Security Information for a Domain
+  spec_file: cisco-umbrella-security-information-for-a-domain-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.8
+  evidence: GET /security/name/{domain} "Get Security Score Information for Domain"; GET /domains/risk-score/{domain}
+    "Get Risk Score for Domain", schema RiskScore
+  reason: Returns security reputation and risk scoring for domains — core threat intelligence feeding
+    detection and response.
+- tag: Users
+  spec_file: cisco-umbrella-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: '"Manage the Umbrella user accounts and roles." — POST /users createUser; POST /passwordResets/{customerId}'
+  reason: Administration of user accounts, roles and password resets is identity and access management
+    for the security platform.
+- tag: Domain Status and Categorization
+  spec_file: cisco-umbrella-domain-status-and-categorization-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.78
+  evidence: '"Get Domain Status and Categorization"; schemas SecurityCategory, DomainCategorization; description:
+    "Security reputation of a domain ... Threat intelligence data for domains, IPs, and URLs"'
+  reason: Umbrella Investigate returns malicious/benign status, security categories and reputation for
+    domains — threat intelligence feeding detection and response.
+- tag: Summaries by Rule (Intrusion)
+  spec_file: cisco-umbrella-summaries-by-rule-intrusion-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.78
+  evidence: GET /summaries-by-rule/intrusion  getSummariesByRuleIntrusion; schemas "SignatureListSummary",
+    "SignatureList"
+  reason: Intrusion-prevention rule/signature hit reporting is threat detection telemetry (IDS/IPS), squarely
+    Threat Detection & Response within Cybersecurity Management.
+- tag: Top Threats
+  spec_file: cisco-umbrella-top-threats-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.78
+  evidence: GET /top-threats "Get Top Threats (All)"; schema TopThreats
+  reason: Enumerates detected threats from the DNS/web security platform, which is threat detection and
+    response monitoring rather than any business-domain alerting.
+- tag: API Keys
+  spec_file: cisco-umbrella-api-keys-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.75
+  evidence: '"Manage your Umbrella API keys."; POST /apiKeys createAPIKeys; schemas clientId, clientSecret,
+    scopes, allowedIPs'
+  reason: Issuance, refresh, scoping and revocation of OAuth client credentials used by developers to
+    consume the vendor's public API — Developer Identity & Credential Management. Alternative reading
+    as generic IAM is weaker since these are machine API credentials for the platform's API ecosystem.
+- tag: API Usage Report
+  spec_file: cisco-umbrella-api-usage-report-api-openapi.yml
+  capability_id: BC-4270.50
+  capability_id_l1: BC-4270
+  capability_name: API Consumption Governance
+  confidence: 0.75
+  evidence: '"Get the Umbrella API usage reports for an organization."; GET /apiUsage/requests getAPIUsageRequests;
+    GET /apiUsage/summary'
+  reason: Reporting of API request/response volumes per key for an organisation — API consumption analytics,
+    which is the usage-analytics element of API Consumption Governance.
+- tag: Destination Lists
+  spec_file: cisco-umbrella-destination-lists-api-openapi.yml
+  capability_id: BC-620
+  capability_id_l1: BC-620
+  capability_name: Cybersecurity Management
+  confidence: 0.75
+  evidence: '"Create and manage destination lists and destinations." — POST /destinationlists "Create
+    Destination List"'
+  reason: Destination lists are the allow/block lists that drive Umbrella's DNS and web filtering enforcement
+    — a cybersecurity control configuration surface. Kept at L1 because it spans policy definition and
+    threat blocking without clearly naming one L2.
+- tag: Destinations
+  spec_file: cisco-umbrella-destinations-api-openapi.yml
+  capability_id: BC-620
+  capability_id_l1: BC-620
+  capability_name: Cybersecurity Management
+  confidence: 0.75
+  evidence: POST /destinationlists/{destinationListId}/destinations  "Add Destinations to Destination
+    List"
+  reason: Manages the individual blocked/allowed destinations inside Umbrella filtering lists — cybersecurity
+    control configuration. L1 only, as the surface is control-list maintenance rather than a specific
+    named sub-capability.
+- tag: Incident Aggregates
+  spec_file: cisco-umbrella-incident-aggregates-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.75
+  evidence: GET /incidents/aggregates/policies  "List Incident Aggregates Policies"; GET /incidents/aggregates/status;
+    schema IncidentAggregates
+  reason: Cloudlock security/DLP incidents aggregated by policy, status and user — security incident detection
+    and response reporting, not IT service-desk incidents.
+- tag: Top Threat Types
+  spec_file: cisco-umbrella-top-threat-types-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.75
+  evidence: GET /top-threat-types "Get Top Threat Types (All)"; schema TopThreatTypes
+  reason: Reports on threat types detected by the security service — threat detection and monitoring output,
+    i.e. Threat Detection & Response.
+- tag: Activity
+  spec_file: cisco-umbrella-activity-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.72
+  evidence: 'GET /activity/intrusion getActivityIntrusion Get Activity Intrusion; schemas: Threat, verdict,
+    Severity, Signature'
+  reason: Reporting API returning DNS, proxy, firewall, intrusion and AMP-retrospective security event
+    records with verdicts, threats and severities — security event monitoring/detection reporting, i.e.
+    threat detection & response tooling, not generic business activity.
+- tag: Related Domains for a Domain
+  spec_file: cisco-umbrella-related-domains-for-a-domain-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.72
+  evidence: '"The Umbrella Investigate API provides a complete view of domains... Threat intelligence
+    data for domains, IPs, and URLs" — GET /links/name/{domain} "Get Related Domains for Domain"'
+  reason: Threat-intelligence lookup of co-occurring/related domains used in investigation, which sits
+    under threat detection and response.
+- tag: Tagging Timeline
+  spec_file: cisco-umbrella-tagging-timeline-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.72
+  evidence: GET /timeline/{name}  Get Tagging Timeline for Destination — Investigate API provides "Threat
+    intelligence data for domains, IPs, and URLs"
+  reason: Investigate API returns the timeline of security/threat tags applied to a domain, IP or URL
+    — threat intelligence supporting detection and response.
+- tag: WHOIS Information for a Domain
+  spec_file: cisco-umbrella-whois-information-for-a-domain-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.72
+  evidence: '"Threat intelligence data for domains, IPs, and URLs" — GET /whois/{domain}/history getWhoisHistory'
+  reason: WHOIS lookup within the Investigate threat-intelligence API supports investigation of malicious
+    domains — threat detection and response tooling.
+- tag: AS Information for a Domain
+  spec_file: cisco-umbrella-as-information-for-a-domain-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: '"Threat intelligence data for domains, IPs, and URLs"; GET /bgp_routes/ip/{ip}/as_for_ip.json
+    ''Get BGP Route Information for IP'''
+  reason: Investigate API lookups of ASN/BGP routing and reputation data for domains and IPs are threat-intelligence
+    enrichment used in detection and investigation, hence Threat Detection & Response Management. Slight
+    uncertainty because the two operations themselves are pure routing lookups.
+- tag: Incident Entities
+  spec_file: cisco-umbrella-incident-entities-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: GET /incident_entities/{id}  listIncidentEntities  "List Incident Entities"; schemas Entity,
+    IncidentEntity
+  reason: Retrieves the cloud objects implicated in a Cloudlock security incident — investigation detail
+    supporting security incident response.
+- tag: Incidents
+  spec_file: cisco-umbrella-incidents-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: '"The Cloudlock API provides data about an organization''s activities, apps, incidents, and
+    policies." with operations "List Incidents", "Update Incident" and schemas Policy, Match'
+  reason: CASB (Cloudlock) incidents are security policy-violation detections that are triaged and updated
+    — i.e. security detection and response workflow, not IT service incidents or business complaints.
+    Sub-capability choice (threat detection & response vs. security governance) carries some ambiguity,
+    hence moderate confidence.
+- tag: Roles
+  spec_file: cisco-umbrella-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: '"Manage the Umbrella user accounts and roles." — GET /roles "List Roles", schema RoleObject'
+  reason: Administrative role definitions governing user access to the console, i.e. role-based access
+    control under Identity & Access Management.
+- tag: Top Files
+  spec_file: cisco-umbrella-top-files-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: GET /top-files  getTopFilesProxy  Get Top Files (Proxy); schemas TopFile, sha256
+  reason: Reporting of files observed through the secure web proxy keyed by SHA-256 hash — file/malware
+    inspection telemetry supporting threat detection and response.

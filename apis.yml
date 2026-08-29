@@ -19306,6 +19306,9 @@ apis:
     url: >-
       https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-reporting-overview/
 common:
+- type: CapabilityMap
+  url: capabilities/cisco-umbrella-capability-edges.yml
+  name: Cisco Umbrella Business Capability Map
 - type: Overlay
   url: overlays/cisco-umbrella-admin-key-admin-overlay.yaml
 - type: Overlay
