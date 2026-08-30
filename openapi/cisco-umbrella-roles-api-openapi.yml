@@ -1,0 +1,219 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Users Roles API
+  version: 2.0.0
+  description: Manage the Umbrella user accounts and roles.
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: admin/v2
+security:
+- oauthFlow: []
+tags:
+- name: Roles
+paths:
+  /roles:
+    get:
+      tags:
+      - Roles
+      description: List the roles in the organization.
+      summary: List Roles
+      operationId: listRoles
+      security:
+      - oauthFlow:
+        - admin.roles:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleObject'
+              example:
+              - organizationId: 1
+                label: Full Admin
+                roleId: 1
+              - organizationId: 1
+                label: Read Only
+                roleId: 2
+              - organizationId: 1
+                label: Block Page Bypass
+                roleId: 3
+              - organizationId: 1
+                label: Reporting Only
+                roleId: 4
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Server error
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Unauthorized request
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Not Found
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Invalid request
+  schemas:
+    RoleObject:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          description: The ID of the role.
+        label:
+          type: string
+          description: The label for the role.
+        organizationId:
+          type: integer
+          description: The organization ID.
+      required:
+      - roleId
+      - label
+      - organizationId
+      example:
+        organizationId: 1
+        label: Full Admin
+        roleId: 1
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            admin.users:read: Read admin users
+            admin.users:write: Write admin users
+            admin.roles:read: Read admin roles
+            admin.passwordreset:write: Write admin passwords
+            admin.organizations:write: Read admin organizations
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/users-roles.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/users-roles.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

@@ -1,0 +1,248 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Related Domains for a Domain API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Related Domains for a Domain
+paths:
+  /links/name/{domain}:
+    get:
+      summary: Get Related Domains for Domain
+      operationId: getLinksName
+      tags:
+      - Related Domains for a Domain
+      description: 'List the domain names that are frequently requested around
+
+        the same time (up to 60 seconds before or after) as the given domain name,
+
+        but that are not frequently associated with other domain names.'
+      parameters:
+      - $ref: '#/components/parameters/domainParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tb1:
+                    type: array
+                    description: 'The list of domain name and score pairs where score is the number of client IP requests
+
+                      to the site around the same time that the site is looked up.'
+                    items:
+                      type: object
+                      properties:
+                        domain:
+                          type: string
+                          description: A domain name.
+                          example: www.example1.com
+                        score:
+                          type: number
+                          description: 'The number of client IP requests to the site around the same time
+
+                            that the site is looked up.'
+                          example: 10
+                      description: 'A [domain name, score] tuple where score is the number of client IP requests
+
+                        to the site around the same time as the site is looked up.
+
+                        This is a score that reflects the number of client IPs querying related
+
+                        sites within 60 seconds of the original request.'
+                    example:
+                    - domain: www.example1.com
+                      score: 10
+                  found:
+                    type: boolean
+                    description: Specifies whether the results are available.
+                    example: true
+              example:
+                tb1:
+                - domain: www.example1.com
+                  score: 10
+                - domain: info.example2.com
+                  score: 9
+                - domain: support.example.com
+                  score: 3
+                found: true
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

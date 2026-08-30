@@ -1,0 +1,166 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella App Discovery Application Categories API
+  description: 'The App Discovery API provides an overall view of application and protocol activity in your environment
+
+    and the potential risk indicated by this network traffic.'
+  version: 2.0.2
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+tags:
+- name: Application Categories
+paths:
+  /appDiscovery/applicationCategories:
+    get:
+      tags:
+      - Application Categories
+      summary: List Application Categories
+      description: List all application categories.
+      operationId: getApplicationCategories
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/offset'
+      security:
+      - oauthFlow:
+        - reports.appDiscovery:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationCategoryList'
+              example:
+                items:
+                - name: Security
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  headers:
+    Link:
+      schema:
+        type: string
+      description: 'Links to related resources, in the format defined by
+
+        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
+
+        If there is a next page, this header includes a link with relation type
+
+        `next` to the next page.'
+  responses:
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
+  schemas:
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
+    ApplicationCategory:
+      type: object
+      description: The application category information.
+      properties:
+        name:
+          type: string
+          description: The name of the application category.
+          example: Security
+      example:
+        name: Security
+    ApplicationCategoryList:
+      type: object
+      description: The list of application categories.
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationCategory'
+      example:
+        items:
+        - name: Security
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.appDiscovery:write: Write reports app discovery
+            reports.appDiscovery:read: Read reports app discovery
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

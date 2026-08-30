@@ -1,0 +1,459 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Tagging Tag Devices API
+  version: 2.0.0
+  description: Manage the tags and roaming computers with tags in the Umbrella organization.
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: deployments/v2
+security:
+- oauthFlow: []
+tags:
+- name: TagDevices
+  description: Manage the roaming computers in the Umbrella organization that have a tag.
+paths:
+  /tags/{tagId}/devices:
+    get:
+      description: List the roaming computers that have a tag with the specified tag ID.
+      summary: Get Devices With Tag
+      operationId: getDevicesWithTag
+      tags:
+      - TagDevices
+      security:
+      - oauthFlow:
+        - deployments.tagDevices:read
+      parameters:
+      - $ref: '#/components/parameters/limitTagDevices'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/tagId'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/deviceInformation'
+              example:
+              - originId: 384428946
+                organizationId: 3056800
+                label: test1
+                type: roaming/anyconnect
+                createdAt: '2022-04-12T23:20:50.52Z'
+                modifiedAt: '2022-04-12T23:20:50.52Z'
+              - originId: 12345
+                organizationId: 567893
+                label: device-one
+                type: linux
+                createdAt: '2022-04-12T23:20:50.52Z'
+                modifiedAt: '2022-04-12T23:20:50.52Z'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404TagNotFound'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      description: For the tag ID, add the tag to the roaming computers.
+      summary: Add Tag to Devices
+      operationId: addTagToDevices
+      tags:
+      - TagDevices
+      security:
+      - oauthFlow:
+        - deployments.tagDevices:write
+      parameters:
+      - $ref: '#/components/parameters/tagId'
+      requestBody:
+        $ref: '#/components/requestBodies/addOrigins'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/taggedDeviceInformation'
+              example:
+                tagId: 67343
+                addOrigins:
+                - 12321231
+                - 123134314
+                removeOrigins:
+                - 12345678
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404TagNotFound'
+        '500':
+          $ref: '#/components/responses/500Error'
+    delete:
+      description: 'For the tag ID, remove the tag on the roaming computers in the organization.
+
+        After the delete, if the tag is not assigned to any roaming computers in the organization, Umbrella removes the tag from
+
+        the organization. You can recreate the tag for your organization.'
+      summary: Delete Tag on Devices
+      operationId: deleteTagOnDevices
+      tags:
+      - TagDevices
+      security:
+      - oauthFlow:
+        - deployments.tagDevices:write
+      parameters:
+      - $ref: '#/components/parameters/tagId'
+      requestBody:
+        $ref: '#/components/requestBodies/removeOrigins'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/taggedDeviceInformation'
+              example:
+              - tagId: 67343
+                addOrigins:
+                - 12345678
+                removeOrigins:
+                - 12321231
+                - 123134314
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    404TagNotFound:
+      description: Tag Not found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - Error
+            properties:
+              Error:
+                type: string
+            example:
+              Error: object_not_found
+              message: Tag not found
+              code: 404
+              code_text: Not Found
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+  schemas:
+    tagId:
+      type: integer
+      description: The unique ID of the tag.
+      example: 12345678
+    deviceModifiedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella updated the roaming computer in the organization.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 2456789
+    addOrigins:
+      type: array
+      description: The list of roaming computers (origin IDs) that have the tag.
+      items:
+        type: integer
+        description: An origin ID.
+        example: 12345678
+      example:
+      - 12345678
+      - 87654321
+    removeOrigins:
+      type: array
+      description: The list of roaming computers (origin IDs) that have the tag removed.
+      items:
+        type: integer
+        description: An origin Id.
+        example: 12345678
+      example:
+      - 12345678
+      - 87654321
+    deviceCreatedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella added the roaming computer to the organization.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    deviceInformation:
+      type: object
+      description: The information about the device.
+      required:
+      - originId
+      - organizationId
+      - label
+      - type
+      - createdAt
+      - modifiedAt
+      properties:
+        originId:
+          $ref: '#/components/schemas/originId'
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+        label:
+          $ref: '#/components/schemas/label'
+        type:
+          $ref: '#/components/schemas/type'
+        createdAt:
+          $ref: '#/components/schemas/deviceCreatedAt'
+        modifiedAt:
+          $ref: '#/components/schemas/deviceModifiedAt'
+      example:
+        originId: 12345
+        organizationId: 567893
+        label: device-one
+        type: linux
+        createdAt: '2022-04-12T23:20:50.52Z'
+        modifiedAt: '2022-04-12T23:20:50.52Z'
+    taggedDeviceInformation:
+      type: object
+      description: "The information about the tagged devices:\ntag ID, origin IDs in the organization that have the tag on the roaming computers, and \norigin IDs in the organization that have the tag removed from the roaming computers."
+      required:
+      - tagId
+      - addOrigins
+      - removeOrigins
+      properties:
+        tagId:
+          $ref: '#/components/schemas/tagId'
+        addOrigins:
+          $ref: '#/components/schemas/addOrigins'
+        removeOrigins:
+          $ref: '#/components/schemas/removeOrigins'
+    label:
+      type: string
+      description: The display name of the device.
+      example: device-one
+    type:
+      type: string
+      description: The device type.
+      example: macOS
+    originId:
+      type: integer
+      description: The unique identifier of the device.
+      example: 2456
+  requestBodies:
+    removeOrigins:
+      description: 'Remove the tag on the roaming computers. Provide a list of roaming computer origin IDs.
+
+        The request body can include at most 500 origin IDs.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              removeOrigins:
+                $ref: '#/components/schemas/removeOrigins'
+          example:
+            removeOrigins:
+            - 12321231
+            - 123134314
+    addOrigins:
+      description: 'Add the tag to the roaming computers. Provide a list of roaming computer origin IDs.
+
+        The request body can include at most 500 origin IDs.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              addOrigins:
+                $ref: '#/components/schemas/addOrigins'
+          example:
+            addOrigins:
+            - 12321231
+            - 123134314
+  parameters:
+    limitTagDevices:
+      name: limit
+      description: The number of roaming computers with the tag ID to return from the collection in the response.
+      schema:
+        type: integer
+        default: 10
+        maximum: 500
+      in: query
+      required: false
+      example: 350
+    page:
+      name: page
+      description: The number of a page in the collection.
+      schema:
+        type: integer
+        default: 1
+      in: query
+      required: false
+      example: 2
+    tagId:
+      name: tagId
+      in: path
+      description: The ID of the tag.
+      required: true
+      schema:
+        type: integer
+      example: 2
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            deployments.tags:read: Tags read access
+            deployments.tags:write: Tags write access
+            deployments.tagDevices:read: Tagged devices read access
+            deployments.tagDevices:write: Tagged devices write access
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/tagging.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/tagging.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

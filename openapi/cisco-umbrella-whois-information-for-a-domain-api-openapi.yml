@@ -1,0 +1,1394 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate WHOIS Information for a Domain API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: WHOIS Information for a Domain
+paths:
+  /whois/{domain}:
+    get:
+      summary: Get WHOIS Information for Domain
+      operationId: getWhois
+      tags:
+      - WHOIS Information for a Domain
+      description: 'Get the WHOIS information for the specified email addresses,
+
+        nameservers, and domains. You can search by multiple email addresses or multiple nameservers.
+
+        This documentation outlines the following API endpoints:
+
+        email (single and multiple), domain record (current and historical), and nameserver (single and multiple).
+
+        In some instances, WHOIS information can be irregular as there are no standards
+
+        between domain registrars and large volumes of information can be returned from a query.
+
+        As such, both the email and nameserver WHOIS endpoints have a limit of 500 results,
+
+        which you can reduce to a smaller set of results.
+
+        There is an `offset` parameter that can be leveraged to retrieve the entire set
+
+        of domain entries for a given email without any limitation. Only the email parameter
+
+        supports this.
+
+        You can sort the email parameter by filtering the entries based on the timestamp field.
+
+        If a domain, email, or nameserver has no known WHOIS information, Investigate returns `HTTP 404`.
+
+        If a domain, email or nameserver does not exist, Investigate returns `HTTP 404`.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/domain'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of WHOIS information.
+                items:
+                  $ref: '#/components/schemas/WhoisDomain'
+              example:
+              - administrativeContactFax: ''
+                whoisServers: ''
+                addresses:
+                - 1600 amphitheatre parkway
+                - please contact contact-admin@google.com, 1600 amphitheatre parkway
+                - 2400 e. bayshore pkwy
+                administrativeContactName: DNS Admin
+                zoneContactEmail: ''
+                billingContactFax: ''
+                administrativeContactTelephoneExt: ''
+                administrativeContactEmail: dns-admin@google.com
+                technicalContactEmail: dns-admin@google.com
+                technicalContactFax: '16506181499'
+                nameServers:
+                - ns1.google.com
+                - ns2.google.com
+                - ns3.google.com
+                - ns4.google.com
+                zoneContactName: ''
+                billingContactPostalCode: ''
+                zoneContactFax: ''
+                registrantTelephoneExt: ''
+                zoneContactFaxExt: ''
+                technicalContactTelephoneExt: ''
+                billingContactCity: ''
+                zoneContactStreet: []
+                created: ''
+                administrativeContactCity: Mountain View
+                registrantName: Dns Admin
+                zoneContactCity: ''
+                domainName: google.com
+                zoneContactPostalCode: ''
+                administrativeContactFaxExt: ''
+                technicalContactCountry: UNITED STATES
+                registrarIANAID: '292'
+                updated: 2011-07-20 00:00:00 UTC
+                administrativeContactStreet:
+                - 1600 amphitheatre parkway
+                billingContactEmail: ''
+                status:
+                - clientDeleteProhibited
+                - clientTransferProhibited
+                - clientUpdateProhibited
+                - serverDeleteProhibited
+                - serverTransferProhibited
+                - serverUpdateProhibited
+                registrantCity: Mountain View
+                billingContactCountry: ''
+                expires: 2020-09-14 00:00:00 UTC
+                technicalContactStreet:
+                - 2400 e. bayshore pkwy
+                registrantOrganization: Google Inc.
+                billingContactStreet: []
+                registrarName: MARKMONITOR INC.
+                registrantPostalCode: '94043'
+                zoneContactTelephone: ''
+                registrantEmail: dns-admin@google.com
+                technicalContactFaxExt: ''
+                technicalContactOrganization: Google Inc.
+                emails:
+                - dns-admin@google.com
+                registrantStreet:
+                - please contact contact-admin@google.com
+                - 1600 amphitheatre parkway
+                technicalContactTelephone: '16503300100'
+                technicalContactState: CA
+                technicalContactCity: Mountain View
+                registrantFax: '16506188571'
+                registrantCountry: UNITED STATES
+                billingContactFaxExt: ''
+                timestamp: 0
+                zoneContactOrganization: ''
+                administrativeContactCountry: UNITED STATES
+                billingContactName: ''
+                registrantState: CA
+                registrantTelephone: '16502530000'
+                administrativeContactState: CA
+                registrantFaxExt: ''
+                technicalContactPostalCode: '94043'
+                rawBase64: ''
+                zoneContctTelephoneExt: ''
+                administrativeContactOrganization: Google Inc.
+                billingContactTelephone: ''
+                billingContactTelephoneExt: ''
+                zoneContactState: ''
+                administrativeContactTelephone: '16506234000'
+                billingContactOrganization: ''
+                technicalContactName: DNS Admin
+                administrativeContactPostalCode: '94043'
+                zoneContactCountry: ''
+                billingContactState: ''
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /whois/{domain}/history:
+    get:
+      summary: Get WHOIS History for Domain
+      operationId: getWhoisHistory
+      tags:
+      - WHOIS Information for a Domain
+      description: 'Get a standard WHOIS response record for a single domain with available historical
+
+        WHOIS data returned in an object. The information displayed varies by registrant.
+
+        The default limit for history is 10. You can set another value with the `limit` query parameter.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/domain'
+      - $ref: '#/components/parameters/limitParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of WHOIS information.
+                items:
+                  $ref: '#/components/schemas/WhoisDomain'
+              example:
+              - administrativeContactFax: ''
+                whoisServers: ''
+                addresses:
+                - 1600 amphitheatre parkway
+                - please contact contact-admin@google.com, 1600 amphitheatre parkway
+                - 2400 e. bayshore pkwy
+                administrativeContactName: DNS Admin
+                zoneContactEmail: ''
+                billingContactFax: ''
+                administrativeContactTelephoneExt: ''
+                administrativeContactEmail: dns-admin@google.com
+                technicalContactEmail: dns-admin@google.com
+                technicalContactFax: '16506181499'
+                nameServers:
+                - ns1.google.com
+                - ns2.google.com
+                - ns3.google.com
+                - ns4.google.com
+                zoneContactName: ''
+                billingContactPostalCode: ''
+                zoneContactFax: ''
+                registrantTelephoneExt: ''
+                zoneContactFaxExt: ''
+                technicalContactTelephoneExt: ''
+                billingContactCity: ''
+                zoneContactStreet: []
+                created: ''
+                administrativeContactCity: Mountain View
+                registrantName: Dns Admin
+                zoneContactCity: ''
+                domainName: google.com
+                zoneContactPostalCode: ''
+                administrativeContactFaxExt: ''
+                technicalContactCountry: UNITED STATES
+                registrarIANAID: '292'
+                updated: 2011-07-20 00:00:00 UTC
+                administrativeContactStreet:
+                - 1600 amphitheatre parkway
+                billingContactEmail: ''
+                status:
+                - clientDeleteProhibited
+                - clientTransferProhibited
+                - clientUpdateProhibited
+                - serverDeleteProhibited
+                - serverTransferProhibited
+                - serverUpdateProhibited
+                registrantCity: Mountain View
+                billingContactCountry: ''
+                expires: 2020-09-14 00:00:00 UTC
+                technicalContactStreet:
+                - 2400 e. bayshore pkwy
+                registrantOrganization: Google Inc.
+                billingContactStreet: []
+                registrarName: MARKMONITOR INC.
+                registrantPostalCode: '94043'
+                zoneContactTelephone: ''
+                registrantEmail: dns-admin@google.com
+                technicalContactFaxExt: ''
+                technicalContactOrganization: Google Inc.
+                emails:
+                - dns-admin@google.com
+                registrantStreet:
+                - please contact contact-admin@google.com
+                - 1600 amphitheatre parkway
+                technicalContactTelephone: '16503300100'
+                technicalContactState: CA
+                technicalContactCity: Mountain View
+                registrantFax: '16506188571'
+                registrantCountry: UNITED STATES
+                billingContactFaxExt: ''
+                timestamp: 0
+                zoneContactOrganization: ''
+                administrativeContactCountry: UNITED STATES
+                billingContactName: ''
+                registrantState: CA
+                registrantTelephone: '16502530000'
+                administrativeContactState: CA
+                registrantFaxExt: ''
+                technicalContactPostalCode: '94043'
+                rawBase64: ''
+                zoneContctTelephoneExt: ''
+                administrativeContactOrganization: Google Inc.
+                billingContactTelephone: ''
+                billingContactTelephoneExt: ''
+                zoneContactState: ''
+                administrativeContactTelephone: '16506234000'
+                billingContactOrganization: ''
+                technicalContactName: DNS Admin
+                administrativeContactPostalCode: '94043'
+                zoneContactCountry: ''
+                billingContactState: ''
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /whois/nameservers/{nameserver}:
+    get:
+      summary: Get WHOIS Information for Nameserver
+      operationId: getWhoisNameserver
+      tags:
+      - WHOIS Information for a Domain
+      description: 'Get WHOIS information for the nameserver.
+
+        As a nameserver can potentially register hundreds or thousands of domains,
+
+        the server limits the number of results to 500.'
+      parameters:
+      - name: nameserver
+        in: path
+        required: true
+        description: The nameserver's domain name.
+        schema:
+          type: string
+        example: nameserver1.com
+      - name: limit
+        in: query
+        required: false
+        description: 'Specify the number of records to return from the collection.
+
+          The default limit is 500.'
+        schema:
+          type: integer
+          default: 500
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortFieldParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The WHOIS email and nameserver information.
+                properties:
+                  totalResults:
+                    type: integer
+                    description: The total number of WHOIS records found for this query.
+                  moreDataAvailable:
+                    $ref: '#/components/schemas/moreDataAvailable'
+                  limit:
+                    $ref: '#/components/schemas/limit'
+                  sortField:
+                    type: string
+                    description: The field that is used to sort the collection.
+                    example: updated
+                  domains:
+                    type: array
+                    description: The list of information about the WHOIS emails and nameservers.
+                    items:
+                      $ref: '#/components/schemas/WhoisEmailsAndNameservers'
+                    example:
+                    - domain: 46645.biz
+                      current: true
+              example:
+                totalResults: 500
+                moreDataAvailable: true
+                limit: 500
+                sortField: updated
+                domains:
+                - domain: 46645.biz
+                  current: true
+                - domain: 800google411.net
+                  current: true
+                - domain: zagatnyc.com
+                  current: true
+                - domain: zavers.com
+                  current: true
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /whois/nameservers:
+    get:
+      summary: Get WHOIS Information for Nameservers
+      operationId: getWhoisNameservers
+      tags:
+      - WHOIS Information for a Domain
+      description: 'Get WHOIS information for the nameservers. To search by multiple nameservers, provide
+
+        a comma-delimited list of domain names for the `nameServerList` query parameter.
+
+        For example: `ns1.google.com,ns2.google.com`.'
+      parameters:
+      - name: nameServerList
+        in: query
+        required: true
+        description: The nameserver's domain names.
+        schema:
+          type: string
+          description: The list of the nameserver's domain names.
+        example: ns1.google.com,ns2.google.com
+      - name: limit
+        in: query
+        required: false
+        description: 'The number of records to return in the response from the collection.
+
+          The default limit is 500.'
+        schema:
+          type: integer
+          default: 500
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortFieldParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The WHOIS information about the nameservers.
+                properties:
+                  totalResults:
+                    $ref: '#/components/schemas/totalresults'
+                  moreDataAvailable:
+                    $ref: '#/components/schemas/moreDataAvailable'
+                  limit:
+                    $ref: '#/components/schemas/limit'
+                  sortField:
+                    type: string
+                    description: The field that is used to sort the collection.
+                    example: updated
+                  domains:
+                    type: array
+                    description: The list of WHOIS nameserver domain information.
+                    items:
+                      $ref: '#/components/schemas/WhoisEmailsAndNameservers'
+                    example:
+                    - domain: 46645.biz
+                      current: true
+              example:
+                totalResults: 500
+                moreDataAvailable: true
+                limit: 500
+                sortField: updated
+                domains:
+                - domain: 46645.biz
+                  current: true
+                - domain: 800google411.net
+                  current: true
+                - domain: zagatnyc.com
+                  current: true
+                - domain: zavers.com
+                  current: true
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /whois/emails/{email}:
+    get:
+      summary: Get WHOIS Email Information
+      operationId: getWhoisEmail
+      tags:
+      - WHOIS Information for a Domain
+      description: 'Get the email address or addresses of the registrar for the domain or domains. The results include
+
+        the total number of results for domains registered by this email address and a list
+
+        of the first 500 domains associated with this email.
+
+        You can pivot on the email address to find other malicious domains registered by the same email.
+
+        This endpoint is limited to a maximum of 500 results, which are the first 500 gathered from the database.
+
+        Reduce the number of results by setting the `limit` query parameter.
+
+        **Note:** Due to the sample length, Investigate may truncate a sample.'
+      parameters:
+      - name: email
+        in: path
+        required: true
+        description: An email address that follows the RFC5322 conventions.
+        schema:
+          type: string
+        example: hello@sample.com
+      - name: limit
+        in: query
+        required: false
+        description: 'Specify the number of results to return.
+
+          The default limit is 500.'
+        example: 400
+        schema:
+          type: integer
+          default: 500
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortFieldParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalResults:
+                    type: integer
+                    description: The total number of results for this email address.
+                    example: 400
+                  offset:
+                    $ref: '#/components/schemas/offset'
+                  moreDataAvailable:
+                    type: boolean
+                    description: Specifies whether there is more than 500 results for this email.
+                    example: true
+                  limit:
+                    type: integer
+                    description: 'The number of results returned in the response. The default
+
+                      limit is 500.'
+                  sortField:
+                    type: string
+                    description: The field that is used to sort the collection.
+                    example: updated
+                  domains:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WhoisEmailsAndNameservers'
+                    description: 'The list of domains registered by this email and if the domain is currently registered
+
+                      by this email address.'
+                    example:
+                    - domain: 0emm.com
+                      current: true
+              example:
+                totalResults: 500
+                moreDataAvailable: true
+                limit: 500
+                sortField: updated
+                domains:
+                - domain: 0emm.com
+                  current: true
+                - domain: 10tothe100.net
+                  current: true
+                - domain: youtubube.com
+                  current: true
+                - domain: zagat.net
+                  current: true
+                - domain: zagatnyc.com
+                  current: true
+                - domain: zavers.com
+                  current: true
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /whois/search/{searchField}/{regexExpression}:
+    get:
+      summary: Get WHOIS Information Search
+      operationId: getWhoisSearch
+      tags:
+      - WHOIS Information for a Domain
+      description: 'Performs a regular expression (RegEx) search on the WHOIS data (domain, nameserver, and email fields)
+
+        that was updated or created in the specified time range.
+
+        Returns a list of ten WHOIS records that match the specified RegEx expression.
+
+        Use the `offset` query parameter to paginate the collection.
+
+        By default, Investigate sorts by the `updated` field.
+
+        '
+      parameters:
+      - name: searchField
+        in: path
+        required: true
+        description: 'Specifies the field name to use in the RegEx search.
+
+          Valid field names are: `domain`, `nameserver`, and `email`.'
+        schema:
+          type: string
+          enum:
+          - domain
+          - nameserver
+          - email
+        example: domain
+      - name: regexExpression
+        in: path
+        required: true
+        description: A standard regular expression pattern search.
+        schema:
+          type: string
+        example: exa[a-z]ple.com
+      - $ref: '#/components/parameters/start'
+      - $ref: '#/components/parameters/stop'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortFieldParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The WHOIS information for a domain.
+                properties:
+                  totalResults:
+                    type: integer
+                    description: The total number of results for this search.
+                    example: 500
+                  offset:
+                    $ref: '#/components/schemas/offset'
+                  moreDataAvailable:
+                    type: boolean
+                    description: Specifies whether there is more than 10 results for this search.
+                    example: true
+                  limit:
+                    type: integer
+                    description: The total number of results for this page. Default limit is 10.
+                    example: 15
+                  sortField:
+                    type: string
+                    description: The field that is used to sort the collection.
+                    example: updated
+                  records:
+                    type: array
+                    description: The list of WHOIS records.
+                    items:
+                      $ref: '#/components/schemas/WhoisDomain'
+                    example:
+                    - administrativeContactFax: ''
+                      whoisServers: ''
+                      addresses:
+                      - 1600 amphitheatre parkway
+                      - please contact contact-admin@google.com, 1600 amphitheatre parkway
+                      - 2400 e. bayshore pkwy
+                      administrativeContactName: DNS Admin
+                      zoneContactEmail: ''
+                      billingContactFax: ''
+                      administrativeContactTelephoneExt: ''
+                      administrativeContactEmail: dns-admin@google.com
+                      technicalContactEmail: dns-admin@google.com
+                      technicalContactFax: '16506181499'
+                      nameServers:
+                      - ns1.google.com
+                      - ns2.google.com
+                      - ns3.google.com
+                      - ns4.google.com
+                      zoneContactName: ''
+                      billingContactPostalCode: ''
+                      zoneContactFax: ''
+                      registrantTelephoneExt: ''
+                      zoneContactFaxExt: ''
+                      technicalContactTelephoneExt: ''
+                      billingContactCity: ''
+                      zoneContactStreet: []
+                      created: ''
+                      administrativeContactCity: Mountain View
+                      registrantName: Dns Admin
+                      zoneContactCity: ''
+                      domainName: google.com
+                      zoneContactPostalCode: ''
+                      administrativeContactFaxExt: ''
+                      technicalContactCountry: UNITED STATES
+                      registrarIANAID: '292'
+                      updated: 2011-07-20 00:00:00 UTC
+                      administrativeContactStreet:
+                      - 1600 amphitheatre parkway
+                      billingContactEmail: ''
+                      status:
+                      - clientDeleteProhibited
+                      - clientTransferProhibited
+                      - clientUpdateProhibited
+                      - serverDeleteProhibited
+                      - serverTransferProhibited
+                      - serverUpdateProhibited
+                      registrantCity: Mountain View
+                      billingContactCountry: ''
+                      expires: 2020-09-14 00:00:00 UTC
+                      technicalContactStreet:
+                      - 2400 e. bayshore pkwy
+                      registrantOrganization: Google Inc.
+                      billingContactStreet: []
+                      registrarName: MARKMONITOR INC.
+                      registrantPostalCode: '94043'
+                      zoneContactTelephone: ''
+                      registrantEmail: dns-admin@google.com
+                      technicalContactFaxExt: ''
+                      technicalContactOrganization: Google Inc.
+                      emails:
+                      - dns-admin@google.com
+                      registrantStreet:
+                      - please contact contact-admin@google.com
+                      - 1600 amphitheatre parkway
+                      technicalContactTelephone: '16503300100'
+                      technicalContactState: CA
+                      technicalContactCity: Mountain View
+                      registrantFax: '16506188571'
+                      registrantCountry: UNITED STATES
+                      billingContactFaxExt: ''
+                      timestamp: 0
+                      zoneContactOrganization: ''
+                      administrativeContactCountry: UNITED STATES
+                      billingContactName: ''
+                      registrantState: CA
+                      registrantTelephone: '16502530000'
+                      administrativeContactState: CA
+                      registrantFaxExt: ''
+                      technicalContactPostalCode: '94043'
+                      rawBase64: ''
+                      zoneContctTelephoneExt: ''
+                      administrativeContactOrganization: Google Inc.
+                      billingContactTelephone: ''
+                      billingContactTelephoneExt: ''
+                      zoneContactState: ''
+                      administrativeContactTelephone: '16506234000'
+                      billingContactOrganization: ''
+                      technicalContactName: DNS Admin
+                      administrativeContactPostalCode: '94043'
+                      zoneContactCountry: ''
+                      billingContactState: ''
+              example:
+                totalResults: 500
+                offset: 0
+                moreDataAvailable: true
+                limit: 10
+                sortField: updated
+                records:
+                - administrativeContactFax: ''
+                  whoisServers: ''
+                  addresses:
+                  - 1600 amphitheatre parkway
+                  - please contact contact-admin@google.com, 1600 amphitheatre parkway
+                  - 2400 e. bayshore pkwy
+                  administrativeContactName: DNS Admin
+                  zoneContactEmail: ''
+                  billingContactFax: ''
+                  administrativeContactTelephoneExt: ''
+                  administrativeContactEmail: dns-admin@google.com
+                  technicalContactEmail: dns-admin@google.com
+                  technicalContactFax: '16506181499'
+                  nameServers:
+                  - ns1.google.com
+                  - ns2.google.com
+                  - ns3.google.com
+                  - ns4.google.com
+                  zoneContactName: ''
+                  billingContactPostalCode: ''
+                  zoneContactFax: ''
+                  registrantTelephoneExt: ''
+                  zoneContactFaxExt: ''
+                  technicalContactTelephoneExt: ''
+                  billingContactCity: ''
+                  zoneContactStreet: []
+                  created: ''
+                  administrativeContactCity: Mountain View
+                  registrantName: Dns Admin
+                  zoneContactCity: ''
+                  domainName: google.com
+                  zoneContactPostalCode: ''
+                  administrativeContactFaxExt: ''
+                  technicalContactCountry: UNITED STATES
+                  registrarIANAID: '292'
+                  updated: 2011-07-20 00:00:00 UTC
+                  administrativeContactStreet:
+                  - 1600 amphitheatre parkway
+                  billingContactEmail: ''
+                  status:
+                  - clientDeleteProhibited
+                  - clientTransferProhibited
+                  - clientUpdateProhibited
+                  - serverDeleteProhibited
+                  - serverTransferProhibited
+                  - serverUpdateProhibited
+                  registrantCity: Mountain View
+                  billingContactCountry: ''
+                  expires: 2020-09-14 00:00:00 UTC
+                  technicalContactStreet:
+                  - 2400 e. bayshore pkwy
+                  registrantOrganization: Google Inc.
+                  billingContactStreet: []
+                  registrarName: MARKMONITOR INC.
+                  registrantPostalCode: '94043'
+                  zoneContactTelephone: ''
+                  registrantEmail: dns-admin@google.com
+                  technicalContactFaxExt: ''
+                  technicalContactOrganization: Google Inc.
+                  emails:
+                  - dns-admin@google.com
+                  registrantStreet:
+                  - please contact contact-admin@google.com
+                  - 1600 amphitheatre parkway
+                  technicalContactTelephone: '16503300100'
+                  technicalContactState: CA
+                  technicalContactCity: Mountain View
+                  registrantFax: '16506188571'
+                  registrantCountry: UNITED STATES
+                  billingContactFaxExt: ''
+                  timestamp: 0
+                  zoneContactOrganization: ''
+                  administrativeContactCountry: UNITED STATES
+                  billingContactName: ''
+                  registrantState: CA
+                  registrantTelephone: '16502530000'
+                  administrativeContactState: CA
+                  registrantFaxExt: ''
+                  technicalContactPostalCode: '94043'
+                  rawBase64: ''
+                  zoneContctTelephoneExt: ''
+                  administrativeContactOrganization: Google Inc.
+                  billingContactTelephone: ''
+                  billingContactTelephoneExt: ''
+                  zoneContactState: ''
+                  administrativeContactTelephone: '16506234000'
+                  billingContactOrganization: ''
+                  technicalContactName: DNS Admin
+                  administrativeContactPostalCode: '94043'
+                  zoneContactCountry: ''
+                  billingContactState: ''
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+  responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    WhoisDomain:
+      type: object
+      description: A standard WHOIS response record for a single domain.
+      properties:
+        administrativeContactFax:
+          type: string
+        whoisServers:
+          type: string
+        addresses:
+          type: array
+          items:
+            type: string
+        administrativeContactName:
+          type: string
+        zoneContactEmail:
+          type: string
+        billingContactFax:
+          type: string
+        administrativeContactTelephoneExt:
+          type: string
+        administrativeContactEmail:
+          type: string
+        technicalContactEmail:
+          type: string
+        technicalContactFax:
+          type: string
+        nameServers:
+          type: array
+          items:
+            type: string
+        zoneContactName:
+          type: string
+        billingContactPostalCode:
+          type: string
+        zoneContactFax:
+          type: string
+        registrantTelephoneExt:
+          type: string
+        zoneContactFaxExt:
+          type: string
+        technicalContactTelephoneExt:
+          type: string
+        billingContactCity:
+          type: string
+        zoneContactStreet:
+          type: array
+          items:
+            type: string
+        created:
+          type: string
+        administrativeContactCity:
+          type: string
+        registrantName:
+          type: string
+        zoneContactCity:
+          type: string
+        domainName:
+          type: string
+        zoneContactPostalCode:
+          type: string
+        administrativeContactFaxExt:
+          type: string
+        technicalContactCountry:
+          type: string
+        registrarIANAID:
+          type: string
+        updated:
+          type: string
+        administrativeContactStreet:
+          type: array
+          items:
+            type: string
+        billingContactEmail:
+          type: string
+        status:
+          type: array
+          items:
+            type: string
+        registrantCity:
+          type: string
+        billingContactCountry:
+          type: string
+        expires:
+          type: string
+        technicalContactStreet:
+          type: array
+          items:
+            type: string
+        registrantOrganization:
+          type: string
+        billingContactStreet:
+          type: array
+          items:
+            type: string
+        registrarName:
+          type: string
+        registrantPostalCode:
+          type: string
+        zoneContactTelephone:
+          type: string
+        registrantEmail:
+          type: string
+        technicalContactFaxExt:
+          type: string
+        technicalContactOrganization:
+          type: string
+        emails:
+          type: array
+          items:
+            type: string
+        registrantStreet:
+          type: array
+          items:
+            type: string
+        technicalContactTelephone:
+          type: string
+        technicalContactState:
+          type: string
+        technicalContactCity:
+          type: string
+        registrantFax:
+          type: string
+        registrantCountry:
+          type: string
+        billingContactFaxExt:
+          type: string
+        timestamp:
+          type: integer
+        zoneContactOrganization:
+          type: string
+        administrativeContactCountry:
+          type: string
+        billingContactName:
+          type: string
+        registrantState:
+          type: string
+        registrantTelephone:
+          type: string
+        administrativeContactState:
+          type: string
+        registrantFaxExt:
+          type: string
+        technicalContactPostalCode:
+          type: string
+        zoneContactTelephoneExt:
+          type: string
+        administrativeContactOrganization:
+          type: string
+        billingContactTelephone:
+          type: string
+        billingContactTelephoneExt:
+          type: string
+        zoneContactState:
+          type: string
+        administrativeContactTelephone:
+          type: string
+        billingContactOrganization:
+          type: string
+        technicalContactName:
+          type: string
+        administrativeContactPostalCode:
+          type: string
+        zoneContactCountry:
+          type: string
+        billingContactState:
+          type: string
+        auditUpdatedDate:
+          type: string
+      example:
+        administrativeContactFax: ''
+        whoisServers: ''
+        addresses:
+        - 1600 amphitheatre parkway
+        - please contact contact-admin@google.com, 1600 amphitheatre parkway
+        - 2400 e. bayshore pkwy
+        administrativeContactName: DNS Admin
+        zoneContactEmail: ''
+        billingContactFax: ''
+        administrativeContactTelephoneExt: ''
+        administrativeContactEmail: dns-admin@google.com
+        technicalContactEmail: dns-admin@google.com
+        technicalContactFax: '16506181499'
+        nameServers:
+        - ns1.google.com
+        - ns2.google.com
+        - ns3.google.com
+        - ns4.google.com
+        zoneContactName: ''
+        billingContactPostalCode: ''
+        zoneContactFax: ''
+        registrantTelephoneExt: ''
+        zoneContactFaxExt: ''
+        technicalContactTelephoneExt: ''
+        billingContactCity: ''
+        zoneContactStreet: []
+        created: ''
+        administrativeContactCity: Mountain View
+        registrantName: Dns Admin
+        zoneContactCity: ''
+        domainName: google.com
+        zoneContactPostalCode: ''
+        administrativeContactFaxExt: ''
+        technicalContactCountry: UNITED STATES
+        registrarIANAID: '292'
+        updated: 2011-07-20 00:00:00 UTC
+        administrativeContactStreet:
+        - 1600 amphitheatre parkway
+        billingContactEmail: ''
+        status:
+        - clientDeleteProhibited
+        - clientTransferProhibited
+        - clientUpdateProhibited
+        - serverDeleteProhibited
+        - serverTransferProhibited
+        - serverUpdateProhibited
+        registrantCity: Mountain View
+        billingContactCountry: ''
+        expires: 2020-09-14 00:00:00 UTC
+        technicalContactStreet:
+        - 2400 e. bayshore pkwy
+        registrantOrganization: Google Inc.
+        billingContactStreet: []
+        registrarName: MARKMONITOR INC.
+        registrantPostalCode: '94043'
+        zoneContactTelephone: ''
+        registrantEmail: dns-admin@google.com
+        technicalContactFaxExt: ''
+        technicalContactOrganization: Google Inc.
+        emails:
+        - dns-admin@google.com
+        registrantStreet:
+        - please contact contact-admin@google.com
+        - 1600 amphitheatre parkway
+        technicalContactTelephone: '16503300100'
+        technicalContactState: CA
+        technicalContactCity: Mountain View
+        registrantFax: '16506188571'
+        registrantCountry: UNITED STATES
+        billingContactFaxExt: ''
+        timestamp: 0
+        zoneContactOrganization: ''
+        administrativeContactCountry: UNITED STATES
+        billingContactName: ''
+        registrantState: CA
+        registrantTelephone: '16502530000'
+        administrativeContactState: CA
+        registrantFaxExt: ''
+        technicalContactPostalCode: '94043'
+        rawBase64: ''
+        zoneContctTelephoneExt: ''
+        administrativeContactOrganization: Google Inc.
+        billingContactTelephone: ''
+        billingContactTelephoneExt: ''
+        zoneContactState: ''
+        administrativeContactTelephone: '16506234000'
+        billingContactOrganization: ''
+        technicalContactName: DNS Admin
+        administrativeContactPostalCode: '94043'
+        zoneContactCountry: ''
+        billingContactState: ''
+    moreDataAvailable:
+      type: boolean
+      description: Specifies whether more samples are available for the destination.
+      example: true
+    limit:
+      type: integer
+      description: The maximum number of records to include in the response.
+      format: int64
+      example: 100
+    WhoisEmailsAndNameservers:
+      type: object
+      description: The information about the WHOIS email and nameserver.
+      properties:
+        domain:
+          type: string
+          description: The domain name.
+          example: zayget2.com
+        current:
+          type: boolean
+          description: Specifies whether the domain name is current.
+          example: true
+    totalresults:
+      type: integer
+      description: The total number of samples.
+      format: int64
+      example: 1000
+    offset:
+      type: integer
+      description: The place to start reading in the collection.
+      format: int64
+      default: 0
+      example: 5
+  parameters:
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
+    stop:
+      name: stop
+      in: query
+      required: false
+      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
+
+        Filter for data that appears before this time.
+
+        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
+      schema:
+        type: string
+      example: now
+    domain:
+      name: domain
+      in: path
+      required: true
+      description: The domain name without wildcards and including the top-level domain (TLD).
+      schema:
+        type: string
+      example: store.cisco.com
+    start:
+      name: start
+      in: query
+      required: true
+      description: 'Specifies a relative or absolute start time. If specifying an absolute time,
+
+        use an epoch time (Unix time) millisecond timestamp within the last 30 days.
+
+        Filter for data that appears after this time.
+
+        If specifying a relative time, use either seconds, minutes, hours, days
+
+        or weeks with a minus sign in front.
+
+        As an example, -1days, -1000minutes, or -2weeks are all valid.
+
+        You cannot combine timestamps. Only use one of the relative time enumerators per query.'
+      schema:
+        type: string
+      example: -1days
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of items to return in the response from the collection. The default limit is 10.
+
+        Increase the limit to request a larger set of data.'
+      schema:
+        type: integer
+        default: 10
+      example: 25
+    sortFieldParam:
+      name: sortField
+      in: query
+      required: false
+      description: 'Valid values are: `created`, `updated`, `expires`, or `domainname`.'
+      schema:
+        type: string
+        enum:
+        - created
+        - updated
+        - expires
+        - domainname
+      example: created
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

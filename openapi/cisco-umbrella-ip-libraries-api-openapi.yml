@@ -1,0 +1,425 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock IP Libraries API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: IP Libraries
+paths:
+  /ip/suspicious:
+    delete:
+      tags:
+      - IP Libraries
+      description: 'Remove custom, organization-defined, or suspicious IP addresses from
+
+        the collection.'
+      operationId: deleteEntriesIpSuspicious
+      summary: Delete Multiple Entries
+      parameters:
+      - description: List of entry IDs to delete.
+        in: query
+        name: ids
+        required: true
+        schema:
+          type: string
+      - description: e.g. /ip/suspicious/?ids=J83euASvnDF,6yj3gQxaqo
+        example: /ip/suspicious/?ids=J83euASvnDF,6yj3gQxaqo
+        in: header
+        name: Location
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    get:
+      tags:
+      - IP Libraries
+      description: List an organization's suspicious IP feeds.
+      operationId: listEntriesIpSuspicious
+      summary: List IP Suspicious Entries
+      parameters:
+      - description: 'Match string within any of: name, location, ip_address, categories'
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+      - description: Match a substring within entry name
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IPCollection'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      tags:
+      - IP Libraries
+      description: Upload a file (IP feed) for review. Use a multipart/form-data request to upload and import a CSV file.
+      operationId: importCsvEntriesIpSuspicious
+      summary: Import CSV Entries
+      parameters:
+      - description: The uploaded file.
+        in: query
+        name: file
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /ip/suspicious/{id}:
+    put:
+      tags:
+      - IP Libraries
+      description: Update the TTL expiration date, IP address, categories, and short-description.
+      operationId: updateEntryIpSuspicious
+      summary: Update IP Entry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                categories:
+                  description: Change categories.
+                  type: string
+                description:
+                  description: Internal short description.
+                  type: string
+                expires_on:
+                  description: Datetime to expire the ip address.
+                  type: string
+                ip_address:
+                  description: Change IP address.
+                  type: string
+              type: object
+      parameters:
+      - description: The ID of the entry to update.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /ip/trusted:
+    delete:
+      tags:
+      - IP Libraries
+      description: Remove the trusted IP's from the collection.
+      operationId: deleteEntriesIpTrusted
+      summary: Delete Trusted IPs
+      parameters:
+      - description: A comma-delimited string of IDs to delete.
+        in: query
+        name: ids
+        required: true
+        schema:
+          type: string
+      - description: A comma-delimited string of IDs.
+        example: 7nLzJYxR5Z,6yj3gQxaqo
+        in: header
+        name: Location
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    get:
+      tags:
+      - IP Libraries
+      description: List an organization's trusted IP feeds.
+      operationId: listEntriesTrustedIp
+      summary: List IP Entries
+      parameters:
+      - description: 'Match string within any of: name, location, ip_address, categories.'
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+      - description: Match a substring within entry name.
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IPCollection'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      tags:
+      - IP Libraries
+      description: Upload a file (IP feed) for review. Use a multipart/form-data request to upload and import a CSV file.
+      operationId: importCsvEntriesIpTrusted
+      summary: Import CSV Entries
+      parameters:
+      - description: Uploaded file
+        in: query
+        name: file
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /ip/trusted/{id}:
+    put:
+      tags:
+      - IP Libraries
+      description: Update the name, ip address, categories, and short description for the trusted IP feed.
+      operationId: updateEntryIpTrusted
+      summary: Update IP Trusted by ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                categories:
+                  description: Change categories.
+                  type: string
+                description:
+                  description: Internal short description.
+                  type: string
+                ip_address:
+                  description: Change IP address.
+                  type: string
+                name:
+                  description: Name of entry.
+                  type: string
+              type: object
+      parameters:
+      - description: The ID of the entry to update.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  schemas:
+    IPCollection:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The library item name.
+          example: Safe IP
+        description:
+          type: string
+          description: The library item description.
+          example: trusted
+        ip_address:
+          type: string
+          description: The IP address in the library.
+          example: 172.255.255.0
+        location:
+          type: string
+          description: The location of the item.
+          example: Regional Office
+        type:
+          type: string
+          description: The item type.
+          example: trusted
+        categories:
+          type: string
+          description: The item categories.
+          example: offices, locations
+        updated_on:
+          type: string
+          description: The last update date specified as a timestamp in UTC.
+          example: '2016-06-20T13:05:23.034264+00:00'
+        created_on:
+          type: string
+          description: The creation date specified as a timestamp in UTC.
+          example: '2016-06-20T13:05:23.034264+00:00'
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

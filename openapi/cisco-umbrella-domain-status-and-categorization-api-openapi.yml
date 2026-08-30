@@ -1,0 +1,351 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Domain Status and Categorization API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Domain Status and Categorization
+paths:
+  /domains/categorization/{domain}:
+    get:
+      summary: Get Domain Status and Categorization
+      operationId: getDomainsCategorization
+      tags:
+      - Domain Status and Categorization
+      description: 'Look up the status, and security and content category IDs for the domain.
+
+        The domain status is a numerical value determined by the Cisco Security Labs team.
+
+        Valid status values are: ''-1'' (malicious), ''1'' (safe), or ''0'' (undetermined status).
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/domainParam'
+      - $ref: '#/components/parameters/showLabels'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainCategorization'
+              example:
+                amazon.com:
+                  status: 1
+                  security_categories:
+                  - '150'
+                  content_categories:
+                  - '8'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /domains/categorization:
+    post:
+      summary: Check Status and Categorization of Domains
+      operationId: postDomainsCategorization
+      tags:
+      - Domain Status and Categorization
+      description: 'Provide a list of domains and look up the status, and security and content category IDs for each domain.
+
+        The domain status is a numerical value determined by the Cisco Security Labs team.
+
+        Valid status values are: ''-1'' (malicious), ''1'' (safe), or ''0'' (undetermined status).
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/showLabels'
+      security:
+      - oauthFlow:
+        - investigate.bulk:read
+      requestBody:
+        required: true
+        description: 'In a single request, the payload must not exceed 100KB and contain no more
+
+          than 1000 domains.'
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The list of domains.
+              items:
+                type: string
+                description: A domain name.
+                example: yahoo.com
+            example:
+            - google.com
+            - yahoo.com
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainCategorization'
+              example:
+              - google.com: null
+                status: 1
+                security_categories: []
+                content_categories:
+                - '23'
+                - '25'
+                - '190'
+              - yahoo.com: null
+                status: 1
+                security_categories: []
+                content_categories:
+                - '23'
+                - '167'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  schemas:
+    ContentCategory:
+      type: string
+      description: An Umbrella content category.
+      example: Astrology
+    DomainCategorization:
+      type: object
+      description: 'The information about the domain''s content and security categories.
+
+        Use the `showLabels` query parameter to display the security and content category labels
+
+        instead of the IDs.'
+      properties:
+        status:
+          type: integer
+          format: int64
+          description: '* If the domain is considered malicious, the status returned is `-1`.
+
+            * If the domain is considered benign, the status returned is `1`.
+
+            * If the domain is unclassified, the status returned is 0.'
+          example: 0
+        security_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityCategory'
+          description: 'The security categories that match this domain.
+
+            If the domain does not match any security categories, the server returns an empty list.'
+          example:
+          - Cryptomining
+        content_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentCategory'
+          description: 'The content categories that match this domain.
+
+            If the domain does not match any content categories, the server returns an empty list.'
+          example:
+          - Astrology
+      example:
+        status: 1
+        security_categories:
+        - Malware
+        - Phishing Attacks
+        content_categories:
+        - Auctions
+        - Chat and Instant Messaging
+    SecurityCategory:
+      type: string
+      description: An Umbrella security category.
+      example: Cryptomining
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
+    showLabels:
+      name: showLabels
+      in: query
+      required: false
+      description: 'Include the `showLabels` query parameter to display the security and content category labels in the response.
+
+        For example: https://api.umbrella.com/investigate/v2/domains/categorization/umbrella.com?showLabels.'
+      schema:
+        type: string
+      example: https://api.umbrella.com/investigate/v2/domains/categorization/umbrella.com?showLabels
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

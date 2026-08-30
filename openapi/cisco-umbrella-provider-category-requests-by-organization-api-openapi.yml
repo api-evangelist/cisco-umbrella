@@ -1,0 +1,300 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Reporting Provider Category Requests by Organization API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+security:
+- oauthFlow: []
+tags:
+- name: Provider Category Requests by Organization
+paths:
+  /providers/category-requests-by-org:
+    get:
+      tags:
+      - Provider Category Requests by Organization
+      summary: Get Provider Category Requests by Organization
+      description: 'List the summary counts of all requests for each category within the timeframe.
+
+
+        **Access Scope:** Reports > Customer > Read-Only'
+      operationId: getProviderCategoryRequestsByOrganization
+      security:
+      - oauthFlow:
+        - reports.customers:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProviderCategoryRequestsByOrganization'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - organization:
+                    id: 232323
+                    label: Company Name Goes Here
+                  counts:
+                  - category:
+                      id: 66
+                      label: Malware
+                      type: security
+                      integration: true
+                    requests: 123
+                    requestsblocked: 34
+                    numberoforganizationswithcategorizedtraffic: 1
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+  schemas:
+    Organization:
+      type: object
+      description: The information about the organization.
+      properties:
+        id:
+          type: number
+          description: orgid
+        label:
+          type: string
+          description: The name of the organization.
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
+    ProviderCategoryRequestsByOrganization:
+      required:
+      - counts
+      - organization
+      type: object
+      description: The information about the provider's category requests by organization.
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryRequests'
+      example:
+        organization:
+          id: 232323
+          label: Company Name Goes Here
+        counts:
+        - category:
+            id: 66
+            label: Malware
+            type: security
+            integration: true
+          requests: 123
+          requestsblocked: 34
+          numberoforganizationswithcategorizedtraffic: 1
+    Category:
+      type: object
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
+    CategoryRequests:
+      type: object
+      description: The information about categories and requests.
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        requests:
+          type: number
+          description: The number of requests.
+        requestsblocked:
+          type: number
+          description: The number of requests that were blocked.
+        numberoforganizationswithcategorizedtraffic:
+          type: number
+          description: The number of organizations with traffic for that category.
+  parameters:
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.granularEvents:read: Read reports granular events
+            reports.utilities:read: Read reports utilities
+            reports.aggregations:read: Read reports aggregations
+            reports.summariesByRule:read: Read reports for the summaries of the rule
+            reports.customers:read: Read reports for the customers
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

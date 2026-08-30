@@ -1,0 +1,254 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella App Discovery Identities API
+  description: 'The App Discovery API provides an overall view of application and protocol activity in your environment
+
+    and the potential risk indicated by this network traffic.'
+  version: 2.0.2
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+tags:
+- name: Identities
+paths:
+  /appDiscovery/protocols/{protocolId}/identities:
+    get:
+      tags:
+      - Identities
+      summary: List Protocol Identities
+      description: List identities for a specific protocol.
+      operationId: getProtocolIdentities
+      parameters:
+      - $ref: '#/components/parameters/protocolId'
+      - $ref: '#/components/parameters/date'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/identitiesSort'
+      - $ref: '#/components/parameters/order'
+      security:
+      - oauthFlow:
+        - reports.appDiscovery:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtocolIdentityList'
+              example:
+                items:
+                - id: 10000
+                  name: My Identity
+                  events: 100
+                  blockedEvents: 50
+                  firstDetected: '2022-01-01T00:00:00.000Z'
+                  lastDetected: '2022-01-01T00:00:00.000Z'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  schemas:
+    ProtocolIdentityList:
+      type: object
+      description: The list of the app's identity information.
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtocolIdentity'
+      example:
+        items:
+        - id: 10000
+          name: My Identity
+          events: 100
+          blockedEvents: 50
+          firstDetected: '2022-01-01T00:00:00.000Z'
+          lastDetected: '2022-01-01T00:00:00.000Z'
+    ProtocolIdentity:
+      type: object
+      description: The app's identity information.
+      properties:
+        id:
+          type: integer
+          description: The ID of the identity.
+          example: 10000
+        name:
+          type: string
+          description: The name of the identity.
+          example: My Identity
+        events:
+          type: integer
+          example: 100
+          description: The number of events for the identity.
+        blockedEvents:
+          type: integer
+          description: The number of blocked events for the identity.
+          example: 50
+        firstDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system first detected the identity.
+          example: '2022-01-01T00:00:00.000Z'
+        lastDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system last detected the identity.
+          example: '2022-01-01T00:00:00.000Z'
+      example:
+        id: 10000
+        name: My identity
+        events: 100
+        blockedEvents: 40
+        firstDetected: '2022-01-01T00:00:00.000Z'
+        lastDetected: '2022-01-01T00:00:00.000Z'
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
+  headers:
+    Link:
+      schema:
+        type: string
+      description: 'Links to related resources, in the format defined by
+
+        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
+
+        If there is a next page, this header includes a link with relation type
+
+        `next` to the next page.'
+  responses:
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
+    identitiesSort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        enum:
+        - firstDetected
+        - lastDetected
+      description: Specify the name of a field to sort the application identities.
+      example: lastDetected
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
+    date:
+      in: query
+      name: date
+      schema:
+        type: string
+        format: date
+      description: 'Specify a date to search for data within a twenty-four hour time period.
+
+        If you do not provide a date, the last 90 days period is used to query the collection.'
+      example: '2022-01-01'
+    order:
+      in: query
+      name: order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      description: 'Specify the order to sort the collection. Valid values are: `asc` (ascending)
+
+        or `desc` (descending).'
+      example: asc
+    protocolId:
+      in: path
+      name: protocolId
+      description: The ID of the protocol.
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.appDiscovery:write: Write reports app discovery
+            reports.appDiscovery:read: Read reports app discovery
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

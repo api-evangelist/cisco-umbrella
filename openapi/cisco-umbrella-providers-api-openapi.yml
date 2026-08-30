@@ -1,0 +1,2693 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Providers API
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  description: 'Operations tagged Providers across 2 of this provider''s published API definitions: cisco-umbrella-admin-providers-openapi.yml, cisco-umbrella-reports-provider-consoles-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: admin/v2
+security:
+- oauthFlow: []
+tags:
+- name: Providers
+paths:
+  /providers/customers:
+    post:
+      tags:
+      - Providers
+      description: Create a customer for a provider.
+      summary: Create Customer for Provider
+      operationId: createProviderCustomer
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      requestBody:
+        $ref: '#/components/requestBodies/CustomerCreateRequestBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+              example:
+                customerId: 1234
+                customerName: myCustomerName
+                licenseType: theLicenseType
+                packageName: Umbrella SIG Essentials
+                seats: 1000
+                streetAddress: 123 myStreet Rd.
+                streetAddress2: 123a mystreet2 Place
+                city: myCity
+                state: CA
+                countryCode: 12a
+                zipCode: 12345a
+                packageId: 101
+                dealId: myDealId
+                adminEmails:
+                - you@myeamil.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    get:
+      tags:
+      - Providers
+      description: List the customers for the provider.
+      operationId: listProviderCustomers
+      summary: List Customers for Provider
+      security:
+      - oauthFlow:
+        - admin.customers:read
+      parameters:
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/pageParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List the customers for the provider.
+                items:
+                  $ref: '#/components/schemas/Customer'
+              example:
+              - customerId: 1234
+                customerName: myCustomerName
+                licenseType: theLicenseType
+                packageName: Umbrella SIG Essentials
+                seats: 1000
+                streetAddress: 123 myStreet Rd.
+                streetAddress2: 123a mystreet2 Place
+                city: myCity
+                state: CA
+                countryCode: 12a
+                zipCode: 12345a
+                packageId: 101
+                dealId: myDealId
+                adminEmails:
+                - you@myeamil.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}:
+    get:
+      tags:
+      - Providers
+      description: Get a customer for the provider.
+      summary: Get Customer for Provider
+      operationId: getProviderCustomer
+      security:
+      - oauthFlow:
+        - admin.customers:read
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+              example:
+                customerId: 1234
+                customerName: myCustomerName
+                licenseType: theLicenseType
+                packageName: Umbrella SIG Essentials
+                seats: 1000
+                streetAddress: 123 myStreet Rd.
+                streetAddress2: 123a mystreet2 Place
+                city: myCity
+                state: CA
+                countryCode: 12a
+                zipCode: 12345a
+                packageId: 101
+                dealId: myDealId
+                adminEmails:
+                - you@myeamil.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    delete:
+      tags:
+      - Providers
+      description: Delete a customer for a provider.
+      operationId: deleteProviderCustomer
+      summary: Delete Customer for Provider
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type:
+                - string
+                - 'null'
+              example: null
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Providers
+      description: Update a customer for a provider.
+      operationId: updateProviderCustomer
+      summary: Update Customer for Provider
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      requestBody:
+        $ref: '#/components/requestBodies/CustomerUpdateRequestBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+              example:
+                customerId: 1234
+                customerName: myCustomerName
+                licenseType: theLicenseType
+                packageName: Umbrella SIG Essentials
+                seats: 1000
+                streetAddress: 123 myStreet Rd.
+                streetAddress2: 123a mystreet2 Place
+                city: myCity
+                state: CA
+                countryCode: 12a
+                zipCode: 12345a
+                packageId: 101
+                dealId: myDealId
+                adminEmails:
+                - you@myeamil.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}/trialconversions:
+    put:
+      tags:
+      - Providers
+      description: Convert your Managed Services License Agreement (MSLA) trial to an MSLA customer.
+      summary: Update Trial to Customer
+      operationId: putTrialConversions
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      requestBody:
+        description: Umbrella package ID
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - packageId
+              properties:
+                packageId:
+                  $ref: '#/components/schemas/packageIdTrialConversions'
+            example:
+              packageId: 107
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Convert an MSLA trial to an MSLA customer.
+                properties:
+                  conversionStatus:
+                    type: string
+                    description: The status of the trial conversion.
+                    example: success
+                required:
+                - conversionStatus
+              example:
+                conversionStatus: success
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}/accessRequests:
+    post:
+      tags:
+      - Providers
+      description: Create the access request for the customer's organization.
+      summary: Create Customer Access Request
+      operationId: createCustomerAccessRequest
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRequest'
+              example:
+                id: 1234567
+                organizationId: 2344568
+                state: approved
+                organizationName: test-organization
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}/accessRequests/{accessRequestId}:
+    get:
+      tags:
+      - Providers
+      description: Get the access request details for the customer's organization.
+      summary: Get Customer Access Request
+      operationId: getCustomerAccessRequest
+      security:
+      - oauthFlow:
+        - admin.customers:read
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      - $ref: '#/components/parameters/accessRequestIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRequest'
+              example:
+                id: 1234567
+                organizationId: 2344568
+                state: approved
+                organizationName: test-organization
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Providers
+      description: Update the access request for the customer's organization.
+      summary: Update Customer Access Request
+      operationId: updateCustomerAccessRequest
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      - $ref: '#/components/parameters/accessRequestIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessRequest'
+              example:
+                id: 1234567
+                organizationId: 2344568
+                state: approved
+                organizationName: test-organization
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}/trialExtensions:
+    post:
+      tags:
+      - Providers
+      description: Create the extension for the customer's trial.
+      summary: Create Customer Trial Extensions
+      operationId: createCustomerTrialExtensions
+      security:
+      - oauthFlow:
+        - admin.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      requestBody:
+        description: Provide the trial extension information.
+        content:
+          application/json:
+            schema:
+              type: object
+              description: The trial extension information.
+              properties:
+                trialExtensionDays:
+                  type: integer
+                  description: The number of days to extend the trial.
+                  enum:
+                  - 7
+                  - 14
+            example:
+              trialExtensionDays: 7
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomer'
+              example:
+                organizationId: 2345892
+                organizationTypeId: 4
+                originId: 2345964
+                organizationName: organization name
+                createdAt: 1594557263
+                modifiedAt: 1667252442
+                subscriptionId: 1678934
+                packageId: 250
+                packageName: Umbrella SIG Essentials
+                packageInternalName: SIG Essentials
+                users: 25
+                startsAt: '2023-03-01'
+                endsAt: '2023-07-01'
+                strength:
+                  customerLoggedIn: true
+                  lastLoginDate: '2022-10-03 13:42:39'
+                  identitiesCreated: 12
+                  hasTraffic: false
+                  trialStrength: High
+                adminEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                streetAddress: 123 Circle Street
+                streetAddress2: P.O. Box 575
+                city: San Jose
+                state: CA
+                countryCode: US
+                zipCode: 01904
+                dealId: 123443c
+                ppovLifecycle:
+                  state: state of customer trial
+                  date: '2023-02-28'
+                  enabled: true
+                  lastSentDate: '2023-03-01'
+                  mailIdentifiers:
+                    noLoginDayFourMailIdentifier: customer email identifier, no login four days
+                    noOriginDayThreeMailIdentifier: three day email identifier, no origin
+                    noOriginDaySevenMailIdentifier: seven day email identifer, no origin
+                  excludedLifecycleEmails:
+                  - name@acmeTech.com
+                hasDistributorVisibility: true
+                isOnboardingWizardCompleted: true
+                trialId: MD5 hash
+                accountManagerEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                accessRequestId: 1234565
+                accessRequestState: pending
+                trialPeriod: Aug 18, 2022 - Oct 15, 2023
+                trialExtensionCount: 3
+                trialExtendedDays: 10
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}/subscriptionDetails:
+    get:
+      tags:
+      - Providers
+      description: Get the subscription details for the customer's organization.
+      summary: Get Customer Subscription Details
+      operationId: getCustomerSubscriptionDetails
+      security:
+      - oauthFlow:
+        - admin.customers:read
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomer'
+              example:
+                organizationId: 2345892
+                organizationTypeId: 4
+                originId: 2345964
+                organizationName: organization name
+                createdAt: 1594557263
+                modifiedAt: 1667252442
+                subscriptionId: 1678934
+                packageId: 250
+                packageName: Umbrella SIG Essentials
+                packageInternalName: SIG essentials
+                users: 25
+                startsAt: '2023-03-01'
+                endsAt: '2023-07-01'
+                strength:
+                  customerLoggedIn: true
+                  lastLoginDate: '2022-10-03 13:42:39'
+                  identitiesCreated: 12
+                  hasTraffic: false
+                  trialStrength: High
+                adminEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                streetAddress: 123 Circle Street
+                streetAddress2: P.O. Box 575
+                city: San Jose
+                state: CA
+                countryCode: US
+                zipCode: 01904
+                dealId: 123443c
+                ppovLifecycle:
+                  state: state of customer trial
+                  date: '2023-02-28'
+                  enabled: true
+                  lastSentDate: '2023-03-01'
+                  mailIdentifiers:
+                    noLoginDayFourMailIdentifier: customer email identifier, no login four days
+                    noOriginDayThreeMailIdentifier: three day email identifier, no origin
+                    noOriginDaySevenMailIdentifier: seven day email identifer, no origin
+                  excludedLifecycleEmails:
+                  - name@acmeTech.com
+                hasDistributorVisibility: true
+                isOnboardingWizardCompleted: true
+                trialId: MD5 hash
+                accountManagerEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                accessRequestId: 1234565
+                accessRequestState: pending
+                trialPeriod: Aug 18, 2022 - Oct 15, 2023
+                trialExtensionCount: 3
+                trialExtendedDays: 10
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/{customerId}/trialStrengths:
+    get:
+      tags:
+      - Providers
+      description: Get the strength of a customer trial for a provider.
+      summary: Get Customer Trial Strength
+      operationId: getCustomerTrialStrength
+      security:
+      - oauthFlow:
+        - admin.customers:read
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrialStrength'
+              example:
+                customerLoggedIn: true
+                lastLoginDate: '2022-10-03 13:42:39'
+                identitiesCreated: 25
+                hasTraffic: false
+                trialStrength: '-'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customerAddresses:
+    get:
+      tags:
+      - Providers
+      description: Get the customer addresses for provider.
+      summary: Get Customer Addresses for Provider
+      operationId: getCustomerAddresses
+      security:
+      - oauthFlow:
+        - admin.customerSearch:read
+      parameters:
+      - $ref: '#/components/parameters/pageParam'
+      - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerAddress'
+              example:
+              - accountId: 132405632
+                accountSiteId: 104571945
+                mappedCrPartyId: 10803658
+                organizationName: cisco
+                streetAddress: 73 Rue De La Plain
+                streetAddress2: 213 Circle Ct
+                city: San Jose
+                state: CA
+                countryCode: US
+                zipCode: '75020'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customers/packages:
+    get:
+      tags:
+      - Providers
+      description: Get the packages for the trial customer.
+      summary: Get Customer Packages for Provider
+      operationId: getCustomerPackages
+      security:
+      - oauthFlow:
+        - admin.customers:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Package'
+              example:
+              - id: 246
+                name: Umbrella DNS Security Essentials
+                pkgSeatMin: 1
+                ppovSeatMin: 1
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/customerDeals/{dealId}:
+    get:
+      tags:
+      - Providers
+      description: Get the information about deals available to customer.
+      summary: Get Customer Deals by ID
+      operationId: getCustomerDeals
+      parameters:
+      - $ref: '#/components/parameters/dealIdParam'
+      - $ref: '#/components/parameters/ccoIdParam'
+      security:
+      - oauthFlow:
+        - admin.customerDeals:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerDeal'
+              example:
+              - dealId: 1233456a
+                endCustomer: ''
+                majorLineItems:
+                - objectId: 12345345
+                  sourceAppRefId: abdjlkjfkj22
+                canStampDeal: true
+                trialIds:
+                - abbfyue458cjd
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Providers
+      description: Update the customer deal.
+      summary: Update Customer Deals by ID
+      operationId: updateCustomerDeals
+      security:
+      - oauthFlow:
+        - admin.customerDeals:write
+      parameters:
+      - $ref: '#/components/parameters/dealIdParam'
+      requestBody:
+        description: Provide the customer deal information.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - ccoid
+              - customerId
+              properties:
+                ccoid:
+                  type: integer
+                  format: int32
+                  example: 12329433
+                  description: The ID of the user querying the deal ID.
+                customerId:
+                  $ref: '#/components/schemas/customerId'
+                quoteId:
+                  type: integer
+                  format: int32
+                  example: 8484
+                  description: The ID for the quote.
+                majorLineItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      objectId:
+                        type: integer
+                        format: int32
+                        example: 12345
+                      sourceAppRefId:
+                        type: string
+                        example: abbfyue458cjd
+            example:
+              ccoid: 123435
+              customerId: 1234
+              quoteId: 23423
+              majorLineItems:
+              - objectId: 12345345
+                sourceAppRefId: abdjlkjfkj22
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDeal'
+              example:
+                dealId: 1233456a
+                endCustomer: ''
+                majorLineItems:
+                - objectId: 12345345
+                  sourceAppRefId: abdjlkjfkj22
+                canStampDeal: true
+                trialIds:
+                - abbfyue458cjd
+        '400':
+          $ref: '#/components/responses/400ErrorPutCustomerDeals'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: admin/v2
+  /providers/consoles:
+    get:
+      tags:
+      - Providers
+      description: Get the data available from the provider's console.
+      summary: Get Providers Console Data
+      operationId: getProvidersConsoleData
+      security:
+      - oauthFlow:
+        - reports.customers:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvidersConsole'
+              example:
+                packageName: Umbrella SIG Essentials
+                seatsTotal: 25
+                seatsUsed: 20
+                customerCount: 20
+                status: enrolled
+                rebillAt: '2022-06-13T16:07:07.222Z'
+                expiresAt: '2022-06-13T16:07:07.222Z'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerErr'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: reports/v2
+  /providers/customers/downloadReportRequests:
+    get:
+      tags:
+      - Providers
+      description: Get the security report for the customer of the service provider.
+      summary: Get Customer Security Report
+      operationId: getServiceProviderCustomerSecurityReport
+      security:
+      - oauthFlow:
+        - reports.customers:read
+      parameters:
+      - $ref: '#/components/parameters/outputFormatParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadReport'
+              example:
+                isReportReady: true
+                organizationId: 2345892
+                organizationTypeId: 4
+                organizationName: organization name
+                createdAt: 1594557263
+                packageId: 7
+                packageName: SIG essentials
+                users: 25
+                trialStartsAt: '2023-03-01'
+                trialEndsAt: '2023-07-01'
+                adminEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                streetAddress: 123 Circle Street
+                streetAddress2: P.O. Box 575
+                city: San Jose
+                state: CA
+                countryCode: US
+                zipCode: 01904
+                dealId: 123443c
+                ppovLifecycle:
+                  state: state of customer trial
+                  date: '2023-02-28'
+                  enabled: true
+                  lastSentDate: '2023-03-01'
+                  mailIdentifiers:
+                    noLoginDayFourMailIdentifier: customer mail identifier, no login four days
+                    noOriginDayThreeMailIdentifier: three day mail identifier, no origin
+                    noOriginDaySevenMailIdentifier: seven day mail identifer, no origin
+                  excludedLifecycleEmails:
+                  - name@acmetech.com
+                hasDistributorVisibility: true
+                isOnboardingWizardCompleted: true
+                trialId: MD5 hash
+                accountManagerEmails:
+                - name@cisco.com
+                - name-one@cisco.com
+                serviceGracePeriodEndDate: 1594557263
+                networks: 20
+                roamingClients: 10
+                VAs: 5
+                comments:
+                - A comment about the customer's trial
+                sigQuestionnaire: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+                  Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+                  Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+            text/plain:
+              schema:
+                type: string
+              example: csv data
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerErr'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: reports/v2
+  /providers/customers/{customerId}/securityReportRequests:
+    post:
+      tags:
+      - Providers
+      description: Create security report request for customer of service provider.
+      summary: Create Customer Security Report Request
+      operationId: createCustomerSecurityReportRequest
+      security:
+      - oauthFlow:
+        - reports.customers:write
+      parameters:
+      - $ref: '#/components/parameters/customerIdParam_2'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityReportsRequest'
+              example:
+                data:
+                  body:
+                    email: user@cisco.com
+                    end_date: '2022-09-09'
+                    organization_id: '7970851'
+                    organization_name: Abc Prime Product
+                    origin_id: '585256703'
+                    start_date: '2022-09-01'
+                  header:
+                    date: 1663674125
+                    status: pending
+                  id: 2683
+                status: ok
+                task: enqueue-task
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerErr'
+    servers:
+    - url: https://api.umbrella.com/{basePath}
+      variables:
+        basePath:
+          default: reports/v2
+components:
+  schemas:
+    GetCustomer:
+      type: object
+      description: The information about the customer.
+      required:
+      - organizationId
+      properties:
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+        organizationTypeId:
+          type: integer
+          description: The type ID of the customer's organization.
+          example: 1234
+        originId:
+          type: integer
+          description: The origin ID created for the customer.
+          example: 12443
+        organizationName:
+          $ref: '#/components/schemas/organizationName'
+        createdAt:
+          type: integer
+          description: The time when the logo was created. Specify the time in milliseconds.
+          example: 12345678934
+        modifiedAt:
+          type: integer
+          description: The time when the logo was last modified. Specify the time in milliseconds.
+          example: 12345678934
+        subscriptionId:
+          type: integer
+          description: The ID of the subscription.
+          example: 1325
+        packageId:
+          $ref: '#/components/schemas/packageId'
+        packageName:
+          $ref: '#/components/schemas/packageName'
+        packageInternalName:
+          type: string
+          description: The internal name for the package.
+          example: SIG Essentials
+        users:
+          type: integer
+          description: The number of users in the subscription.
+          example: 200
+        startsAt:
+          type: string
+          format: date
+          description: The start date of the subscription.
+          example: '2021-09-22'
+        endsAt:
+          type: string
+          format: date
+          description: The end date of the subscription.
+          example: '2021-09-22'
+        strength:
+          $ref: '#/components/schemas/TrialStrength'
+        adminEmails:
+          $ref: '#/components/schemas/adminEmails'
+        streetAddress:
+          $ref: '#/components/schemas/streetAddress'
+        streetAddress2:
+          $ref: '#/components/schemas/streetAddress2'
+        city:
+          $ref: '#/components/schemas/city'
+        state:
+          $ref: '#/components/schemas/state'
+        countryCode:
+          $ref: '#/components/schemas/countryCode'
+        zipCode:
+          $ref: '#/components/schemas/zipCode'
+        dealId:
+          $ref: '#/components/schemas/dealId'
+        ppovLifecycle:
+          $ref: '#/components/schemas/PpovLifecycle'
+        hasDistributorVisibility:
+          type: boolean
+          description: Specify whether the distributor has visibility into the trial.
+          example: true
+        isOnboardingWizardCompleted:
+          type: boolean
+          description: Specify whether the customer has logged into Umbrella.
+          example: true
+        trialId:
+          type: string
+          description: The MD5 value of the organization ID.
+          example: ajlkjiuasoidfjsdfkj1
+        accountManagerEmails:
+          type: array
+          items:
+            type: string
+          description: The emails of the account managers.
+          example:
+          - name@hello.com
+        accessRequestId:
+          type: integer
+          description: The ID of the access request to enable access to the child organization.
+          example: 12344
+        accessRequestState:
+          type: string
+          description: The state of the access request.
+          enum:
+          - approved
+          - denied
+          - pending
+          example: approved
+        trialPeriod:
+          type: string
+          description: The period of the trial, including the start and end times.
+          example: Aug 18, 2022 - Oct 15, 2023
+        trialExtensionCount:
+          type: integer
+          description: The number of extensions that are applied to the trial.
+          example: 15
+        trialExtendedDays:
+          type: integer
+          description: The number of days to extend the trial.
+          example: 7
+      example:
+        organizationId: 2345892
+        organizationTypeId: 4
+        originId: 2345964
+        organizationName: organization name
+        createdAt: 1594557263
+        modifiedAt: 1667252442
+        subscriptionId: 1678934
+        packageId: 250
+        packageName: Umbrella SIG Essentials
+        packageInternalName: SIG Essentials
+        users: 25
+        startsAt: '2023-03-01'
+        endsAt: '2023-07-01'
+        strength:
+          customerLoggedIn: true
+          lastLoginDate: '2022-10-03 13:42:39'
+          identitiesCreated: 12
+          hasTraffic: false
+          trialStrength: High
+        adminEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        streetAddress: 123 Circle Street
+        streetAddress2: P.O. Box 575
+        city: San Jose
+        state: CA
+        countryCode: US
+        zipCode: 01904
+        dealId: 123443c
+        ppovLifecycle:
+          state: state of customer trial
+          date: '2023-02-28'
+          enabled: true
+          lastSentDate: '2023-03-01'
+          mailIdentifiers:
+            noLoginDayFourMailIdentifier: customer email identifier, no login four days
+            noOriginDayThreeMailIdentifier: three day email identifier, no origin
+            noOriginDaySevenMailIdentifier: seven day email identifer, no origin
+          excludedLifecycleEmails:
+          - name@acmeTech.com
+        hasDistributorVisibility: true
+        isOnboardingWizardCompleted: true
+        trialId: MD5 hash
+        accountManagerEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        accessRequestId: 1234565
+        accessRequestState: pending
+        trialPeriod: Aug 18, 2022 - Oct 15, 2023
+        trialExtensionCount: 3
+        trialExtendedDays: 10
+    seats:
+      type: integer
+      minimum: 1
+      description: The number of users.
+      example: 50
+    state:
+      type: string
+      description: The name of the customer's state.
+      minLength: 1
+      maxLength: 50
+      example: NY
+    packageId:
+      type: integer
+      enum:
+      - 99
+      - 101
+      - 107
+      - 171
+      - 202
+      - 246
+      - 248
+      - 250
+      - 252
+      - 312
+      description: 'The ID of the Umbrella package.
+
+        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
+
+        | Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `99`       | Umbrella Professional            |
+
+        | `101`      | Umbrella Platform                |
+
+        | `107`      | Umbrella Insights                |
+
+        | `171`      | Cisco Umbrella for Wireless LAN  |
+
+        | `202`      | Cisco Umbrella for EDU           |
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |
+
+        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
+
+
+        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
+      example: 252
+    customerName:
+      type: string
+      description: The name of the customer's organization.
+      minLength: 1
+      maxLength: 255
+      example: NameOfCustomer
+    AccessRequest:
+      type: object
+      description: The information about the organization's access request.
+      required:
+      - id
+      - organizationId
+      - state
+      - organizationName
+      properties:
+        id:
+          type: integer
+          description: The ID of the organization's access request.
+          example: 1234
+        organizationId:
+          type: integer
+          description: The ID of the organization that created the access request.
+        state:
+          type: string
+          description: The current state of the access request.
+          enum:
+          - approved
+          - denied
+          - pending
+          example: approved
+        displayAt:
+          type: integer
+          description: The time when the logo was created. Specify the time in milliseconds.
+          example: 1234567891
+        createdAt:
+          type: integer
+          description: The time when the logo was created. Specify the time in milliseconds.
+          example: 1234567891
+        modifiedAt:
+          type: integer
+          description: The time when the logo was last modified. Specify the time in milliseconds.
+          example: 1234567891
+        organizationName:
+          type: string
+          description: The name of the organization that created the access request.
+          example: acmeTech
+      example:
+        id: 1234
+        organizationId: 139973
+        state: approved
+        organizationName: acmeTech
+    streetAddress:
+      type: string
+      description: The street address for the customer.
+      minLength: 1
+      maxLength: 255
+      example: One Penn Plaza
+    customerId:
+      type: integer
+      description: The ID for the customer.
+      example: 1233
+    TrialStrength:
+      type: object
+      description: The number of features consumed by a customer trial.
+      required:
+      - customerLoggedIn
+      - lastLoginDate
+      - identitiesCreated
+      - hasTraffic
+      - trialStrength
+      properties:
+        customerLoggedIn:
+          type: boolean
+          description: Specify whether the trial customer logged into their organization.
+          example: true
+        lastLoginDate:
+          type: string
+          format: iso-date-time
+          description: The date when the customer last logged into their organization.
+          example: '2022-10-03 13:42:39'
+        identitiesCreated:
+          type: integer
+          description: The number of identities that were created.
+          example: 25
+        hasTraffic:
+          type: boolean
+          description: Specify whether the organization has traffic.
+          example: false
+        trialStrength:
+          type: string
+          description: 'The number of features used by the trial.
+
+            The hyphen (`-`) character indicates no features.'
+          enum:
+          - Low
+          - Medium
+          - High
+          - '-'
+          example: '-'
+      example:
+        customerLoggedIn: true
+        lastLoginDate: '2022-10-03 13:42:39'
+        identitiesCreated: 12
+        hasTraffic: false
+        trialStrength: '-'
+    organizationId:
+      type: integer
+      description: The ID of the organization.
+    dealId:
+      type: string
+      description: The deal ID.
+      example: 14a
+    packageName:
+      type: string
+      enum:
+      - Umbrella Professional
+      - Umbrella Platform
+      - Umbrella Insights
+      - Cisco Umbrella for Wireless LAN
+      - Cisco Umbrella for EDU
+      - Umbrella DNS Security Essentials
+      - Umbrella DNS Security Advantage
+      - Umbrella SIG Essentials
+      - Umbrella SIG Advantage
+      - Umbrella Not for Resale (NFR) MSP DNS Advantage
+      description: 'The name of the Umbrella package.
+
+        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
+
+        | Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `99`       | Umbrella Professional            |
+
+        | `101`      | Umbrella Platform                |
+
+        | `107`      | Umbrella Insights                |
+
+        | `171`      | Cisco Umbrella for Wireless LAN  |
+
+        | `202`      | Cisco Umbrella for EDU           |
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |
+
+        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
+
+
+        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
+      example: Umbrella SIG Advantage
+    Customer:
+      type: object
+      description: The properties of a customer.
+      required:
+      - customerId
+      - customerName
+      - packageName
+      - packageId
+      - seats
+      - streetAddress
+      - city
+      - countryCode
+      - adminEmails
+      properties:
+        customerId:
+          $ref: '#/components/schemas/customerId'
+        customerName:
+          $ref: '#/components/schemas/customerName'
+        licenseType:
+          type: string
+          description: The type of license for the customer's organization.
+          example: SIG Essentials
+        packageName:
+          $ref: '#/components/schemas/packageName'
+        seats:
+          $ref: '#/components/schemas/seats'
+        streetAddress:
+          $ref: '#/components/schemas/streetAddress'
+        streetAddress2:
+          $ref: '#/components/schemas/streetAddress2'
+        city:
+          $ref: '#/components/schemas/city'
+        state:
+          $ref: '#/components/schemas/state'
+        countryCode:
+          $ref: '#/components/schemas/countryCode'
+        zipCode:
+          $ref: '#/components/schemas/zipCode'
+        packageId:
+          $ref: '#/components/schemas/packageId'
+        dealId:
+          $ref: '#/components/schemas/dealId'
+        adminEmails:
+          $ref: '#/components/schemas/adminEmails'
+        ccwDealOwnerEmails:
+          $ref: '#/components/schemas/ccwDealOwnerEmails'
+        createdAt:
+          type: string
+          format: iso-date-time
+          description: 'The time when the customer information was created.
+
+            The timestamp is specified in the ISO 8601 format.'
+          example: '2022-10-03 13:42:39'
+        modifiedAt:
+          type: string
+          format: iso-date-time
+          description: 'The time when the customer information was last modified.
+
+            The timestamp is specified in the ISO 8601 format.'
+          example: '2022-11-03 13:42:39'
+        isTrial:
+          type: boolean
+          default: true
+          description: Specify whether the customer is a trial with an MSSP with SPLA (MSLA) license.
+          example: true
+        addonRbi:
+          type: string
+          description: "Specify whether remote browser isolation (RBI) is added to the subscription.\nRemote Browser Isolation Add-On is applicable for SIG Essentials or SIG Advantage only:\n  `0` = No selection\n  `1` = RBI Isolate Risky\n  `2` = RBI Isolate Web Applications\n  `3` = RBI Isolate All\n"
+          example: '1'
+        addonDlp:
+          type: boolean
+          description: 'Specify whether data loss prevention (DLP) is added to the subscription.
+
+            The Data Loss Prevention Add-On is applicable only for SIG E.'
+          example: true
+        addonCdfwL7:
+          type: boolean
+          description: 'Specify whether if cloud delivered firewall (CDFW) is added to the subscription.
+
+            The L7 Cloud Delivered Firewall Solution is applicable only for SIG E.'
+          example: true
+      example:
+        customerId: 2345892
+        customerName: name of customer
+        packageId: 252
+        packageName: Umbrella SIG Advantage
+        seats: 25
+        adminEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        streetAddress: 123 Circle Street
+        city: San Jose
+        state: CA
+        countryCode: US
+        zipCode: 01904
+    streetAddress2:
+      type: string
+      description: The second street address for the customer.
+      minLength: 1
+      maxLength: 255
+      example: Two Center Way
+    Package:
+      type: object
+      description: The information about an Umbrella package.
+      required:
+      - id
+      - name
+      - pkgSeatMin
+      - ppovSeatMin
+      properties:
+        id:
+          type: integer
+          description: The ID of the package.
+          example: 250
+        name:
+          type: string
+          description: The name of the package.
+          example: Umbrella DNS Security Advantage
+        pkgSeatMin:
+          type: integer
+          description: The minimum number of seats for the package.
+          example: 1
+        ppovSeatMin:
+          type: integer
+          description: The minimum number of seats for the customer trial.
+          example: 20
+      example:
+        id: 12345565
+        name: Umbrella DNS Security Advantage
+        pkgSeatMin: 1
+        ppovSeatMin: 1
+    CustomerDeal:
+      type: object
+      description: The information about a customer deal.
+      required:
+      - dealId
+      - endCustomer
+      - majorLineItems
+      - canStampDeal
+      - trialIds
+      properties:
+        dealId:
+          $ref: '#/components/schemas/dealId'
+        endCustomer:
+          type: string
+          description: The type of customer.
+          example: ''
+        majorLineItems:
+          type: array
+          description: The list of essential components of the deal.
+          items:
+            type: object
+            properties:
+              objectId:
+                type: integer
+                description: The ID of the object.
+                example: 123545
+              sourceAppRefId:
+                type: string
+                description: The source application reference ID.
+                example: abbfyue458cjd
+          example:
+          - objectId: 123455
+            sourceAppRefId: asdfkljdkjfklj
+        canStampDeal:
+          type: boolean
+          description: Specify whether to approve the deal.
+          example: false
+        trialIds:
+          type: array
+          description: The list of trial IDs.
+          items:
+            type: string
+          example:
+          - abbfyue458cjd
+      example:
+        dealId: '1233456'
+        endCustomer: ''
+        majorLineItems:
+        - objectId: 12345345
+          sourceAppRefId: abdjlkjfkj22
+        canStampDeal: true
+        trialIds:
+        - abbfyue458cjd
+    ccwDealOwnerEmails:
+      type: array
+      description: The list emails for the CCW deal owner.
+      items:
+        type: string
+        format: email
+      example:
+      - dealowner@acmetech.com
+    packageIdWrite:
+      type: integer
+      enum:
+      - 171
+      - 202
+      - 246
+      - 248
+      - 250
+      - 252
+      - 312
+      description: 'The ID of the Umbrella package.
+
+        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
+
+        | Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `171`      | Cisco Umbrella for Wireless LAN  |
+
+        | `202`      | Cisco Umbrella for EDU           |
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |
+
+        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
+
+
+        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
+      example: 252
+    CustomerAddress:
+      type: object
+      description: The customer's address information.
+      required:
+      - accountId
+      - accountSiteId
+      - mappedCrPartyId
+      properties:
+        accountId:
+          type: integer
+          description: The ID of the account.
+          example: 4590
+        accountSiteId:
+          type: integer
+          description: The ID of the site for the account.
+          example: 12
+        mappedCrPartyId:
+          type: integer
+          description: The ID of the mapped CR party.
+          example: 123457
+        organizationName:
+          type: string
+          description: The name of the customer's organization.
+          example: Cisco Systems
+        streetAddress:
+          $ref: '#/components/schemas/streetAddress'
+        streetAddress2:
+          $ref: '#/components/schemas/streetAddress2'
+        city:
+          $ref: '#/components/schemas/city'
+        state:
+          $ref: '#/components/schemas/state'
+        countryCode:
+          $ref: '#/components/schemas/countryCode'
+        zipCode:
+          $ref: '#/components/schemas/zipCode'
+      example:
+        accountId: 132405632
+        accountSiteId: 104571945
+        mappedCrPartyId: 10803658
+        organizationName: cisco
+        streetAddress: 73 Rue De La Plaine
+        streetAddress2: 213 Circle Ct
+        city: San Jose
+        state: CA
+        countryCode: US
+        zipCode: '75020'
+    city:
+      type: string
+      description: The name of the city where the customer's organization is located.
+      minLength: 1
+      maxLength: 255
+      example: Culver City
+    PpovLifecycle:
+      type: object
+      description: The email details about lifecycle events from a customer trial.
+      properties:
+        state:
+          type: string
+          description: The current state of the customer trial.
+          example: customer trial is active
+        date:
+          type: string
+          format: date
+          description: The date of the lifecycle event.
+          example: '2021-09-28'
+        enabled:
+          type: boolean
+          description: Specify whether lifecycle emails are enabled.
+          example: true
+        lastSentDate:
+          type: string
+          format: date
+          description: The date when the last lifecycle email was sent.
+          example: '2021-10-05'
+        mailIdentifiers:
+          type: object
+          description: The information about the identifiers for the customer.
+          properties:
+            noLoginDayFourMailIdentifier:
+              type: string
+              description: The email for the customer that did not log in for four days.
+              example: name@noorgin.acmetech.com
+            noOriginDayThreeMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for three days.
+              example: name@noorgin.acmetech.com
+            noOriginDaySevenMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for seven days.
+              example: name@noorgin.acmetech.com
+        excludedLifecycleEmails:
+          type: array
+          items:
+            type: string
+          description: The emails excluded for the lifecycle of the customer.
+          example:
+          - name1@acmeTech.com
+          - name2@acmetech.com
+      example:
+        state: state of customer trial
+        date: '2023-02-28'
+        enabled: true
+        lastSentDate: '2023-03-01'
+        mailIdentifiers:
+          noLoginDayFourMailIdentifier: customer mail identifier, no login four days
+          noOriginDayThreeMailIdentifier: three day mail identifier, no origin
+          noOriginDaySevenMailIdentifier: seven day mail identifer, no origin
+        excludedLifecycleEmails:
+        - name@acmeTech.com
+    countryCode:
+      type: string
+      description: The country code of the customer's organization.
+      minLength: 2
+      maxLength: 3
+      example: FR
+    organizationName:
+      type: string
+      description: The name of the customer's organization.
+      example: acmeTech
+    zipCode:
+      type: string
+      description: The zip code of the customer's organization.
+      minLength: 1
+      example: 08105
+    packageIdTrialConversions:
+      type: integer
+      enum:
+      - 246
+      - 248
+      - 250
+      - 252
+      description: '| Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |'
+      example: 246
+    adminEmails:
+      type: array
+      description: The list of the administrator email addresses.
+      items:
+        type: string
+        format: email
+        example: name@bbctech.com
+      example:
+      - name@acmetech.com
+    ProvidersConsole:
+      type: object
+      properties:
+        packageName:
+          type: string
+          description: The name of the service provider's subscribed package
+        seatsTotal:
+          type: integer
+          description: The number of seats allocated to the service provider
+        seatsUsed:
+          type: integer
+          description: The number of seats used by the service provider
+        customerCount:
+          type: integer
+          description: The number of customers for the service provider
+        status:
+          type: string
+          description: The status of the service provider
+        rebillAt:
+          type: string
+          format: date-time
+          description: 'The time when the service provider was rebilled.
+
+            The timestamp is specified in the ISO 8601 format.'
+        expiresAt:
+          type: string
+          format: date-time
+          description: 'The time when the service provider''s subscription expires.
+
+            The timestamp is specified in the ISO 8601 format.'
+      required:
+      - packageName
+      - seatsTotal
+      - seatsUsed
+      - customerCount
+      - status
+      - rebillAt
+      - expiresAt
+      example:
+        packageName: Umbrella SIG Essentials
+        seatsTotal: 25
+        seatsUsed: 20
+        customerCount: 20
+        status: enrolled
+        rebillAt: '2022-06-13T16:07:07.222Z'
+        expiresAt: '2022-06-13T16:07:07.222Z'
+    ServerError:
+      description: Error- This request could not be processed by the server
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+          description: the http error code returned
+        error:
+          type: string
+          example: Internal Server Error
+          description: a brief description of the error
+        txId:
+          type: string
+          example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+          description: a unique hex number that can be used for debugging
+    sigQuestionnaire:
+      type: string
+      description: The SIG questionnaire
+      example: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+        Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+        Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+    ForbiddenError:
+      description: Forbidden- The token is invalid
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+          description: HTTP status code
+        error:
+          type: string
+          example: Forbidden, Invalid authentication credentials
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    BadRequestError:
+      description: Validation Error
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+          description: HTTP status code
+        error:
+          type: string
+          example: Validation Error
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+        validationErrors:
+          type: object
+          properties:
+            someProperty:
+              type: string
+              example: must not be empty
+              description: the name of the property failing validation.
+    DownloadReport:
+      type: object
+      required:
+      - isReportReady
+      properties:
+        isReportReady:
+          type: boolean
+          default: true
+          description: Specifies whether the security report is ready to download
+          example: false
+        organizationTypeId:
+          type: integer
+          description: The type ID of the customer's organization
+        organizationName:
+          type: string
+          description: The name of the customer's organization
+        organizationId:
+          type: integer
+          description: The ID of the customer's organization
+        createdAt:
+          type: integer
+          description: The time when the report was created. Specify the time in milliseconds.
+          example: 1594557263
+        packageName:
+          type: string
+          description: The name of customer's subscription
+        users:
+          type: integer
+          description: The number of users in the subscription
+        adminEmails:
+          type: array
+          items:
+            type: string
+          description: The emails of admins for the customer's organization
+        streetAddress:
+          type: string
+          description: The customer's street address
+        streetAddress2:
+          type: string
+          description: The second street address for the customer
+        city:
+          type: string
+          description: The customer's city
+        state:
+          type: string
+          description: The customer's state
+        countryCode:
+          type: string
+          description: The customer's country
+          minLength: 2
+          maxLength: 3
+        zipCode:
+          type: string
+          description: The customer's zip code
+        dealId:
+          type: string
+          description: The ID of the CCW deal for the subscription
+        ppovLifecycle:
+          $ref: '#/components/schemas/PpovLifecycle_2'
+        hasDistributorVisibility:
+          type: boolean
+          description: Specify whether the distributor has visibility into the trial
+        isOnboardingWizardCompleted:
+          type: boolean
+          description: Specify whether customer has logged into the dashboard
+        trialId:
+          type: string
+          description: The MD5 value of the customer's trial ID
+        accountManagerEmails:
+          type: array
+          items:
+            type: string
+          description: The emails of the account managers
+        trialStartsAt:
+          type: string
+          format: date
+          description: The start date of the trial subscription
+          example: '2021-09-22'
+        trialEndsAt:
+          type: string
+          format: date
+          description: The end date of the trial subscription
+          example: '2021-11-22'
+        serviceGracePeriodEndDate:
+          type: integer
+          example: 1594557263
+          description: The period that extends the trial subscription
+        networks:
+          type: integer
+          description: The number of networks deployed in the customer's organization
+          example: 25
+        roamingClients:
+          type: integer
+          description: The number of roaming clients deployed in the customer's organization
+          example: 20
+        VAs:
+          type: integer
+          description: The number of virtual appliances (VAs) deployed in the customer's organization
+          example: 5
+        comments:
+          type: array
+          items:
+            type: string
+          description: The feedback about the customer's trial
+        sigQuestionnaire:
+          $ref: '#/components/schemas/sigQuestionnaire'
+      example:
+        isReportReady: true
+        organizationId: 2345892
+        organizationTypeId: 4
+        organizationName: Cisco Systems
+        createdAt: 1594557263
+        packageId: 7
+        packageName: SIG essentials
+        users: 25
+        trialStartsAt: '2023-03-01'
+        trialEndsAt: '2023-07-01'
+        adminEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        streetAddress: 123 Circle Street
+        streetAddress2: P.O. Box 575
+        city: San Jose
+        state: CA
+        countryCode: US
+        zipCode: 01904
+        dealId: 123443c
+        ppovLifecycle:
+          state: state of customer trial
+          date: '2023-02-28'
+          enabled: true
+          lastSentDate: '2023-03-01'
+          mailIdentifiers:
+            noLoginDayFourMailIdentifier: customer mail identifier, no login four days
+            noOriginDayThreeMailIdentifier: three day mail identifier, no origin
+            noOriginDaySevenMailIdentifier: seven day mail identifer, no origin
+          excludedLifecycleEmails:
+          - name@acmetech.com
+        hasDistributorVisibility: true
+        isOnboardingWizardCompleted: true
+        trialId: MD5 hash
+        accountManagerEmails:
+        - name@cisco.com
+        - name-one@cisco.com
+        serviceGracePeriodEndDate: 1594557263
+        networks: 5
+        roamingClients: 25
+        VAs: 10
+        comments:
+        - A comment about the customer's trial
+        sigQuestionnaire: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+          Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+          Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+    NotFoundError:
+      description: Not Found- A resource specified in the URL was not found
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+          description: HTTP status code
+        error:
+          type: string
+          example: Not Found
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    PpovLifecycle_2:
+      type: object
+      description: The email details for a customer trial lifecycle events
+      properties:
+        state:
+          type: string
+          description: The current state of the customer trial
+        date:
+          type: string
+          format: date
+          description: ''
+          example: '2021-09-28'
+        enabled:
+          type: boolean
+          description: Specify whether lifecycle emails are enabled
+        lastSentDate:
+          type: string
+          format: date
+          description: Specify last lifecycle email sent date
+          example: '2021-10-05'
+        mailIdentifiers:
+          type: object
+          description: The information about the email identifiers for the customer
+          properties:
+            noLoginDayFourMailIdentifier:
+              type: string
+              description: The email for the customer that did not log in for four days
+              example: name@noorgin.acmetech.com
+            noOriginDayThreeMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for three days
+              example: name@noorgin.acmetech.com
+            noOriginDaySevenMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for seven days
+              example: name@noorgin.acmetech.com
+        excludedLifecycleEmails:
+          type: array
+          items:
+            type: string
+          description: The emails excluded for the lifecycle of the customer
+          example:
+          - name1@acmeTech.com
+          - name2@acmetech.com
+    SecurityReportsRequest:
+      type: object
+      required:
+      - status
+      - data
+      properties:
+        data:
+          type: object
+          description: The data for the request to access the report
+          properties:
+            id:
+              type: integer
+              description: The ID of the request to generate the report
+            header:
+              type: object
+              description: The status information about the report
+              properties:
+                date:
+                  type: integer
+                  description: The date of the generated report specified in milliseconds
+                status:
+                  type: string
+                  description: The status of the report generation
+            body:
+              type: object
+              description: The details of the report
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address used to send the report
+                end_date:
+                  type: string
+                  format: date
+                  description: The report includes data that appears before the specified date
+                  example: '2022-07-13'
+                organization_id:
+                  type: string
+                  description: The ID of the customer's organization
+                organization_name:
+                  type: string
+                  description: The name of the customer's organization
+                origin_id:
+                  type: string
+                  description: The origin ID
+                start_date:
+                  type: string
+                  format: date
+                  description: The report includes data that appears after the specified date
+                  example: '2022-06-13'
+        status:
+          type: string
+          description: The status of the report generation request
+        task:
+          type: string
+          description: The task for the report generation
+      example:
+        data:
+          body:
+            email: user@cisco.com
+            end_date: '2022-09-09'
+            organization_id: '7970851'
+            organization_name: Abc Prime Product
+            origin_id: '585256703'
+            start_date: '2022-09-01'
+          header:
+            date: 1663674125
+            status: pending
+          id: 2683
+        status: ok
+        task: enqueue-task
+    UnauthorizedError:
+      description: Unauthorized- The authorization header is missing or the token is unauthorized
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 401
+          description: HTTP status code
+        error:
+          type: string
+          example: Unauthorized
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+  headers:
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+  responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Server error
+            properties:
+              message:
+                type: string
+                description: Message for Server error
+          example:
+            message: server error
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Unauthorized request
+            properties:
+              message:
+                type: string
+                description: Message for Unauthorized request
+          example:
+            message: Unauthorized request
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Forbidden
+            properties:
+              message:
+                type: string
+                description: Message for Forbidden
+          example:
+            message: Forbidden
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Not Found
+            properties:
+              message:
+                type: string
+                description: Message for Not Found
+          example:
+            message: Not Found
+    400ErrorPutCustomerDeals:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The error that occurred for getting the list of the customer deal information.
+            properties:
+              message:
+                type: string
+          examples:
+            400NoParentOrg:
+              value:
+                message: Parent organization does not exist
+            400WrongParentOrg:
+              value:
+                message: Invalid parent organization type
+            400NoCcoId:
+              value:
+                message: No CCOID specified
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Invalid request
+            properties:
+              message:
+                type: string
+                description: Message for Invalid request
+          example:
+            message: Invalid request
+    ServerErr:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    InvalidRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+  parameters:
+    dealIdParam:
+      name: dealId
+      in: path
+      description: The deal ID.
+      required: true
+      schema:
+        type: string
+      example: 1235a
+    pageParam:
+      name: page
+      in: query
+      description: A number of a page in the collection.
+      schema:
+        type: integer
+        default: 1
+        format: int32
+        minimum: 1
+      required: false
+      example: 2
+    customerIdParam:
+      name: customerId
+      in: path
+      description: The ID of the customer.
+      required: true
+      schema:
+        type: integer
+        format: int32
+    accessRequestIdParam:
+      name: accessRequestId
+      in: path
+      description: The access request ID.
+      required: true
+      schema:
+        type: integer
+    limitParam:
+      name: limit
+      in: query
+      description: The number of records to return from the collection on a page.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+      example: 50
+    ccoIdParam:
+      name: ccoId
+      in: query
+      description: The ID of the user querying the deal ID.
+      required: true
+      schema:
+        type: integer
+        format: int32
+      example: 12329433
+    customerIdParam_2:
+      name: customerId
+      description: The customer ID
+      schema:
+        type: integer
+      in: path
+      required: true
+    outputFormatParam:
+      name: outputFormat
+      in: query
+      description: 'The content type of the security report. Valid values are: ''cvs'' or ''json''.'
+      required: false
+      schema:
+        default: json
+        type: string
+        enum:
+        - json
+        - csv
+  requestBodies:
+    CustomerCreateRequestBody:
+      description: Create a new customer with the provided information.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Create a new customer with the provided information.
+            required:
+            - customerName
+            - seats
+            - streetAddress
+            - city
+            - countryCode
+            - packageId
+            - adminEmails
+            properties:
+              customerName:
+                $ref: '#/components/schemas/customerName'
+              addonRbi:
+                type: string
+                enum:
+                - '0'
+                - '1'
+                - '2'
+                - '3'
+                maxLength: 1
+                description: 'Remote Browser Isolation Add-On (applicable only for SIG Essentials or SIG Advantage).
+
+                  Specify one option:
+
+                  `0` = No selection
+
+                  `1` = RBI Isolate Risky
+
+                  `2` = RBI Isolate Web Applications
+
+                  `3` = RBI Isolate All
+
+                  '
+              addonCdfwL7:
+                type: boolean
+                description: L7 Cloud Delivered Firewall Solution (applicable only for SIG Essentials).
+              addonDlp:
+                type: boolean
+                description: Data Loss Prevention Add-On (applicable only for SIG Essentials).
+              licenseType:
+                type: string
+                enum:
+                - term
+                - msla
+                default: term
+                description: 'The customer''s license type (applicable only for MSSP):
+
+                  `term` = term customer
+
+                  `msla` = Managed Services License Agreement (MSLA) customer
+
+                  '
+              isTrial:
+                type: boolean
+                default: true
+                description: Specify whether the customer is a trial with an MSSP with SPLA (MSLA) license.
+                example: true
+              seats:
+                $ref: '#/components/schemas/seats'
+              streetAddress:
+                $ref: '#/components/schemas/streetAddress'
+              streetAddress2:
+                $ref: '#/components/schemas/streetAddress2'
+              city:
+                $ref: '#/components/schemas/city'
+              state:
+                $ref: '#/components/schemas/state'
+              countryCode:
+                $ref: '#/components/schemas/countryCode'
+              zipCode:
+                $ref: '#/components/schemas/zipCode'
+              packageId:
+                $ref: '#/components/schemas/packageIdWrite'
+              dealId:
+                $ref: '#/components/schemas/dealId'
+              adminEmails:
+                $ref: '#/components/schemas/adminEmails'
+              ccwDealOwnerEmails:
+                $ref: '#/components/schemas/ccwDealOwnerEmails'
+          example:
+            customerName: cisco
+            seats: 1000
+            streetAddress: 123 Customer Way
+            city: San Jose
+            state: CA
+            countryCode: 1a
+            packageId: 250
+            adminEmails:
+            - company@cisco.com
+    CustomerUpdateRequestBody:
+      description: Update the customer information.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerName:
+                $ref: '#/components/schemas/customerName'
+              seats:
+                $ref: '#/components/schemas/seats'
+              streetAddress:
+                $ref: '#/components/schemas/streetAddress'
+              streetAddress2:
+                $ref: '#/components/schemas/streetAddress2'
+              city:
+                $ref: '#/components/schemas/city'
+              state:
+                $ref: '#/components/schemas/state'
+              countryCode:
+                $ref: '#/components/schemas/countryCode'
+              zipCode:
+                $ref: '#/components/schemas/zipCode'
+              packageId:
+                $ref: '#/components/schemas/packageIdWrite'
+              dealId:
+                $ref: '#/components/schemas/dealId'
+              adminEmails:
+                $ref: '#/components/schemas/adminEmails'
+              ccwDealOwnerEmails:
+                $ref: '#/components/schemas/ccwDealOwnerEmails'
+            required:
+            - customerName
+            - seats
+            - streetAddress
+            - city
+            - countryCode
+            - packageId
+            - adminEmails
+          example:
+            customerName: Cisco Systems
+            seats: 1000
+            streetAddress: 123 Customer Way
+            city: San Jose
+            state: CA
+            countryCode: 1a
+            packageId: 250
+            adminEmails:
+            - company@cisco.com
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            admin.customers:read: Read admin customers
+            admin.customers:write: Write admin customers
+            admin.customerSearch:read: Read admin customer search
+            admin.customerDeals:read: Read admin customer deals
+            admin.customerDeals:write: Write admin customer deals
+x-refined-from:
+- cisco-umbrella-admin-providers-openapi.yml
+- cisco-umbrella-reports-provider-consoles-openapi.yml
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/key-admin.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/key-admin.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

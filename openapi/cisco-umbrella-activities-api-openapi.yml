@@ -1,0 +1,279 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Activities API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Activities
+paths:
+  /activities:
+    get:
+      tags:
+      - Activities
+      summary: List Activities
+      description: Get the UBA (User Behavioral Analysis) activities.
+      operationId: listActivities
+      parameters:
+      - $ref: '#/components/parameters/eventTypeParam'
+      - name: ids
+        schema:
+          type: string
+        in: query
+        description: 'Filter the collection based on the event id or group of ids. Provide a comma-separated list of ID strings.
+
+          The ID strings must be url encoded.'
+        example: google:auth:-1595373817266362937%230,aws:CloudTrail:d891a0e2-4aaa-4cea-b237-da3d103ccbef
+      - $ref: '#/components/parameters/createdAfterParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActivitiesCollection'
+              examples:
+                response:
+                  value:
+                  - client_ip: 86.176.87.160
+                    client_location:
+                      city: Harpenden
+                      country:
+                        code: GB
+                        name: United Kingdom
+                      lat: '51.8'
+                      lng: '-0.35'
+                      region:
+                        code: F8
+                        name: Hertford
+                    created_at: '2015-06-23T15:18:09.000Z'
+                    event_category: auth
+                    event_id: -6285966971996490902#0
+                    event_type: login
+                    extra:
+                      auth:
+                        auth_type: ''
+                        is_suspicious: false
+                    operation_successful: true
+                    origin_id: '-6285966971996490902'
+                    raw:
+                      actor:
+                        email: yoni.fine@cloudlockdemo.com
+                        profileId: '108287862377325873441'
+                        etag: '"RU_ANZvud_qrxRGJHqK2w1PCmE4/mLe1pMbCGKexbLn4QBfOSNhifXY"'
+                      events:
+                      - parameters:
+                        - name: login_type
+                          value: google_password
+                        - name: login_success
+                          type: login
+                      id:
+                        applicationName: login
+                        customerId: C015wxbys
+                        time: '2015-06-23T15:18:09.000Z'
+                        uniqueQualifier: '-6285966971996490902'
+                      ipAddress: 86.176.87.160
+                      kind: admin#reports#activity
+                    user:
+                      user_email: yoni.fine@cloudlockdemo.com
+                      vendor_id: '108287862377325873441'
+                    user_agent: ''
+                    vendor:
+                      name: google
+                      service: auth
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    createdAfterParam:
+      name: created_after
+      schema:
+        type: string
+      in: query
+      description: Filter the collection by the creation date.
+      example: '2021-01-01'
+    eventTypeParam:
+      name: event_type
+      schema:
+        type: string
+      in: query
+      description: 'Filter based on the event type. For example: login, user_settings, or other.'
+      example: user_settings
+  schemas:
+    ActivitiesCollection:
+      type: object
+      properties:
+        event_id:
+          type: string
+          description: This is CloudLock Internal Identifier for an activity.
+          example: -6285966971996490902#0
+        client_ip:
+          type: string
+          description: The client's IP address.
+          example: 86.176.87.160
+        event_type:
+          type: string
+          description: The type of the event.
+          example: login, other, user_settings
+        created_at:
+          type: string
+          description: When the activity took place, in UTC.
+          example: '2015-03-19T09:00:17.602482+00:00'
+        operation_successful:
+          type: boolean
+          description: Specifies whether the activity succeeded.
+          example: true
+        client_location:
+          type: object
+          properties:
+            city:
+              type: string
+            country:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+            lat:
+              type: string
+            lng:
+              type: string
+            region:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+          description: The client location information.
+        event_category:
+          type: string
+          description: The event category type.
+          example: auth
+        origin_id:
+          type: string
+          description: The origin ID.
+          example: '-6285966971996490902'
+        user:
+          type: object
+          properties:
+            user_email:
+              type: string
+              description: ''
+            vendor_id:
+              type: string
+              description: ''
+          description: The user information.
+        user_agent:
+          type: string
+        vendor:
+          type: object
+          properties:
+            name:
+              type: string
+              description: ''
+            service:
+              type: string
+              description: The vendor description.
+          description: The platform information.
+        extra:
+          type: object
+          properties:
+            auth:
+              type: object
+              properties:
+                auth_type:
+                  type: string
+                  description: The type of authentication.
+                is_suspicious:
+                  type: boolean
+                  description: Indicates whether the activity is flagged as being suspicious.
+          description: Additional information related to the activity
+        raw:
+          type: object
+          description: The raw information for the activity.
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

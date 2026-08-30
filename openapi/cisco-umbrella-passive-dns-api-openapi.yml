@@ -1,0 +1,633 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Passive DNS API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Passive DNS
+paths:
+  /pdns/name/{domain}:
+    get:
+      summary: Get Resource Records for Name
+      operationId: getPassiveDNSName
+      tags:
+      - Passive DNS
+      description: The Passive DNS endpoint provides historical data from the Umbrella resolvers for domains, IPs, and other resource records.
+      parameters:
+      - $ref: '#/components/parameters/domainParam'
+      - $ref: '#/components/parameters/limitRecordsParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortorderParam'
+      - $ref: '#/components/parameters/sortbyParam'
+      - $ref: '#/components/parameters/recordTypeParam'
+      - $ref: '#/components/parameters/includeFeaturesParam'
+      - $ref: '#/components/parameters/minFirstSeenParam'
+      - $ref: '#/components/parameters/maxFirstSeenParam'
+      - $ref: '#/components/parameters/minLastSeenParam'
+      - $ref: '#/components/parameters/maxLastSeenParam'
+      - $ref: '#/components/parameters/sortCategoriesParam'
+      - $ref: '#/components/parameters/requiredCategoriesParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Records'
+              example:
+              - minTtl: 86400
+                maxTtl: 86400
+                firstSeen: 1506630180000
+                lastSeen: 1557133071000
+                name: coinhive.com
+                type: NS
+                rr: lara.ns.cloudflare.com.
+                securityCategories:
+                - '8'
+                - '150'
+                contentCategories:
+                - Software/Technology
+                - Business Services
+                firstSeenISO: '2017-09-28T20:23:00Z'
+                lastSeenISO: 2019-05-06T08:57Z
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /pdns/domain/{domain}:
+    get:
+      summary: Get Resource Records for Domain
+      operationId: getPassiveDNSDomain
+      tags:
+      - Passive DNS
+      description: Get the Resource Record (RR) data for DNS responses, and categorization data, where the answer (or rdata) is the domain(s).
+      parameters:
+      - $ref: '#/components/parameters/domainParam'
+      - $ref: '#/components/parameters/limitRecordsParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortorderParam'
+      - $ref: '#/components/parameters/sortbyParam'
+      - $ref: '#/components/parameters/recordTypeParam'
+      - $ref: '#/components/parameters/includeFeaturesParam'
+      - $ref: '#/components/parameters/minFirstSeenParam'
+      - $ref: '#/components/parameters/maxFirstSeenParam'
+      - $ref: '#/components/parameters/minLastSeenParam'
+      - $ref: '#/components/parameters/maxLastSeenParam'
+      - $ref: '#/components/parameters/sortCategoriesParam'
+      - $ref: '#/components/parameters/requiredCategoriesParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Records'
+              example:
+              - minTtl: 3600
+                maxTtl: 3600
+                firstSeen: 1482339360000
+                lastSeen: 1482339360000
+                name: coinhive.com
+                type: CNAME
+                rr: www.coinhive.com.
+                securityCategories:
+                - Potentially Harmful
+                - Cryptomining
+                contentCategories: []
+                firstSeenISO: '2016-12-21T16:56:00Z'
+                lastSeenISO: 2016-12-21T16:56Z
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /pdns/ip/{ip}:
+    get:
+      summary: Get Resource Records for IP
+      operationId: getPassiveDNSIp
+      tags:
+      - Passive DNS
+      description: Get the Resource Record (RR) data for DNS responses, and categorization data, where the answer (or rdata) is the domain(s).
+      parameters:
+      - name: ip
+        in: path
+        required: true
+        description: 'An IP address, for example: 2620:119:35::35.'
+        schema:
+          type: string
+        example: 208.67.222.222
+      - $ref: '#/components/parameters/limitRecordsParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortorderParam'
+      - $ref: '#/components/parameters/sortbyParam'
+      - $ref: '#/components/parameters/recordTypeParam'
+      - $ref: '#/components/parameters/includeFeaturesParam'
+      - $ref: '#/components/parameters/minFirstSeenParam'
+      - $ref: '#/components/parameters/maxFirstSeenParam'
+      - $ref: '#/components/parameters/minLastSeenParam'
+      - $ref: '#/components/parameters/maxLastSeenParam'
+      - $ref: '#/components/parameters/sortCategoriesParam'
+      - $ref: '#/components/parameters/requiredCategoriesParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Records'
+              example:
+              - minTtl: 3600
+                maxTtl: 3600
+                firstSeen: 1544388420000
+                lastSeen: 1553839713000
+                name: 146.112.61.104
+                type: A
+                rr: hit-block.umbrella.com.
+                securityCategories:
+                - Malware
+                contentCategories:
+                - Software/Technology
+                firstSeenISO: '2018-12-09T20:47:00Z'
+                lastSeenISO: 2019-03-29T06:08Z
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /pdns/raw/{anystring}:
+    get:
+      summary: Get Resource Records for Raw Data
+      operationId: getPassiveDNSRaw
+      tags:
+      - Passive DNS
+      description: Get the Resource Record (RR) data for DNS responses, and categorization data, where the answer (or rdata) could be anything.
+      parameters:
+      - name: anystring
+        in: path
+        required: true
+        description: 'The text representation of the data. When querying TXT records, add quotes around the text.
+
+          For example, to search for the ''abc'', provide the string as a path parameter
+
+          in an API request: ''https://api.umbrella.com/investigate/v2/pdns/raw/%22abc%22''.'
+        schema:
+          type: string
+        example: '%22abc%22'
+      - $ref: '#/components/parameters/limitRecordsParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/sortorderParam'
+      - $ref: '#/components/parameters/sortbyParam'
+      - $ref: '#/components/parameters/recordTypeParam'
+      - $ref: '#/components/parameters/includeFeaturesParam'
+      - $ref: '#/components/parameters/minFirstSeenParam'
+      - $ref: '#/components/parameters/maxFirstSeenParam'
+      - $ref: '#/components/parameters/minLastSeenParam'
+      - $ref: '#/components/parameters/maxLastSeenParam'
+      - $ref: '#/components/parameters/sortCategoriesParam'
+      - $ref: '#/components/parameters/requiredCategoriesParam'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Records'
+              example:
+              - minTtl: 3600
+                maxTtl: 3600
+                firstSeen: 1544386020000
+                lastSeen: 1555327199000
+                name: 926723159-3188410
+                type: TXT
+                rr: cisco.com
+                securityCategories:
+                - Malware
+                - Cryptomining
+                contentCategories:
+                - Software/Technology
+                - Business Services
+                firstSeenISO: '2018-12-09T20:07:00Z'
+                lastSeenISO: 2019-04-15T11:19Z
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+  responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    Record:
+      type: object
+      description: The information about the record.
+      properties:
+        minTtl:
+          type: integer
+          format: int64
+          description: The minimum TTL for the record in seconds.
+        maxTtl:
+          type: integer
+          format: int64
+          description: The maximum TTL for the record in seconds.
+        firstSeen:
+          $ref: '#/components/schemas/firstSeen'
+        lastSeen:
+          type: integer
+          format: int64
+          description: 'The last time Umbrella related the domain for the resource record, specified
+
+            in Unix Epoch time.'
+        name:
+          type: string
+          description: The name of the query.
+        type:
+          type: string
+          description: 'The DNS record type. For example: A, CNAME, NS, MX.'
+        securityCategories:
+          type: array
+          items:
+            type: string
+          description: The Umbrella security categories, if any, that match the domain.
+        contentCategories:
+          type: array
+          items:
+            type: string
+          description: The Umbrella content categories, if any, that match the domain.
+        firstSeenISO:
+          $ref: '#/components/schemas/firstSeenISO'
+        lastSeenISO:
+          $ref: '#/components/schemas/lastSeenISO'
+    Records:
+      type: array
+      description: The list of records.
+      items:
+        $ref: '#/components/schemas/Record'
+    firstSeenISO:
+      type: string
+      format: date-time
+      description: 'The first time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+    lastSeenISO:
+      type: string
+      description: 'The last time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+    firstSeen:
+      type: integer
+      format: int64
+      description: 'The first time Umbrella related the domain for the resource record, specified
+
+        in Unix Epoch time.'
+      example: 1615427410
+  parameters:
+    maxFirstSeenParam:
+      name: maxFirstSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `firstSeen` <= the value of `maxFirstSeen`.
+      schema:
+        type: integer
+        format: int64
+    sortorderParam:
+      name: sortorder
+      in: query
+      required: false
+      description: Sort records by ascending (`asc`) or descending (`desc`) order. By default, the records are returned in descending order.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+      example: asc
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
+    requiredCategoriesParam:
+      name: requiredCategories
+      in: query
+      required: false
+      description: 'Filter for records that are assigned the specified security categories.
+
+        The case-sensitive security category strings are: Drive-by Downloads/Exploits, Mobile Threats,
+
+        Dynamic DNS, High Risk Sites and Locations, Command and Control, Malware, Phishing,
+
+        Newly Seen Domains, Potentially Harmful,
+
+        DNS Tunneling VPN, and Cryptomining. Use commas to separate multiple security category strings.'
+      schema:
+        type: string
+      example: Mobile Threats, Phishing
+    sortbyParam:
+      name: sortby
+      in: query
+      required: false
+      description: 'Sort records by one of the following fields: `minTtl`, `maxTtl`, `firstSeen`, or `lastSeen`.'
+      schema:
+        type: string
+        enum:
+        - minTtl
+        - maxTtl
+        - firstSeen
+        - lastSeen
+      example: minTtl
+    maxLastSeenParam:
+      name: maxLastSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `lastSeen` <= the value of `maxLastSeen`.
+      schema:
+        type: integer
+        format: int64
+    minFirstSeenParam:
+      name: minFirstSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `firstSeen` >= the value of `minFirstSeen`.
+      schema:
+        type: integer
+        format: int64
+    includeFeaturesParam:
+      name: includefeatures
+      in: query
+      required: false
+      description: Specify whether to add the feature sections to the response. The default value is 'false'.
+      schema:
+        type: boolean
+      example: true
+    minLastSeenParam:
+      name: minLastSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `lastSeen` >= the value of `minLastSeen`.
+      schema:
+        type: integer
+        format: int64
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
+    limitRecordsParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of records to return in the collection.
+
+        The default limit is 500 records. The maximum number of records
+
+        returned for all requests to the endpoint is 10,000.
+
+        '
+      schema:
+        type: integer
+        default: 500
+        maximum: 10000
+      example: 1000
+    sortCategoriesParam:
+      name: sortCategories
+      in: query
+      required: false
+      description: 'Sort the records by the specified security categories or all security categories (`All`).
+
+        The case-sensitive security category strings are: Drive-by Downloads/Exploits, Mobile Threats,
+
+        Dynamic DNS, High Risk Sites and Locations, Command and Control, Malware, Phishing,
+
+        Newly Seen Domains, Potentially Harmful,
+
+        DNS Tunneling VPN, and Cryptomining. Use commas to separate multiple security category strings.
+
+
+        Investigate lists the records that have at least one of these security categories at the top of the list.
+
+        The rest of the sorting parameters are applied within the records with and without any of
+
+        the security categories.'
+      schema:
+        type: string
+      example: All
+    recordTypeParam:
+      name: recordType
+      in: query
+      required: false
+      description: 'The type of records. For example: ''A'', ''CNAME'', ''NS'', ''MX''.
+
+        Use commas to separate multiple types of record.'
+      schema:
+        type: string
+      example: A, CNAME
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

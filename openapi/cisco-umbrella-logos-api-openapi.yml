@@ -1,0 +1,480 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Service Providers Console Logos API
+  version: 2.0.0
+  description: Configure the Service Providers console.
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: admin/v2
+security:
+- oauthFlow: []
+tags:
+- name: Logos
+paths:
+  /config/logos:
+    get:
+      tags:
+      - Logos
+      description: Get the logos for the service providers console.
+      summary: List Logos
+      operationId: getLogos
+      security:
+      - oauthFlow:
+        - admin.config:read
+      responses:
+        '200':
+          description: No Content
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Get logos for the service providers console.
+                items:
+                  $ref: '#/components/schemas/Logo'
+              example:
+              - id: 1235455
+                organizationId: 123456a
+                imageUrl: https://examples.com
+                imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+                token: '1234567889123456789123456789123456789123456789123456789123456789'
+                createdAt: 1559836800
+                modifiedAt: 1559836800
+                enabled: true
+                brandingTypeId: 4
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      tags:
+      - Logos
+      description: Create a logo for the service providers console.
+      summary: Create Logo
+      operationId: createLogo
+      security:
+      - oauthFlow:
+        - admin.config:write
+      requestBody:
+        $ref: '#/components/requestBodies/LogoRequestBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logo'
+              example:
+                id: 1235455
+                organizationId: 123456a
+                imageUrl: https://examples.com
+                imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+                token: '1234567889123456789123456789123456789123456789123456789123456789'
+                createdAt: 1559836800
+                modifiedAt: 1559836800
+                enabled: true
+                brandingTypeId: 4
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /config/logos/{logoId}:
+    get:
+      tags:
+      - Logos
+      description: Get a logo for the service providers console.
+      summary: Get Logo
+      operationId: getLogo
+      parameters:
+      - $ref: '#/components/parameters/logoIdParam'
+      security:
+      - oauthFlow:
+        - admin.config:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logo'
+              example:
+                id: 1235455
+                organizationId: 123456a
+                imageUrl: https://examples.com
+                imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+                token: '1234567889123456789123456789123456789123456789123456789123456789'
+                createdAt: 1559836800
+                modifiedAt: 1559836800
+                enabled: true
+                brandingTypeId: 4
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Logos
+      description: Update a logo for the service providers console.
+      summary: Update Logo
+      operationId: updateLogo
+      parameters:
+      - $ref: '#/components/parameters/logoIdParam'
+      security:
+      - oauthFlow:
+        - admin.config:write
+      requestBody:
+        $ref: '#/components/requestBodies/LogoRequestBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logo'
+              example:
+                id: 1235455
+                organizationId: 123456a
+                imageUrl: https://examples.com
+                imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+                token: '1234567889123456789123456789123456789123456789123456789123456789'
+                createdAt: 1559836800
+                modifiedAt: 1559836800
+                enabled: true
+                brandingTypeId: 4
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    delete:
+      tags:
+      - Logos
+      description: Delete a logo for the service providers console.
+      summary: Delete Logo
+      operationId: deleteLogo
+      parameters:
+      - $ref: '#/components/parameters/logoIdParam'
+      security:
+      - oauthFlow:
+        - admin.config:write
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type:
+                - string
+                - 'null'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
+    500Error:
+      description: Internal Server error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Internal Server Error
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Unauthorized
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Not Found
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Bad Request
+  requestBodies:
+    LogoRequestBody:
+      description: Add the logo information for the service providers console.
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            description: Add the logo information for the service providers console.
+            required:
+            - imageKey
+            - token
+            - enabled
+            - brandingTypeId
+            - imageUrl
+            properties:
+              imageKey:
+                type: string
+                format: binary
+                description: The key for the logo.
+                example: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+              imageUrl:
+                type: string
+                description: The URL for the logo.
+                format: url
+                example: https://examples.com
+              token:
+                type: string
+                minLength: 64
+                maxLength: 64
+                example: '1234567889123456789123456789123456789123456789123456789123456789'
+                description: The token for the logo.
+              enabled:
+                type: boolean
+                default: false
+                example: true
+              brandingTypeId:
+                type: integer
+                description: The ID of the type of branding.
+                example: 4
+          example:
+            imageUrl: https://examples.com
+            imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+            token: '1234567889123456789123456789123456789123456789123456789123456789'
+            enabled: true
+            brandingTypeId: 4
+  parameters:
+    logoIdParam:
+      name: logoId
+      in: path
+      description: The logo ID.
+      schema:
+        type: integer
+      required: true
+      example: 5315
+  schemas:
+    Logo:
+      type: object
+      description: The information about the service provider's logo.
+      required:
+      - id
+      - organizationId
+      - imageKey
+      - token
+      - enabled
+      - brandingTypeId
+      - imageUrl
+      properties:
+        id:
+          type: integer
+          description: The ID of the logo.
+          example: 123455
+        organizationId:
+          type: string
+          description: The ID of the organization associated with the logo.
+          example: 123456a
+        imageUrl:
+          type: string
+          format: url
+          description: The URL for the logo.
+          example: https://examples.com
+        imageKey:
+          type: string
+          format: binary
+          description: The key for the logo.
+          example: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+        token:
+          type: string
+          minLength: 64
+          maxLength: 64
+          description: The randomly generated number for the logo.
+          example: '1234567889123456789123456789123456789123456789123456789123456789'
+        createdAt:
+          type: integer
+          format: int32
+          description: The time when the logo was created. The time is specified in milliseconds.
+          example: 1559836800
+        modifiedAt:
+          type: integer
+          format: int32
+          description: The time when the logo was last modified. The time is specified in milliseconds.
+          example: 1559836800
+        enabled:
+          type: boolean
+          default: false
+          example: true
+          description: Specify whether the logo is in use.
+        brandingTypeId:
+          type: integer
+          description: The ID of the type of branding.
+          example: 4
+      example:
+        id: 1235455
+        organizationId: 123456a
+        imageUrl: https://examples.com
+        imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+        token: '1234567889123456789123456789123456789123456789123456789123456789'
+        createdAt: 1559836800
+        modifiedAt: 1559836800
+        enabled: true
+        brandingTypeId: 4
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            admin.config:read: Read admin config
+            admin.config:write: Write admin config
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

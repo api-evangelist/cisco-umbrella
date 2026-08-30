@@ -1,0 +1,283 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Tagging Timeline API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Tagging Timeline
+paths:
+  /timeline/{name}:
+    get:
+      operationId: getTimeline
+      tags:
+      - Tagging Timeline
+      summary: Get Tagging Timeline for Destination
+      description: 'List the historical tagging timeline for a given IP, domain, or URL.
+
+        Investigate sorts the timeline items in descending order using the timestamp field.
+
+        Each timeline item includes lists of security category,
+
+        attack, or threat type associated with the destination.
+
+        Use the Tagging Timeline endpoint to verify when Umbrella assigned or removed
+
+        a security category, attack, or threat type.
+
+        If the current timeline item contains the security category, type of attack,
+
+        or threat type not found in the previous timeline item,
+
+        Umbrella updated the current timeline item.
+
+        If the current timeline item does not contain the security category, attack,
+
+        or threat type found in the previous timeline item,
+
+        Umbrella removed the security category, type of attack,
+
+        or threat type.
+
+        '
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: An IP, domain, or URL.
+        schema:
+          type: string
+        example: https://cisco.com
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimelineItem'
+              example:
+              - categories:
+                - Malware
+                attacks:
+                - Trojan
+                threatTypes: []
+                timestamp: 1561574807853
+              - categories:
+                - '8'
+                - '150'
+                attacks:
+                - Trojan
+                threatTypes: []
+                timestamp: 1559545774604
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    TimelineItem:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+            description: 'The security category assigned at this date and time on the domain, IP, or URL. '
+          description: 'The list of security categories assigned at this date and time on the domain, IP, or URL.
+
+            If no security categories are assigned, Investigate returns an empty array.'
+          example:
+          - Command and Control
+          - Phishing
+        attacks:
+          type: array
+          items:
+            type: string
+            description: 'The security threat assigned at this date and time on the domain, IP, or URL. '
+          description: 'The list of threats assigned at this date and time on the domain, IP, or URL.
+
+            If no threats are assigned, Investigate returns an empty array.'
+          example:
+          - Malware
+        threatTypes:
+          type: array
+          items:
+            type: string
+            description: 'The type of security threats assigned at this date and time on the domain, IP, or URL. '
+          description: 'The list of threat types assigned at this date and time on the domain, IP, or URL.
+
+            If no threat types are tagged, Investigate returns an empty array.'
+          example:
+          - Bot
+        timestamp:
+          type: integer
+          format: int64
+          description: 'The date and time of the tagging of the domain, IP, or URL.
+
+            The date and time is specified in milliseconds elapsed since the Unix epoch.'
+          example: 1615427410000
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

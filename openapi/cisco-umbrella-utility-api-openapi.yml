@@ -1,0 +1,889 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Reporting Utility API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+security:
+- oauthFlow: []
+tags:
+- name: Utility
+paths:
+  /applications:
+    get:
+      tags:
+      - Utility
+      summary: Get Applications
+      operationId: getApplications
+      description: 'List the applications.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      parameters:
+      - $ref: '#/components/parameters/applicationNameParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ApplicationsWithCategories'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                  applications:
+                  - id: 1
+                    label: Web Hosting
+                    type: AVC
+                    category:
+                      id: 40
+                      label: Hosting Services
+                  categories:
+                  - id: 42
+                    name: Education
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /categories:
+    get:
+      tags:
+      - Utility
+      summary: Get Categories
+      description: 'List the categories.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: getCategories
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoryWithLegacyId'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - id: 66
+                  legacyid: 94
+                  label: Malware
+                  type: security
+                  integration: true
+                  deprecated: true
+                - id: 110
+                  legacyid: 176
+                  label: DNS Tunneling VPN
+                  type: security
+                  integration: true
+                  deprecated: false
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /identities:
+    get:
+      tags:
+      - Utility
+      summary: Get Identities
+      operationId: getIdentities
+      description: 'List the identities.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      parameters:
+      - $ref: '#/components/parameters/limitParamIdentitiesUtility'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Identity'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - id: 1
+                  label: Catch Rate Testing System
+                  type:
+                    id: 21
+                    label: Sites
+                    type: site
+                  deleted: false
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      tags:
+      - Utility
+      summary: Get Identities By IDs
+      description: 'Get the identities information by providing a list of identity IDs in the request body.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: postIdentities
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      parameters:
+      - $ref: '#/components/parameters/limitParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Provide an array of identity ID.
+              properties:
+                identityids:
+                  description: A list of identity ID.
+                  type: array
+                  items:
+                    type: integer
+                    description: An identity ID.
+                    example: 234567891
+            example:
+              identityids:
+              - 234567891
+              - 234567892
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Identity'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - id: 1
+                  label: Catch Rate Testing System
+                  type:
+                    id: 21
+                    label: Sites
+                    type: site
+                  deleted: false
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /identities/{identityid}:
+    get:
+      tags:
+      - Utility
+      summary: Get Identity
+      description: 'Get identity by identity ID.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: getIdentity
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      parameters:
+      - $ref: '#/components/parameters/identityIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Identity'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                  id: 1
+                  label: Catch Rate Testing System
+                  type:
+                    id: 21
+                    label: Sites
+                    type: site
+                  deleted: true
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /threat-types:
+    get:
+      tags:
+      - Utility
+      summary: Get Threat Types
+      description: 'List the threat types.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: getThreatTypes
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ThreatType'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - name: Ransomware
+                  description: a description
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /threat-types/{threattypeid}:
+    get:
+      tags:
+      - Utility
+      summary: Get Threat Type By Threat ID
+      description: 'List the threat types by threat ID.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: getThreatType
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      parameters:
+      - $ref: '#/components/parameters/threatTypeIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ThreatType'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                  name: Ransomware
+                  description: a description
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /threat-names:
+    get:
+      tags:
+      - Utility
+      summary: Get Threat Names
+      description: 'List the threat names.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: getThreatNames
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ThreatName'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - name: WannaCry
+                  description: a description
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /threat-names/{threatnameid}:
+    get:
+      tags:
+      - Utility
+      summary: Get Threat Name By Threat ID
+      description: 'Get the threat name by threat ID.
+
+
+        **Access Scope:** Reports > Utilities > Read-Only'
+      operationId: getThreatName
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      parameters:
+      - $ref: '#/components/parameters/threatNameIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ThreatName'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                  name: WannaCry
+                  description: WannaCry threat description
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /providers/categories:
+    get:
+      tags:
+      - Utility
+      summary: Get Provider Categories
+      description: 'List the Provider categories
+
+
+        **Access Scope:** Reports > Customer > Read-Only'
+      operationId: getProviderCategories
+      security:
+      - oauthFlow:
+        - reports.utilities:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoryWithLegacyId'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - id: 66
+                  legacyid: 94
+                  label: Malware
+                  type: security
+                  integration: true
+                  deprecated: false
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    threatTypeIdParam:
+      name: threattypeid
+      in: path
+      description: The name of the threat type.
+      required: true
+      schema:
+        type: string
+      example: Ransomware
+    threatNameIdParam:
+      name: threatnameid
+      in: path
+      description: The name of the threat.
+      required: true
+      schema:
+        type: string
+      example: WannaCry
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    identityIdParam:
+      name: identityid
+      in: path
+      description: An identity ID.
+      required: true
+      schema:
+        type: number
+      example: 42
+    searchParam:
+      name: search
+      in: query
+      description: 'A string that represents a search parameter.
+
+        Filter data for requests where the search string appears in the endpoint data.'
+      schema:
+        type: string
+      example: somelabel
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    limitParamIdentitiesUtility:
+      name: limit
+      in: query
+      description: '(Identities utility endpoint) The number of records to return from the collection.
+
+        The default limit is 100. In a single response, the server returns at most 5000 records from the collection.'
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    applicationNameParam:
+      name: application
+      in: query
+      description: Filter on the name of the application.
+      schema:
+        type: string
+      example: Games
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+  schemas:
+    IdentityType:
+      type: object
+      description: The information about the identity including the type.
+      properties:
+        id:
+          type: number
+          description: The ID of the origin type for the identity.
+        label:
+          type: string
+          description: The label of the origin type for the identity.
+        type:
+          type: string
+          description: The name of the origin type for the identity.
+    ThreatType:
+      type: object
+      description: The properties of the threat type.
+      properties:
+        name:
+          type: string
+          description: The name of the threat type.
+        description:
+          type: string
+          description: The name of the threat type.
+      required:
+      - name
+      - description
+      example:
+        name: Ransomware
+        description: a description
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
+    Application:
+      type: object
+      description: The information about the application.
+      properties:
+        id:
+          type: number
+          description: The ID of the application.
+        label:
+          type: string
+          description: The descriptive label for the application.
+        type:
+          type: string
+          description: 'The type of the application: NBAR or AVC.'
+          enum:
+          - NBAR
+          - AVC
+          example: AVC
+        category:
+          type: object
+          description: The category of the application.
+          properties:
+            id:
+              type: number
+              description: The ID of the application category.
+            label:
+              type: string
+              description: The label of the application category.
+      example:
+        id: 1
+        label: malware
+        type: AVC
+        category:
+          id: 2
+          label: Education
+    CategoryWithLegacyId:
+      type: object
+      description: The information about the category with legacy ID.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        legacyid:
+          type: number
+          description: The legacy category ID.
+        label:
+          type: string
+          description: The label of the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+        deprecated:
+          type: boolean
+          description: Specifies whether the legacy category is deprecated.
+          example: true
+      required:
+      - id
+      - integration
+      - label
+      - legacyid
+      - type
+      - deprecated
+      example:
+        id: 66
+        legacyid: 94
+        label: Malware
+        type: security
+        integration: true
+        deprecated: false
+    Identity:
+      type: object
+      description: The information about the identity.
+      properties:
+        id:
+          type: number
+          description: The ID of the identity.
+        label:
+          type: string
+          description: The descriptive label for the identity.
+        type:
+          $ref: '#/components/schemas/IdentityType'
+        deleted:
+          type: boolean
+          description: Indicates whether the identity was deleted.
+          example: true
+      required:
+      - id
+      - label
+      - type
+      - deleted
+      example:
+        id: 1
+        label: Catch Rate Testing System
+        type:
+          id: 21
+          label: Sites
+          type: site
+        deleted: false
+    ApplicationsWithCategories:
+      type: object
+      description: The information about the applications and categories.
+      properties:
+        applications:
+          type: array
+          description: The list of applications.
+          items:
+            $ref: '#/components/schemas/Application'
+        categories:
+          type: array
+          description: The list of application categories.
+          items:
+            $ref: '#/components/schemas/ApplicationCategories'
+      example:
+        applications:
+        - id: 1
+          label: Web Hosting
+          type: AVC
+          category:
+            id: 40
+            label: Hosting Services
+        categories:
+        - id: 42
+          name: Education
+    ApplicationCategories:
+      type: object
+      description: The information about the applications.
+      properties:
+        id:
+          type: number
+          description: The ID of the application category.
+          example: 1234
+        name:
+          type: string
+          description: The name of the application category.
+          example: Travel
+      example:
+        id: 1234
+        name: Travel
+    ThreatName:
+      type: object
+      description: The properties of the threat name.
+      properties:
+        name:
+          type: string
+          description: The name of the threat.
+        description:
+          type: string
+          description: The description of the threat name.
+      required:
+      - name
+      - description
+      example:
+        name: WannaCry
+        description: a description
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.granularEvents:read: Read reports granular events
+            reports.utilities:read: Read reports utilities
+            reports.aggregations:read: Read reports aggregations
+            reports.summariesByRule:read: Read reports for the summaries of the rule
+            reports.customers:read: Read reports for the customers
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

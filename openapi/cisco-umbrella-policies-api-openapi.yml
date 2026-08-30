@@ -1,0 +1,150 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Policies API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Policies
+paths:
+  /policies:
+    get:
+      tags:
+      - Policies
+      description: Get all of the organization's configured policies.
+      operationId: listPolicies
+      summary: List the Organization's Policies
+      parameters:
+      - name: state
+        example: active
+        in: query
+        required: false
+        description: Provide a string that indicates the policy state.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoliciesCollection'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    PoliciesCollection:
+      type: object
+      properties:
+        id:
+          type: string
+          description: This is CloudLock Internal Identifier for a policy.
+          example: G8qz0vb49V
+        name:
+          type: string
+          description: The name of the policy.
+          example: PCI - Alert
+        state:
+          type: string
+          description: Indicates if the policy is active or inactive.
+          example: Active, Inactive
+        description:
+          type: string
+          description: The description of the policy.
+          example: Apps whose authorized access scopes present potential security risks
+        created_at:
+          type: string
+          description: The policy creation time, specified as a timestamp in UTC.
+          example: '2015-03-19T09:00:17.602482+00:00'
+        updated_at:
+          type: string
+          description: The policy updated time, specified as a timestamp in UTC.
+          example: '2015-03-19T09:00:17.602482+00:00'
+        severity:
+          type: string
+          description: The severity assigned to incidents of this policy.
+          example: CRITICAL,WARNING,INFO,ALERT
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

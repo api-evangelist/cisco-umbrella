@@ -1,0 +1,228 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Incident Entities API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Incident Entities
+paths:
+  /incident_entities/{id}:
+    get:
+      tags:
+      - Incident Entities
+      description: 'Get the detailed entity information for an entity involved in an incident.
+
+        There is a limit of up to 100 ACL''s and the data is reflective of the last time we scanned the
+
+        document (not when the incident was created).
+
+
+        Usage:
+
+        First get an incident/incidents. Then take the id value from the entity
+
+        object within the incident and call the incident_entities endpoint using
+
+        that entitys id (not the incident id).
+
+
+        Example:
+
+        You have an incident which has an ID of 528815. Lookup the entity id for
+
+        this incident, then use this entity id to get the entity information.'
+      operationId: listIncidentEntities
+      summary: List Incident Entities
+      parameters:
+      - description: The ID of the entity in the incident.
+        example: 513266
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentEntity'
+              examples:
+                response:
+                  value:
+                    id: '513266'
+                    name: Logins for EC2 Instances.xlsx
+                    user: ''
+                    owner_name: ''
+                    owner_vendor_id: ''
+                    acl:
+                    - created_on: '2021-02-27 20:18:38.799158'
+                      id: '2823'
+                      origin_id: ''
+                      role: viewer
+                      status: ACTIVE
+                      type: public_with_link
+                      value: public_with_link
+                      vendor:
+                        name: box
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    Entity:
+      type: object
+      description: The information about the object relating to this incident.
+      properties:
+        direct_url:
+          type: string
+          description: The URL to the object.
+        extra:
+          type: object
+          description: The additional information related to the incident.
+          properties:
+            origin_type_label:
+              type: string
+              description: This field gives additional info regarding the scanned object that triggered the policy violation.
+            origin_type_label_plural:
+              type: string
+              description: Similar to the origin_type_label but for a plural label
+        id:
+          type: string
+          description: This is Cloudlock Internal Identifier for an entity.
+        mime_type:
+          type: string
+          description: The mime type of the object/document (if any)
+        name:
+          type: string
+          description: The name of the underlying object represented by this entity.
+        origin_id:
+          type: string
+          description: This is the identifier of the object in the vendor system.
+        origin_type:
+          type: string
+          description: The object type (i.e. document, post, app, event).
+        owner_email:
+          type: string
+          description: Object owner's email address (e.g. user@cloudlock.com).
+        owner_name:
+          type: string
+          description: Object owner's name (i.e. John Q. User).
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+    IncidentEntity:
+      type: object
+      description: The information about the object relating to this incident.
+      properties:
+        acl:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              value:
+                type: string
+              role:
+                type: string
+              type:
+                type: string
+              status:
+                type: string
+              created_on:
+                type: string
+              vendor:
+                $ref: '#/components/schemas/Vendor'
+              origin_id:
+                type: string
+        entity:
+          $ref: '#/components/schemas/Entity'
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the vendor. For example: google.'
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

@@ -1,0 +1,357 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella App Discovery Protocols API
+  description: 'The App Discovery API provides an overall view of application and protocol activity in your environment
+
+    and the potential risk indicated by this network traffic.'
+  version: 2.0.2
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+tags:
+- name: Protocols
+paths:
+  /appDiscovery/protocols:
+    get:
+      tags:
+      - Protocols
+      summary: List Protocols
+      description: List all protocols.
+      operationId: getProtocols
+      parameters:
+      - $ref: '#/components/parameters/identity'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/protocolsSort'
+      - $ref: '#/components/parameters/order'
+      security:
+      - oauthFlow:
+        - reports.appDiscovery:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtocolList'
+              example:
+                items:
+                - id: 0j1b5Eh
+                  name: ftp
+                  description: File Transfer Protocol
+                  events: 100
+                  blockedEvents: 50
+                  firstDetected: '2022-01-01T00:00:00.000Z'
+                  lastDetected: '2022-01-01T00:00:00.000Z'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /appDiscovery/protocols/{protocolId}:
+    get:
+      tags:
+      - Protocols
+      summary: Get Protocol
+      description: Get protocol by ID.
+      operationId: getProtocol
+      parameters:
+      - $ref: '#/components/parameters/protocolId'
+      - $ref: '#/components/parameters/date'
+      security:
+      - oauthFlow:
+        - reports.appDiscovery:read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtocolObject'
+              example:
+                id: 0j1b5EmA
+                name: ftp
+                description: File Transfer Protocol
+                identitiesCount: 5
+                events: 100
+                blockedEvents: 50
+                firstDetected: '2022-01-01T00:00:00.000Z'
+                lastDetected: '2022-01-01T00:00:00.000Z'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  headers:
+    Link:
+      schema:
+        type: string
+      description: 'Links to related resources, in the format defined by
+
+        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
+
+        If there is a next page, this header includes a link with relation type
+
+        `next` to the next page.'
+  schemas:
+    ProtocolObjectInList:
+      type: object
+      description: The app's protocol information.
+      required:
+      - id
+      - name
+      - description
+      - events
+      - blockedEvents
+      - firstDetected
+      - lastDetected
+      properties:
+        id:
+          type: string
+          description: The ID of the protocol.
+          example: 0j1b5EmA
+        name:
+          type: string
+          description: The name of the protocol.
+          example: ftp
+        description:
+          type: string
+          description: The description of the protocol.
+          example: File Transfer Protocol
+        events:
+          type: integer
+          example: 100
+        blockedEvents:
+          type: integer
+          example: 50
+        firstDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system first detected the app protocol.
+          example: '2022-01-01T00:00:00.000Z'
+        lastDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system last detected the app protocol.
+          example: '2022-01-01T00:00:00.000Z'
+      example:
+        id: 0j1b5EmA
+        name: ftp
+        description: File Transfer Protocol
+        events: 100
+        blockedEvents: 50
+        firstDetected: '2022-01-01T00:00:00.000Z'
+        lastDetected: '2022-01-01T00:00:00.000Z'
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
+    ProtocolObject:
+      type: object
+      description: The app's protocol information.
+      properties:
+        id:
+          type: string
+          description: The ID of the protocol.
+          example: 0j1b5EmA
+        name:
+          type: string
+          description: The name of the protocol.
+          example: ftp
+        description:
+          type: string
+          description: The description of the protocol.
+          example: File Transfer Protocol
+        identitiesCount:
+          type: integer
+          description: The number of identities.
+          example: 5
+        events:
+          type: integer
+          description: The number of identity events.
+          example: 100
+        blockedEvents:
+          type: integer
+          description: The number of blocked events for the identities.
+          example: 50
+        firstDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system first detected the protocol for the identities.
+          example: '2022-01-01T00:00:00.000Z'
+        lastDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system last detected the protocol for the identities.
+          example: '2022-01-01T00:00:00.000Z'
+      example:
+        id: 0j1b5Em
+        name: ftp
+        description: File Transfer Protocol
+        identitiesCount: 5
+        events: 100
+        blockedEvents: 40
+        firstDetected: '2022-01-01T00:00:00.000Z'
+        lastDetected: '2022-01-01T00:00:00.000Z'
+    ProtocolList:
+      type: object
+      description: The list of the app's protocol information.
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtocolObjectInList'
+      example:
+        items:
+        - id: 0j1b5Em
+          name: ftp
+          description: File Transfer Protocol
+          events: 100
+          blockedEvents: 50
+          firstDetected: '2022-01-01T00:00:00.000Z'
+          lastDetected: '2022-01-01T00:00:00.000Z'
+  responses:
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
+    order:
+      in: query
+      name: order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      description: 'Specify the order to sort the collection. Valid values are: `asc` (ascending)
+
+        or `desc` (descending).'
+      example: asc
+    protocolsSort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        enum:
+        - firstDetected
+        - lastDetected
+      description: Specify the name of a field to sort the application protocols.
+      example: firstDetected
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
+    date:
+      in: query
+      name: date
+      schema:
+        type: string
+        format: date
+      description: 'Specify a date to search for data within a twenty-four hour time period.
+
+        If you do not provide a date, the last 90 days period is used to query the collection.'
+      example: '2022-01-01'
+    protocolId:
+      in: path
+      name: protocolId
+      description: The ID of the protocol.
+      required: true
+      schema:
+        type: string
+    identity:
+      in: query
+      name: identity
+      schema:
+        type: integer
+      description: Specify the entity ID to filter the collection.
+      example: 12355
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.appDiscovery:write: Write reports app discovery
+            reports.appDiscovery:read: Read reports app discovery
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/app-discovery.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

@@ -1,0 +1,294 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Domain Volume API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Domain Volume
+paths:
+  /domains/volume/{domain}:
+    get:
+      summary: Get Domain Volume
+      operationId: getDomainVolume
+      tags:
+      - Domain Volume
+      description: 'List the query volume for a domain over the last 30 days.
+
+        If there is no information about the domain, Investigate returns an empty array.
+
+        As the query takes time to generate, the last two hours may be blank.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/domainParam'
+      - $ref: '#/components/parameters/start'
+      - $ref: '#/components/parameters/stop'
+      - name: match
+        in: query
+        required: false
+        description: 'Valid values are: `exact`, `component`, or `all`. The default value is `all`.'
+        schema:
+          type: string
+          default: all
+          enum:
+          - exact
+          - component
+          - all
+        example: exact
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dates:
+                    type: array
+                    description: The list of dates recorded for the domain.
+                    items:
+                      type: string
+                      description: The dates recorded for this domain expressed in the Unix epoch time.
+                    example:
+                    - '1510873200000'
+                    - '1510959600000'
+                  queries:
+                    type: array
+                    description: The list of the numbers of DNS queries requested for the domain in one hour, listed in ascending order.
+                    items:
+                      type: string
+                      description: The number of DNS queries requested for the domain in one hour.
+                    example:
+                    - '1378426'
+                    - '1361934'
+                    - '1308188'
+              example:
+                dates:
+                - '1510873200000'
+                - '1510959600000'
+                queries:
+                - '1378426'
+                - '1361934'
+                - '1308188'
+                - '1238823'
+                - '1245126'
+                - '1215994'
+                - '1256917'
+                - '1200190'
+                - '1245963'
+                - '1355719'
+                - '1332685'
+                - '1319825'
+                - '1362464'
+                - '1457174'
+                - '1695448'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
+    stop:
+      name: stop
+      in: query
+      required: false
+      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
+
+        Filter for data that appears before this time.
+
+        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
+      schema:
+        type: string
+      example: now
+    start:
+      name: start
+      in: query
+      required: true
+      description: 'Specifies a relative or absolute start time. If specifying an absolute time,
+
+        use an epoch time (Unix time) millisecond timestamp within the last 30 days.
+
+        Filter for data that appears after this time.
+
+        If specifying a relative time, use either seconds, minutes, hours, days
+
+        or weeks with a minus sign in front.
+
+        As an example, -1days, -1000minutes, or -2weeks are all valid.
+
+        You cannot combine timestamps. Only use one of the relative time enumerators per query.'
+      schema:
+        type: string
+      example: -1days
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

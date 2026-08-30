@@ -1,0 +1,650 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Service Providers Console Contacts API
+  version: 2.0.0
+  description: Configure the Service Providers console.
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: admin/v2
+security:
+- oauthFlow: []
+tags:
+- name: Contacts
+paths:
+  /config/contacts:
+    get:
+      tags:
+      - Contacts
+      description: List the contacts for the service providers console.
+      summary: List Contacts
+      operationId: getContacts
+      security:
+      - oauthFlow:
+        - admin.config:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List the contacts for the service providers console.
+                items:
+                  $ref: '#/components/schemas/GetContact'
+              example:
+              - contactId: 1324455
+                organizationId: 2345678
+                contactType: billing
+                primaryContact: 'no'
+                firstName: my-firstname
+                lastName: my-lastname
+                createAt: 0
+                modifiedAt: 0
+                streetAddress: 123 Circle Court
+                streetAddress2: Box 123
+                city: San Jose
+                state: CA
+                zipCode: 12345a
+                countryCode: '124'
+                emailAddress: seller@cisco.com
+                orgName: org name
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      tags:
+      - Contacts
+      description: Create a contact for the service providers console.
+      summary: Create Contact
+      operationId: createContact
+      security:
+      - oauthFlow:
+        - admin.config:write
+      requestBody:
+        description: Add the contact information for service providers console.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContact'
+            example:
+              contactType: distributor
+              emailAddress: my-contact@email.com
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetContact'
+              example:
+                contactId: 1324455
+                organizationId: 2345678
+                contactType: billing
+                primaryContact: 'no'
+                firstName: my-firstname
+                lastName: my-lastname
+                createdAt: 0
+                modifiedAt: 0
+                streetAddress: 123 Circle Court
+                streetAddress2: Box 123
+                city: San Jose
+                state: CA
+                zipCode: 12345a
+                countryCode: '124'
+                emailAddress: seller@cisco.com
+                orgName: org name
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /config/contacts/{contactId}:
+    get:
+      tags:
+      - Contacts
+      description: Get a contact for the service providers console.
+      summary: Get Contact
+      operationId: getContact
+      parameters:
+      - $ref: '#/components/parameters/contactIdParam'
+      security:
+      - oauthFlow:
+        - admin.config:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetContact'
+              example:
+                contactId: 1324455
+                organizationId: 2345678
+                contactType: billing
+                primaryContact: 'no'
+                firstName: my-firstname
+                lastName: my-lastname
+                createdAt: 0
+                modifiedAt: 0
+                streetAddress: 123 Circle Court
+                streetAddress2: Box 123
+                city: San Jose
+                state: CA
+                zipCode: 12345a
+                countryCode: '124'
+                emailAddress: seller@cisco.com
+                orgName: org name
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Contacts
+      description: Update a contact for service providers console.
+      summary: Update Contact
+      operationId: updateContact
+      security:
+      - oauthFlow:
+        - admin.config:write
+      requestBody:
+        description: Add the contact information for the service providers console.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContact'
+      parameters:
+      - $ref: '#/components/parameters/contactIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetContact'
+              example:
+                contactId: 1324455
+                organizationId: 2345678
+                contactType: billing
+                primaryContact: 'no'
+                firstName: my-firstname
+                lastName: my-lastname
+                createdAt: 0
+                modifiedAt: 0
+                streetAddress: 123 Circle Court
+                streetAddress2: Box 123
+                city: San Jose
+                state: CA
+                zipCode: 12345a
+                countryCode: '124'
+                emailAddress: seller@cisco.com
+                orgName: org name
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    delete:
+      tags:
+      - Contacts
+      description: Delete a contact for the service providers console.
+      summary: Delete Contact
+      operationId: deleteContact
+      security:
+      - oauthFlow:
+        - admin.config:write
+      parameters:
+      - $ref: '#/components/parameters/contactIdParam'
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type:
+                - string
+                - 'null'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
+    500Error:
+      description: Internal Server error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Internal Server Error
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Unauthorized
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Not Found
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Bad Request
+  schemas:
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 1345556
+    CreateContact:
+      type: object
+      description: Add the customer's contact information.
+      required:
+      - contactType
+      - emailAddress
+      properties:
+        contactType:
+          type: string
+          description: The type of contact.
+          enum:
+          - billing
+          - blockfeedback
+          - report
+          - serviceupdate
+          - support
+          - distributor
+          example: billing
+        primaryContact:
+          type: string
+          description: Specify whether the contact is the primary contact.
+          enum:
+          - 'no'
+          - 'yes'
+          default: 'no'
+          example: 'yes'
+        firstName:
+          type: string
+          description: The first name of the contact.
+          example: my-firstname
+        lastName:
+          type: string
+          description: The last name of the contact.
+          example: my-lastname
+        streetAddress:
+          type: string
+          description: The street address for the contact.
+          example: 123 Circle Court
+        streetAddress2:
+          type: string
+          description: A secondary street address for the contact.
+          example: Center Place
+        city:
+          type: string
+          description: The city where the contact is located.
+          example: San Jose
+        state:
+          type: string
+          description: The state where the contact is located.
+          example: CA
+        zipCode:
+          type: string
+          description: The US zip code where the contact is located.
+          example: 01938
+        countryCode:
+          type: string
+          description: The country code for the contact.
+          example: US
+          minLength: 2
+          maxLength: 3
+        phoneNumber:
+          type: string
+          description: The phone number for the contact.
+          example: 215-339-0101
+        phoneNumber2:
+          type: string
+          description: The second phone number for the contact.
+          example: 215-339-0101
+        faxNumber:
+          type: string
+          description: The fax number for the contact.
+          example: 215-339-0101
+        emailAddress:
+          type: string
+          description: The email address for the contact.
+          example: my-contact@cisco.com
+        settings:
+          type: object
+          description: The contact information of the distributor.
+          required:
+          - organization
+          - distributorVisibility
+          properties:
+            primaryContact:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: The first name of the distributor contact.
+                  example: my-firstname
+                lastName:
+                  type: string
+                  description: The last name of the distributor contact.
+                  example: my-lastname
+                emailAddress:
+                  type: string
+                  description: Email address for the distributor contact.
+                  example: my-contact@cisco.com
+                phoneNumber:
+                  type: string
+                  description: The phone number for the distributor contact.
+                  example: 215-339-0101
+            organization:
+              type: object
+              description: The properties of the organization.
+              required:
+              - name
+              - email
+              properties:
+                name:
+                  type: string
+                  description: The organization name of distributor.
+                  example: Cisco Systems
+                email:
+                  type: string
+                  description: The organization email of distributor.
+                  example: test@cisco.com
+            distributorVisibility:
+              type: boolean
+              description: Specify whether primary contact has visibility into trials.
+              default: false
+              example: true
+          example:
+            organization:
+              name: Cisco Systems
+              email: name@cisco.com
+            distributorVisibility: true
+      example:
+        contactType: billing
+        emailAddress: seller@cisco.com
+    GetContact:
+      type: object
+      description: List the customer's contact information.
+      required:
+      - emailAddress
+      properties:
+        contactId:
+          type: integer
+          description: The contact ID.
+          example: 1234
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+        contactType:
+          type: string
+          description: The type of contact.
+          enum:
+          - billing
+          - blockfeedback
+          - report
+          - serviceupdate
+          - support
+          - distributor
+          example: billing
+        primaryContact:
+          type: string
+          description: Specify if the primary contact.
+          enum:
+          - 'no'
+          - 'yes'
+          default: 'no'
+          example: 'yes'
+        firstName:
+          type: string
+          description: The first name of the contact.
+          example: my-firstname
+        lastName:
+          type: string
+          description: The last name of the contact.
+          example: my-lastname
+        streetAddress:
+          type: string
+          description: The street address for the contact.
+          example: 123 Circle Court
+        streetAddress2:
+          type: string
+          description: A secondary street address for the contact.
+          example: Center Place
+        city:
+          type: string
+          description: The city where the contact is located.
+          example: San Jose
+        state:
+          type: string
+          description: The state where the contact is located.
+          example: CA
+        zipCode:
+          type: string
+          description: The US zip code where the contact is located.
+          example: '12345'
+        countryCode:
+          type: string
+          description: The country code for the contact.
+          example: US
+          minLength: 2
+          maxLength: 3
+        phoneNumber:
+          type: string
+          description: The phone number for the contact.
+          example: 215-443-0101
+        phoneNumber2:
+          type: string
+          description: The second phone number for the contact.
+          example: 215-902-1022
+        faxNumber:
+          type: string
+          description: The fax number for the contact.
+          example: ''
+        emailAddress:
+          type: string
+          description: The email address for the contact.
+          example: my-contact@cisco.com
+        createdAt:
+          type: integer
+          format: int32
+          description: The time when the contact information was created. The time is specified in milliseconds.
+          example: 1122222222
+        modifiedAt:
+          type: integer
+          format: int32
+          description: The time when the contact information was last modified. The time is specified in milliseconds.
+          example: 1122222222
+        primaryEmailAddress:
+          type: string
+          format: email
+          description: The email address of primary contact of distributor organization.
+          example: name@company.com
+        distributorVisibility:
+          type: boolean
+          default: false
+          description: Specify whether distributors primary contact has visibility into trials.
+          example: true
+        orgName:
+          type: string
+          description: The organization name of the distributor.
+          example: org name
+      example:
+        emailAddress: my-contact@cisco.com
+  parameters:
+    contactIdParam:
+      name: contactId
+      description: The ID of the contact.
+      schema:
+        type: integer
+      in: path
+      required: true
+      example: 12455
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            admin.config:read: Read admin config
+            admin.config:write: Write admin config
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

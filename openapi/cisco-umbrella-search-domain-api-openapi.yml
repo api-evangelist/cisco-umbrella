@@ -1,0 +1,376 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Search Domain API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Search Domain
+paths:
+  /search/{expression}:
+    get:
+      summary: Get Domains by Search
+      operationId: getSearch
+      tags:
+      - Search Domain
+      description: List the newly seen domains that match a regular expression pattern.
+      parameters:
+      - name: expression
+        in: path
+        required: true
+        description: A standard regular expression pattern search.
+        schema:
+          type: string
+        example: exa[a-z]ple.com
+      - $ref: '#/components/parameters/start'
+      - $ref: '#/components/parameters/stop'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - name: includeCategory
+        in: query
+        required: false
+        description: 'Enables or disables the inclusion of security categories in the response.
+
+          The default value is false.
+
+          '
+        schema:
+          type: boolean
+        example: true
+      - name: type
+        in: query
+        required: false
+        description: 'Specifies the search database node type. Valid values are: URL, IP, or HOST.
+
+          '
+        schema:
+          type: string
+          enum:
+          - URL
+          - IP
+          - HOST
+        example: IP
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The list of newly seen domains that match a regular expression pattern.
+                properties:
+                  expression:
+                    type: string
+                    description: Specifies the regular expression used in the search.
+                    example: exa[a-z]ple.com
+                  totalResults:
+                    $ref: '#/components/schemas/totalresults'
+                  moreDataAvailable:
+                    $ref: '#/components/schemas/moreDataAvailable'
+                  limit:
+                    $ref: '#/components/schemas/limit'
+                  matches:
+                    type: array
+                    description: The list of matching records.
+                    items:
+                      $ref: '#/components/schemas/MatchRecord'
+                    example:
+                    - name: example
+                      firstSeen: 1432330927421
+                      firstSeenISO: '2015-05-22T21:42:07.421Z'
+                      securityCategories:
+                      - Botnet
+              example:
+                expression: exa[a-z]ple.com
+                totalResults: 1
+                moreDataAvailable: false
+                limit: 1000
+                matches:
+                - name: example
+                  firstSeen: 1432330927421
+                  firstSeenISO: '2015-05-22T21:42:07.421Z'
+                  securityCategories:
+                  - Botnet
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
+    stop:
+      name: stop
+      in: query
+      required: false
+      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
+
+        Filter for data that appears before this time.
+
+        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
+      schema:
+        type: string
+      example: now
+    start:
+      name: start
+      in: query
+      required: true
+      description: 'Specifies a relative or absolute start time. If specifying an absolute time,
+
+        use an epoch time (Unix time) millisecond timestamp within the last 30 days.
+
+        Filter for data that appears after this time.
+
+        If specifying a relative time, use either seconds, minutes, hours, days
+
+        or weeks with a minus sign in front.
+
+        As an example, -1days, -1000minutes, or -2weeks are all valid.
+
+        You cannot combine timestamps. Only use one of the relative time enumerators per query.'
+      schema:
+        type: string
+      example: -1days
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of items to return in the response from the collection. The default limit is 10.
+
+        Increase the limit to request a larger set of data.'
+      schema:
+        type: integer
+        default: 10
+      example: 25
+  schemas:
+    MatchRecord:
+      type: object
+      description: The properties of the matching domain.
+      properties:
+        firstSeen:
+          $ref: '#/components/schemas/firstSeen'
+        name:
+          type: string
+          description: The name of the query.
+          example: example.com
+        securityCategories:
+          type: array
+          description: The list of Umbrella security categories that match the domain.
+          items:
+            type: string
+            description: An Umbrella security category.
+          example:
+          - Phishing Attacks
+          - Malware
+        firstSeenISO:
+          $ref: '#/components/schemas/firstSeenISO'
+      example:
+        expression: exa[a-z]ple.com
+        totalResults: 1
+        moreDataAvailable: false
+        limit: 1000
+        matches:
+        - name: example.com
+          firstSeen: 1432330927421
+          firstSeenISO: '2015-05-22T21:42:07.421Z'
+          securityCategories:
+          - Phishing Attacks
+          - Malware
+    moreDataAvailable:
+      type: boolean
+      description: Specifies whether more samples are available for the destination.
+      example: true
+    firstSeen:
+      type: integer
+      format: int64
+      description: 'The first time Umbrella related the domain for the resource record, specified
+
+        in Unix Epoch time.'
+      example: 1615427410
+    totalresults:
+      type: integer
+      description: The total number of samples.
+      format: int64
+      example: 1000
+    limit:
+      type: integer
+      description: The maximum number of records to include in the response.
+      format: int64
+      example: 100
+    firstSeenISO:
+      type: string
+      format: date-time
+      description: 'The first time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

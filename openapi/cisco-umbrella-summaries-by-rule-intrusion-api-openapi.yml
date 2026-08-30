@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Reporting Summaries by Rule (Intrusion) API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+security:
+- oauthFlow: []
+tags:
+- name: Summaries by Rule (Intrusion)
+paths:
+  /summaries-by-rule/intrusion:
+    get:
+      tags:
+      - Summaries by Rule (Intrusion)
+      summary: Get Summaries by Rule
+      description: 'List the summaries by rule for the intrusion type.
+
+
+        **Access Scope:** Reports > Summaries by rule > Read-Only'
+      operationId: getSummariesByRuleIntrusion
+      security:
+      - oauthFlow:
+        - reports.summariesByRule:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/signaturesParam'
+      - $ref: '#/components/parameters/signatureListIdsParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/intrusionActionParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SignatureListSummary'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - signaturelist:
+                    id: 1111
+                  signatures:
+                  - counts:
+                      blocked: 0
+                      detected: 1
+                      wouldblock: 0
+                    generatorid: 1
+                    lasteventat: 1594557262000
+                    id: 47829
+                  rule:
+                    id: 47
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    signatureListIdsParam:
+      name: signaturelistids
+      in: query
+      description: The signature ID or comma-separated list of signature list IDs.
+      schema:
+        type: string
+      example: 1,2
+    portsParam:
+      name: ports
+      in: query
+      description: A port number or comma-delimited list of port numbers.
+      schema:
+        type: string
+      example: 7351,80
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    signaturesParam:
+      name: signatures
+      in: query
+      description: The signature or comma-separated list of <signatureid>-<generatorid> signatures.
+      schema:
+        type: string
+      example: 1-2,1-4
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    intrusionActionParam:
+      name: intrusionaction
+      in: query
+      description: 'An action or list of comma-separated intrusion actions. Valid values are: `would_block`, `blocked`, and `detected`.'
+      schema:
+        type: string
+      example: detected,would_block
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+  schemas:
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
+    RuleParam:
+      type: object
+      description: The properties of the rule parameter.
+      properties:
+        id:
+          type: number
+          description: The ID of the ruleset for the signature.
+          example: 47
+    SignatureListSummary:
+      type: object
+      description: The summary information about the signature lists.
+      properties:
+        signaturelist:
+          $ref: '#/components/schemas/SignatureList'
+        signatures:
+          type: array
+          description: The list of information about the signatures.
+          items:
+            type: object
+            properties:
+              generatorid:
+                type: number
+                description: The generator ID of the signature.
+              id:
+                type: number
+                description: The ID of the signature.
+              lasteventat:
+                type: number
+                description: The date and time in milliseconds of the last event.
+              counts:
+                type: object
+                properties:
+                  blocked:
+                    type: number
+                    description: The number of blocked signatures.
+                  detected:
+                    type: number
+                    description: The number of detected signatures.
+                  wouldblock:
+                    type: number
+                    description: The number of signatures to block.
+                required:
+                - blocked
+                - detected
+                - wouldblock
+        rule:
+          $ref: '#/components/schemas/RuleParam'
+      example:
+        signaturelist:
+          id: 1111
+        signatures:
+        - counts:
+            blocked: 0
+            detected: 1
+            wouldblock: 0
+          generatorid: 1
+          lasteventat: 1594557262000
+          id: 47829
+        rule:
+          id: 47
+    SignatureList:
+      type: object
+      description: The properties of the signature list.
+      properties:
+        id:
+          type: number
+          description: The unique ID assigned to a default or custom signature list.
+      required:
+      - id
+      example:
+        id: 1112
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.granularEvents:read: Read reports granular events
+            reports.utilities:read: Read reports utilities
+            reports.aggregations:read: Read reports aggregations
+            reports.summariesByRule:read: Read reports for the summaries of the rule
+            reports.customers:read: Read reports for the customers
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

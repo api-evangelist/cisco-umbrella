@@ -1,0 +1,612 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Reporting Summaries by Category API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+security:
+- oauthFlow: []
+tags:
+- name: Summaries by Category
+paths:
+  /summaries-by-category:
+    get:
+      tags:
+      - Summaries by Category
+      summary: Get Summaries by Category (All)
+      description: 'List the summaries of requests by category.
+
+
+        **Access Scope:** Reports > Aggregations > Read-Only'
+      operationId: getSummariesByCategory
+      security:
+      - oauthFlow:
+        - reports.aggregations:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/urlsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/ruleIdParam'
+      - $ref: '#/components/parameters/filenameParam'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummaryWithCategory'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - category:
+                    id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  summary:
+                    applications: 123
+                    domains: 82
+                    requestsblocked: 189
+                    filetypes: 0
+                    policycategories: 2
+                    requests: 189
+                    requestsallowed: 10
+                    categories: 11
+                    identitytypes: 1
+                    applicationsblocked: 2
+                    files: 5
+                    identities: 1
+                    applicationsallowed: 2
+                    policyrequests: 6
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /summaries-by-category/{type}:
+    get:
+      tags:
+      - Summaries by Category
+      summary: Get Summaries by Category For Type
+      description: 'List the summaries by category for the type of request.
+
+
+        **Access Scope:** Reports > Aggregations > Read-Only'
+      operationId: getSummariesByCategoryType
+      security:
+      - oauthFlow:
+        - reports.aggregations:read
+      parameters:
+      - $ref: '#/components/parameters/typeDnsWebIpParam'
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/urlsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/ruleIdParam'
+      - $ref: '#/components/parameters/filenameParam'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummaryWithCategory'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - category:
+                    id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  summary:
+                    applications: 123
+                    domains: 82
+                    requestsblocked: 189
+                    filetypes: 0
+                    policycategories: 2
+                    requests: 189
+                    requestsallowed: 10
+                    categories: 11
+                    identitytypes: 1
+                    applicationsblocked: 2
+                    files: 5
+                    identities: 1
+                    applicationsallowed: 2
+                    policyrequests: 4
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
+    ruleIdParam:
+      name: ruleid
+      in: query
+      description: The firewall policy rule ID.
+      schema:
+        type: number
+      example: 1
+    categoriesParam:
+      name: categories
+      in: query
+      description: A category ID or comma-delimited list of category ID.
+      schema:
+        type: string
+      example: 148,151,66
+    bundleIdParam:
+      name: bundleid
+      in: query
+      description: A proxy bundle ID.
+      schema:
+        type: number
+      example: 1
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    antivirusThreatsParam:
+      name: antivirusthreats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+      example: Trojan.Linux.Generic.144075
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    ampDispositionParam:
+      name: ampdisposition
+      in: query
+      description: An AMP disposition string or a comma-delimited list of AMP disposition strings.
+      schema:
+        type: string
+      example: clean,malicious,unknown
+    typeDnsWebIpParam:
+      name: type
+      in: path
+      description: Specify the type of traffic.
+      required: true
+      schema:
+        type: string
+        enum:
+        - dns
+        - proxy
+        - ip
+      example: ip
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    filenameParam:
+      name: filename
+      in: query
+      description: 'A string that identifies a filename. Filter the request by the filename.
+
+        Supports globbing or use of the wildcard character (''*''). The asterisk (*) matches
+
+        zero or more occurrences of any character.'
+      schema:
+        type: string
+      example: myfilename_*
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    urlsParam:
+      name: urls
+      in: query
+      description: A URL or comma-delimited list of URL.
+      schema:
+        type: string
+      example: https://google.com,facebook.com/help
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    verdictParam:
+      name: verdict
+      in: query
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      schema:
+        type: string
+      example: allowed,blocked,proxied
+    dataLossPreventionStateParam:
+      name: datalosspreventionstate
+      in: query
+      description: 'A string that describes the status of a destination.
+
+        Filter for requests that are blocked by the DLP layer security.'
+      schema:
+        type: string
+        enum:
+        - blocked
+      example: blocked
+    securityOverriddenParam:
+      name: securityoverridden
+      in: query
+      description: Specify whether to filter on requests that override security.
+      schema:
+        type: boolean
+      example: true
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+  schemas:
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
+    Summary:
+      type: object
+      description: The summary information about the requests.
+      properties:
+        applications:
+          type: number
+          description: The total number of applications (avc or total).
+        domains:
+          type: number
+          description: The total number of domains.
+        requestsblocked:
+          type: number
+          description: The total number of domains.
+        filetypes:
+          type: number
+          description: The total number of domains.
+        policycategories:
+          type: number
+          description: The total number of blocked categories.
+        policyrequests:
+          type: number
+          description: The total number of policy requests.
+        requests:
+          type: number
+          description: The total number of requests.
+        requestsallowed:
+          type: number
+          description: The total number of allowed requests.
+        categories:
+          type: number
+          description: The total number of categories.
+        identitytypes:
+          type: number
+          description: The total number of identity types.
+        applicationsblocked:
+          type: number
+          description: The total number of blocked applications.
+        files:
+          type: number
+          description: The total number of files.
+        identities:
+          type: number
+          description: The total number of identities.
+        applicationsallowed:
+          type: number
+          description: The total number of allowed applications.
+      required:
+      - applications
+      - applicationsallowed
+      - applicationsblocked
+      - categories
+      - domains
+      - files
+      - filetypes
+      - identities
+      - identitytypes
+      - policycategories
+      - policyrequests
+      - requests
+      - requestsallowed
+      - requestsblocked
+      example:
+        applications: 123
+        domains: 82
+        requestsblocked: 189
+        filetypes: 0
+        policycategories: 2
+        policyrequests: 2
+        requests: 189
+        requestsallowed: 10
+        categories: 11
+        identitytypes: 1
+        applicationsblocked: 2
+        files: 5
+        identities: 1
+        applicationsallowed: 2
+    SummaryWithCategory:
+      type: object
+      description: The properties of the category and summary.
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        summary:
+          $ref: '#/components/schemas/Summary'
+      required:
+      - category
+      - summary
+      example:
+        category:
+          id: 66
+          label: Malware
+          type: security
+          integration: true
+        summary:
+          applications: 123
+          domains: 82
+          requestsblocked: 189
+          filetypes: 0
+          policycategories: 2
+          policyrequests: 2
+          requests: 189
+          requestsallowed: 10
+          categories: 11
+          identitytypes: 1
+          applicationsblocked: 2
+          files: 5
+          identities: 1
+          applicationsallowed: 2
+    Category:
+      type: object
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.granularEvents:read: Read reports granular events
+            reports.utilities:read: Read reports utilities
+            reports.aggregations:read: Read reports aggregations
+            reports.summariesByRule:read: Read reports for the summaries of the rule
+            reports.customers:read: Read reports for the customers
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

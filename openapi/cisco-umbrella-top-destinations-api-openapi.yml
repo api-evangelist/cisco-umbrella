@@ -1,0 +1,701 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Reporting Top Destinations API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+security:
+- oauthFlow: []
+tags:
+- name: Top Destinations
+paths:
+  /top-destinations:
+    get:
+      tags:
+      - Top Destinations
+      summary: Get Top Destinations
+      description: 'List the destinations by the number of requests made to this destination.
+
+        Return the results in descending order.
+
+
+        **Access Scope:** Reports > Aggregations > Read-Only'
+      operationId: getTopDestinations
+      security:
+      - oauthFlow:
+        - reports.aggregations:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetRequiredParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/urlsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/sha256Param'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TopDestination'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - bandwidth: 223437
+                  rank: 4
+                  domain: google.com
+                  count: 3827
+                  counts:
+                    requests: 123
+                    allowedrequests: 60
+                    blockedrequests: 63
+                  categories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  policycategories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /top-destinations/{type}:
+    get:
+      tags:
+      - Top Destinations
+      summary: Get Top Destinations By Type
+      description: 'List the destinations by type of destination and the number of requests made
+
+        to this destination. Return the collection in descending order.
+
+
+        **Access Scope:** Reports > Aggregations > Read-Only'
+      operationId: getTopDestinationsType
+      security:
+      - oauthFlow:
+        - reports.aggregations:read
+      parameters:
+      - $ref: '#/components/parameters/typeDnsWebIpFirewallParam'
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/urlsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/sha256Param'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TopDestination'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - bandwidth: 223437
+                  rank: 4
+                  domain: google.com
+                  count: 3827
+                  counts:
+                    requests: 123
+                    allowedrequests: 60
+                    blockedrequests: 63
+                  categories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  policycategories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /top-urls:
+    get:
+      tags:
+      - Top Destinations
+      summary: Get Top URLs
+      description: 'List the top number of URLs that are requested for a certain domain.
+
+
+        **Access Scope:** Reports > Aggregations > Read-Only'
+      operationId: getTopUrls
+      security:
+      - oauthFlow:
+        - reports.aggregations:read
+      parameters:
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetRequiredParam'
+      - $ref: '#/components/parameters/sha256Param'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TopURL'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - count: 884
+                  path: /backend-api/conversation
+                  categories:
+                  - id: 132
+                    type: content
+                    label: SaaS and B2B
+                    integration: false
+                    deprecated: false
+                  rank: 1
+                - count: 123
+                  path: ''
+                  categories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  rank: 2
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    typeDnsWebIpFirewallParam:
+      name: type
+      in: path
+      description: Specify the type of traffic.
+      required: true
+      schema:
+        type: string
+        enum:
+        - dns
+        - proxy
+        - firewall
+        - ip
+      example: firewall
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
+    categoriesParam:
+      name: categories
+      in: query
+      description: A category ID or comma-delimited list of category ID.
+      schema:
+        type: string
+      example: 148,151,66
+    bundleIdParam:
+      name: bundleid
+      in: query
+      description: A proxy bundle ID.
+      schema:
+        type: number
+      example: 1
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    sha256Param:
+      name: sha256
+      in: query
+      description: A SHA-256 hash.
+      schema:
+        type: string
+      example: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+    offsetRequiredParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      required: true
+      schema:
+        type: number
+      example: 0
+    portsParam:
+      name: ports
+      in: query
+      description: A port number or comma-delimited list of port numbers.
+      schema:
+        type: string
+      example: 7351,80
+    antivirusThreatsParam:
+      name: antivirusthreats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+      example: Trojan.Linux.Generic.144075
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    ampDispositionParam:
+      name: ampdisposition
+      in: query
+      description: An AMP disposition string or a comma-delimited list of AMP disposition strings.
+      schema:
+        type: string
+      example: clean,malicious,unknown
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    urlsParam:
+      name: urls
+      in: query
+      description: A URL or comma-delimited list of URL.
+      schema:
+        type: string
+      example: https://google.com,facebook.com/help
+    timezoneParam:
+      name: timezone
+      in: query
+      description: 'Display the timestamp of the traffic events in the specified timezone.
+
+        For the timezone, provide a continent and city separated by an url-encoded forward slash (''/''), for example: timezone=''ASIA%2fCALCUTTA''.'
+      schema:
+        type: string
+      example: ASIA%2fCALCUTTA
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    verdictParam:
+      name: verdict
+      in: query
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      schema:
+        type: string
+      example: allowed,blocked,proxied
+    dataLossPreventionStateParam:
+      name: datalosspreventionstate
+      in: query
+      description: 'A string that describes the status of a destination.
+
+        Filter for requests that are blocked by the DLP layer security.'
+      schema:
+        type: string
+        enum:
+        - blocked
+      example: blocked
+    securityOverriddenParam:
+      name: securityoverridden
+      in: query
+      description: Specify whether to filter on requests that override security.
+      schema:
+        type: boolean
+      example: true
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+  schemas:
+    count:
+      type: number
+      description: The total number of requests.
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
+    rank:
+      type: number
+      description: The rank of the result based on the number of requests.
+    Category:
+      type: object
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
+    bandwidth:
+      type:
+      - number
+      - 'null'
+      description: The amount of bandwidth
+    RequestCounts:
+      type: object
+      description: The information about the requests.
+      properties:
+        requests:
+          type: number
+          description: The total number of requests.
+        allowedrequests:
+          type: number
+          description: The number of requests that were allowed.
+        blockedrequests:
+          type: number
+          description: The number of requests that were blocked.
+    TopDestination:
+      type: object
+      description: The information about the top destination requests.
+      properties:
+        bandwidth:
+          $ref: '#/components/schemas/bandwidth'
+        rank:
+          $ref: '#/components/schemas/rank'
+        domain:
+          type: string
+          description: The domain name.
+        count:
+          type: number
+          description: The total number of requests made for this destination.
+        counts:
+          $ref: '#/components/schemas/RequestCounts'
+        categories:
+          $ref: '#/components/schemas/categories'
+        policycategories:
+          type: array
+          description: The policy categories that are associated with the destination.
+          items:
+            $ref: '#/components/schemas/Category'
+      required:
+      - bandwidth
+      - categories
+      - count
+      - counts
+      - domain
+      - policycategories
+      - rank
+      example:
+        bandwidth: 223437
+        rank: 4
+        domain: google.com
+        count: 3827
+        counts:
+          requests: 123
+          allowedrequests: 60
+          blockedrequests: 63
+        categories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        policycategories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+    TopURL:
+      type: object
+      description: The information about the top URLs.
+      properties:
+        count:
+          $ref: '#/components/schemas/count'
+        path:
+          type: string
+          description: The URL path.
+        categories:
+          $ref: '#/components/schemas/categories'
+        rank:
+          type: number
+          description: The numeric rank of the top URL.
+      required:
+      - categories
+      - count
+      - path
+      - rank
+      example:
+        count: 123
+        path: ''
+        categories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        rank: 1
+    categories:
+      type: array
+      description: The list of categories.
+      items:
+        $ref: '#/components/schemas/Category'
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.granularEvents:read: Read reports granular events
+            reports.utilities:read: Read reports utilities
+            reports.aggregations:read: Read reports aggregations
+            reports.summariesByRule:read: Read reports for the summaries of the rule
+            reports.customers:read: Read reports for the customers
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

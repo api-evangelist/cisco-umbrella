@@ -1,0 +1,269 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Incident Aggregates API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Incident Aggregates
+paths:
+  /incidents/aggregates/policies:
+    get:
+      tags:
+      - Incident Aggregates
+      description: Get the aggregations (by policies/users/status) for the incidents.
+      operationId: listIncidentAggregatesPolicies
+      summary: List Incident Aggregates Policies
+      parameters:
+      - $ref: '#/components/parameters/createdAfterParam'
+      - name: vendor
+        schema:
+          type: string
+        in: query
+        description: 'Filter based on the platform (for example: google, salesforce)'
+        example: google
+      - name: order
+        schema:
+          type: string
+        in: query
+        description: Order based on the severity. Only descending severity is supported.
+        example: -severity
+      - name: policies
+        in: query
+        schema:
+          type: string
+        description: Return aggregates by policies
+      - name: users
+        schema:
+          type: string
+        in: query
+        description: Return aggregates by users
+      - name: status
+        schema:
+          type: string
+        in: query
+        description: Return aggregates by status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentAggregates'
+              examples:
+                response:
+                  value:
+                  - agg:
+                      info: 34
+                      alert: 443
+                      critical: 770
+                      total: 1247
+                      warning: 0
+                    id: G8qz0vb49V
+                    name: Social Security Number
+                  - agg:
+                      info: 2549
+                      alert: 0
+                      critical: 0
+                      total: 2549
+                      warning: 0
+                    id: GbO4Q6lxLp
+                    name: Custom Regex
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /incidents/aggregates/status:
+    get:
+      tags:
+      - Incident Aggregates
+      description: List the status information for the incident aggregates.
+      operationId: listIncidentAggregatesStatus
+      summary: List Status for Incident Aggregates
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentAggregates'
+              examples:
+                response:
+                  value:
+                  - agg:
+                      info: 1433
+                      alert: 0
+                      critical: 0
+                      total: 1433
+                      warning: 0
+                    id: IN PROGRESS
+                    name: IN PROGRESS
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /incidents/aggregates/users:
+    get:
+      tags:
+      - Incident Aggregates
+      description: List the status information and users for the incident aggregates.
+      operationId: listIncidentAggregatesUsers
+      summary: List Status and Users for Incident Aggregates
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentAggregates'
+              examples:
+                response:
+                  value:
+                  - agg:
+                      info: 134
+                      alert: 0
+                      critical: 2
+                      total: 2049
+                      warning: 1913
+                    id: administrator@testcloudlockprimary1.com
+                    name: administrator@testcloudlockprimary1.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    createdAfterParam:
+      name: created_after
+      schema:
+        type: string
+      in: query
+      description: Filter the collection by the creation date.
+      example: '2021-01-01'
+  schemas:
+    IncidentAggregates:
+      type: object
+      properties:
+        agg:
+          type: object
+          description: The aggregates object.
+          properties:
+            info:
+              type: integer
+              description: The number of `info` severity incidents.
+            total:
+              type: integer
+              description: The overall number of incidents.
+            warning:
+              type: integer
+              description: The number of `warning` severity incidents.
+            critical:
+              type: integer
+              description: The number of `critical` severity incidents.'
+            alert:
+              type: integer
+              description: The number of `alert` severity incidents.
+        id:
+          type: string
+          description: The ID of the policy/status/user.
+        name:
+          type: string
+          description: The name of the policy/status/user.
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

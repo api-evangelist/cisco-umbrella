@@ -1,0 +1,2129 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Reporting Activity API
+  description: The Reporting API provides the data to generate the Umbrella reports.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: reports/v2
+security:
+- oauthFlow: []
+tags:
+- name: Activity
+paths:
+  /activity:
+    get:
+      tags:
+      - Activity
+      summary: Get Activities (All)
+      description: 'List all activities (dns/proxy/firewall/intrusion) within the timeframe.
+
+        **Note:** The IP activity report is not available.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivities
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/urlsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/ruleIdParam'
+      - $ref: '#/components/parameters/filenameParam'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/xTrafficTypeParam'
+      - $ref: '#/components/parameters/isolatedStateParam'
+      - $ref: '#/components/parameters/isolatedFileActionParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      - $ref: '#/components/parameters/httpErrorsParam'
+      - $ref: '#/components/parameters/existsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      anyOf:
+                      - $ref: '#/components/schemas/ActivityDns'
+                      - $ref: '#/components/schemas/ActivityFirewall'
+                      - $ref: '#/components/schemas/ActivityIntrusion'
+                      - $ref: '#/components/schemas/ActivityProxy'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                meta: {}
+                data:
+                - externalip: 52.8.160.247
+                  internalip: 52.8.160.247
+                  policycategories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  categories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  verdict: allowed
+                  domain: google.com
+                  timestamp: 1731002169000
+                  time: 06:31:46
+                  date: '2019-01-24'
+                  identities:
+                  - id: 1
+                    label: Catch Rate Testing System
+                    type:
+                      id: 21
+                      label: Sites
+                      type: site
+                    deleted: true
+                  threats:
+                  - label: Wannacry
+                    type: Ransomware
+                  allapplications:
+                  - id: 1
+                    label: label
+                    type: NBAR
+                    category:
+                      id: 1
+                      label: category
+                  allowedapplications:
+                  - id: 1
+                    label: label
+                    type: NBAR
+                    category:
+                      id: 1
+                      label: category
+                  querytype: MX
+                  returncode: 2
+                  blockedapplications: []
+                  type: dns
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /activity/dns:
+    get:
+      tags:
+      - Activity
+      summary: Get Activity DNS
+      description: 'List all DNS entries within the timeframe.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivityDns
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/orderParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActivityDns'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - externalip: 52.8.160.247
+                  internalip: 52.8.160.247
+                  policycategories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  categories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  verdict: allowed
+                  domain: google.com
+                  timestamp: 1731002169000
+                  time: 06:31:46
+                  date: '2019-01-24'
+                  identities:
+                  - id: 1
+                    label: Catch Rate Testing System
+                    type:
+                      id: 21
+                      label: Sites
+                      type: site
+                    deleted: true
+                  threats:
+                  - label: Wannacry
+                    type: Ransomware
+                  allapplications:
+                  - id: 1
+                    label: label
+                    type: NBAR
+                    category:
+                      id: 1
+                      label: category
+                  allowedapplications:
+                  - id: 1
+                    label: label
+                    type: NBAR
+                    category:
+                      id: 1
+                      label: category
+                  querytype: MX
+                  returncode: 2
+                  blockedapplications: []
+                  type: dns
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /activity/proxy:
+    get:
+      tags:
+      - Activity
+      summary: Get Activity Proxy
+      description: 'List all proxy entries within the timeframe.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivityProxy
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/orderParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/domainsParam'
+      - $ref: '#/components/parameters/urlsParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/policyCategoriesParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/applicationIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/ruleIdParam'
+      - $ref: '#/components/parameters/filenameParam'
+      - $ref: '#/components/parameters/securityOverriddenParam'
+      - $ref: '#/components/parameters/bundleIdParam'
+      - $ref: '#/components/parameters/threatsParam'
+      - $ref: '#/components/parameters/threatTypesParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/antivirusThreatsParam'
+      - $ref: '#/components/parameters/tenantControlsParam'
+      - $ref: '#/components/parameters/isolatedStateParam'
+      - $ref: '#/components/parameters/isolatedFileActionParam'
+      - $ref: '#/components/parameters/dataLossPreventionStateParam'
+      - $ref: '#/components/parameters/httpErrorsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActivityProxy'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - destinationip: ''
+                  externalip: 32.4.91.7
+                  responsesize: 3329530
+                  allapplications:
+                  - id: 1313
+                    label: Netflix
+                    category:
+                      id: 47
+                      label: Media
+                  date: '2022-02-18'
+                  datalossprevention:
+                    state: ''
+                  antivirusthreats:
+                    puas: []
+                    viruses: []
+                    others: []
+                  internalip: 192.168.1.43
+                  referer: ''
+                  contenttype: ''
+                  tenantcontrols: false
+                  securityoverridden: false
+                  useragent: ''
+                  time: '23:29:42'
+                  amp:
+                    disposition: ''
+                    score: 0
+                    malware: ''
+                  policycategories: []
+                  type: proxy
+                  requestsize: 1996
+                  port: 443
+                  policy:
+                    ruleid: 0
+                    rulesetid: 0
+                    destinationlistids: []
+                    timebasedrule: false
+                  forwardingmethod: ''
+                  categories:
+                  - id: 17
+                    type: content
+                    label: Movies
+                    integration: false
+                    deprecated: true
+                  isolated:
+                    state: not-isolated
+                    fileaction: ''
+                  statuscode: 200
+                  egress:
+                    ip: 155.190.3.8
+                    type: shared
+                  blockedfiletype: ''
+                  url: https://ipv4-lax2-ix.1.oca.anothervideo.net
+                  verdict: allowed
+                  responsefilename: ''
+                  warnstatus: ''
+                  sha256: ''
+                  timestamp: 1645226982000
+                  blockedapplications: []
+                  allowedapplications: []
+                  identities:
+                  - id: 1
+                    type:
+                      id: 34
+                      type: anyconnect
+                      label: Anyconnect Roaming Client
+                    label: Vincent's Macbook
+                    deleted: false
+                  datacenter:
+                    label: Los Angeles, US
+                    id: LAX
+                  threats: []
+                  httperrors: []
+                  bundleid: 3
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /activity/firewall:
+    get:
+      tags:
+      - Activity
+      summary: Get Activity Firewall
+      description: 'List all firewall activity within the timeframe.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivityFirewall
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/ruleIdParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActivityFirewall'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - date: '2019'
+                  destinationip: 52.8.160.247
+                  sourceip: 192.168.0.1
+                  sourceport: 0
+                  destinationport: 0
+                  categories:
+                  - id: 66
+                    label: Malware
+                    type: security
+                    integration: true
+                  verdict: allowed
+                  time: '12:34'
+                  timestamp: 1731002169000
+                  identities:
+                  - id: 1
+                    label: Catch Rate Testing System
+                    type:
+                      id: 21
+                      label: Sites
+                      type: site
+                    deleted: false
+                  protocol:
+                    id: 17
+                    label: UDP
+                  rule:
+                    id: 1
+                    label: Default Rule
+                  type: firewall
+                  allapplications:
+                  - id: 72
+                    label: dns IT Service Management
+                    app: ''
+                  applicationprotocols:
+                  - id: 72
+                    label: dns IT Service Management
+                    app: ''
+                  packetsize: 32
+                  direction: towards
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /activity/intrusion:
+    get:
+      tags:
+      - Activity
+      summary: Get Activity Intrusion
+      description: 'List all Intrusion Prevention System (IPS) activity within the timeframe.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivityIntrusion
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/signaturesParam'
+      - $ref: '#/components/parameters/signatureListIdsParam'
+      - $ref: '#/components/parameters/intrusionActionParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      - $ref: '#/components/parameters/filterNoisyDomainsParam'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActivityIntrusion'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - type: intrusion
+                  date: 12-02-22
+                  destinationip: 10.10.10.10
+                  protocol:
+                    id: 17
+                    label: UDP
+                  sourceip: 10.10.10.10
+                  signaturelist:
+                    id: 1111
+                  classification: malicious
+                  rule:
+                  - id: 391327
+                    label: UNKNOWN
+                  ipsProfile: PROFILE
+                  sourceport: 22
+                  sessionid: 190898098
+                  verdict: detected
+                  destinationport: 33
+                  timestamp: 1594557262000
+                  time: 09:30
+                  identities:
+                  - id: 211034846
+                    type:
+                      id: 34
+                      type: anyconnect
+                      label: Anyconnect Roaming Client
+                    label: omerta
+                    deleted: false
+                  severity: HIGH
+                  signature:
+                    generatorid: 1
+                    id: 47829
+                    label: SERVER-OTHER JBoss Richfaces expression language injection attempt
+                    cves:
+                    - cve-2015-0279
+                    - cve-2018-12532
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /activity/ip:
+    get:
+      tags:
+      - Activity
+      summary: Get Activity IP
+      description: '(Deprecated) List all IP activity within the timeframe.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivityIP
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/identityIdsParam'
+      - $ref: '#/components/parameters/identityTypesParam'
+      - $ref: '#/components/parameters/categoriesParam'
+      - $ref: '#/components/parameters/verdictParam'
+      - $ref: '#/components/parameters/ipParam'
+      - $ref: '#/components/parameters/portsParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {}
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data: []
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /activity/amp-retrospective:
+    get:
+      tags:
+      - Activity
+      summary: Get Activity AMP Retrospective
+      description: 'List all AMP retrospective activity within the timeframe.
+
+
+        **Access Scope:** Reports > Granular Events > Read-Only'
+      operationId: getActivityAmpRetrospective
+      security:
+      - oauthFlow:
+        - reports.granularEvents:read
+      parameters:
+      - $ref: '#/components/parameters/fromParam'
+      - $ref: '#/components/parameters/toParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/ampDispositionParam'
+      - $ref: '#/components/parameters/sha256Param'
+      - $ref: '#/components/parameters/timezoneParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActivityAMPRetro'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                required:
+                - data
+                - meta
+              example:
+                data:
+                - timestamp: 1548311506
+                  firstseenat: 1548311506
+                  disposition: clean
+                  score: 10
+                  hostname: google.com
+                  malwarename: malware
+                  sha256: 9495b6c155044053953efe30ebaf804780c114e7b721b14f6a5b0a782769696e
+                meta: {}
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
+    categoriesParam:
+      name: categories
+      in: query
+      description: A category ID or comma-delimited list of category ID.
+      schema:
+        type: string
+      example: 148,151,66
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    httpErrorsParam:
+      name: httperrors
+      in: query
+      description: Filter data for requests that resulted in a TLS error or a certificate error.
+      schema:
+        type: string
+        enum:
+        - certificateerror
+        - tlserror
+      example: certificateerror
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    existsParam:
+      name: exists
+      in: query
+      description: 'Specify an attribute or comma-separated list of attributes to filter the data.
+
+        Valid values are: `categories`, `policycategories`, `applicationid`,
+
+        `nbarapplicationid`, `nbarapplicationtypeids`, `privateapplicationid`, `applicationgroupids`,
+
+        `sha256`, `filename`, `threats`, `threattypes`, `antivirusthreats`, `destinationlistids`, and `httperrors`.'
+      schema:
+        type: string
+      example: destinationlistids,threattypes
+    ruleIdParam:
+      name: ruleid
+      in: query
+      description: The firewall policy rule ID.
+      schema:
+        type: number
+      example: 1
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    sha256Param:
+      name: sha256
+      in: query
+      description: A SHA-256 hash.
+      schema:
+        type: string
+      example: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    ampDispositionParam:
+      name: ampdisposition
+      in: query
+      description: An AMP disposition string or a comma-delimited list of AMP disposition strings.
+      schema:
+        type: string
+      example: clean,malicious,unknown
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    urlsParam:
+      name: urls
+      in: query
+      description: A URL or comma-delimited list of URL.
+      schema:
+        type: string
+      example: https://google.com,facebook.com/help
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    isolatedStateParam:
+      name: isolatedstate
+      in: query
+      description: A string that describes the remote browser isolation (RBI) isolation type.
+      schema:
+        type: string
+        enum:
+        - isolated
+        - not-isolated
+      example: isolated
+    dataLossPreventionStateParam:
+      name: datalosspreventionstate
+      in: query
+      description: 'A string that describes the status of a destination.
+
+        Filter for requests that are blocked by the DLP layer security.'
+      schema:
+        type: string
+        enum:
+        - blocked
+      example: blocked
+    isolatedFileActionParam:
+      name: isolatedFileAction
+      in: query
+      description: A string that describes the remote browser isolation (RBI) file action type.
+      schema:
+        type: string
+        enum:
+        - viewed
+        - downloaded-original-file
+        - downloaded-safe-pdf
+      example: downloaded-safe-pdf
+    securityOverriddenParam:
+      name: securityoverridden
+      in: query
+      description: Specify whether to filter on requests that override security.
+      schema:
+        type: boolean
+      example: true
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+    bundleIdParam:
+      name: bundleid
+      in: query
+      description: A proxy bundle ID.
+      schema:
+        type: number
+      example: 1
+    signatureListIdsParam:
+      name: signaturelistids
+      in: query
+      description: The signature ID or comma-separated list of signature list IDs.
+      schema:
+        type: string
+      example: 1,2
+    antivirusThreatsParam:
+      name: antivirusthreats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+      example: Trojan.Linux.Generic.144075
+    orderParam:
+      name: order
+      in: query
+      description: 'A string that describes how to order the results: ascending (`asc`) or descending (`desc`).'
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      example: desc
+    filenameParam:
+      name: filename
+      in: query
+      description: 'A string that identifies a filename. Filter the request by the filename.
+
+        Supports globbing or use of the wildcard character (''*''). The asterisk (*) matches
+
+        zero or more occurrences of any character.'
+      schema:
+        type: string
+      example: myfilename_*
+    verdictParam:
+      name: verdict
+      in: query
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      schema:
+        type: string
+      example: allowed,blocked,proxied
+    timezoneParam:
+      name: timezone
+      in: query
+      description: 'Display the timestamp of the traffic events in the specified timezone.
+
+        For the timezone, provide a continent and city separated by an url-encoded forward slash (''/''), for example: timezone=''ASIA%2fCALCUTTA''.'
+      schema:
+        type: string
+      example: ASIA%2fCALCUTTA
+    signaturesParam:
+      name: signatures
+      in: query
+      description: The signature or comma-separated list of <signatureid>-<generatorid> signatures.
+      schema:
+        type: string
+      example: 1-2,1-4
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    xTrafficTypeParam:
+      name: x-traffic-type
+      in: header
+      description: 'A string or comma-delimited list of strings that describes the type of traffic.
+
+        If the header is not set, the default value is `all`. Valid values are: `dns`, `proxy`, `firewall`, and `ip`.'
+      schema:
+        type: string
+      example: dns,proxy,firewall,ip
+    intrusionActionParam:
+      name: intrusionaction
+      in: query
+      description: 'An action or list of comma-separated intrusion actions. Valid values are: `would_block`, `blocked`, and `detected`.'
+      schema:
+        type: string
+      example: detected,would_block
+    tenantControlsParam:
+      name: tenantcontrols
+      in: query
+      description: If set to `true`, filter data for requests that are part of a tenant control policy.
+      schema:
+        type: boolean
+      example: true
+    portsParam:
+      name: ports
+      in: query
+      description: A port number or comma-delimited list of port numbers.
+      schema:
+        type: string
+      example: 7351,80
+  schemas:
+    Classification:
+      type: string
+      description: The category of attack detected by a rule that is part of a more general type of attack class, such as trojan-activity, attempted-user, and unknown.
+      example: trojan-activity
+    Policy:
+      type: object
+      description: The properties of the rules in the policy.
+      required:
+      - destinationlistids
+      - ruleid
+      - rulesetid
+      - timebasedrule
+      properties:
+        timebasedrule:
+          type: boolean
+          description: Specify whether the policy triggered a time-of-day rule.
+        destinationlistids:
+          type: array
+          description: The list of destination lists that the rules triggered.
+          items:
+            type: number
+        ruleid:
+          type:
+          - number
+          - 'null'
+          description: The ID of the rule in the policy.
+        rulesetid:
+          type:
+          - number
+          - 'null'
+          description: The ID of the ruleset in the policy.
+    Egress:
+      type: object
+      description: The information about the egress IP.
+      properties:
+        ip:
+          type: string
+          description: The egress IP.
+        type:
+          type: string
+          description: The type of the egress IP.
+          example: shared
+      required:
+      - ip
+      - type
+      example:
+        ip: 155.190.3.8
+        type: shared
+    TimestampInSeconds:
+      type: number
+      description: The timestamp represented in seconds.
+      example: 1594557263
+    ActivityAMPRetro:
+      type: object
+      description: The information about the AMP activity.
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/TimestampInSeconds'
+        firstseenat:
+          type: number
+          description: The date and time (a timestamp expressed in seconds) when the malware event was first recorded.
+          example: 1548311506
+        disposition:
+          type: string
+          description: The disposition for the entry.
+        score:
+          type: number
+          description: The score for the entry.
+        hostname:
+          type: string
+          description: The hostname for the entry.
+        malwarename:
+          type: string
+          description: The name of the malware for the entry.
+        sha256:
+          $ref: '#/components/schemas/sha256'
+      required:
+      - disposition
+      - firstseenat
+      - hostname
+      - malwarename
+      - score
+      - sha256
+      - timestamp
+      example:
+        timestamp: 1548311506
+        firstseenat: 1548311506
+        disposition: clean
+        score: 10
+        hostname: google.com
+        malwarename: malware
+        sha256: 9495b6c155044053953efe30ebaf804780c114e7b721b14f6a5b0a782769696e
+    Time:
+      type: string
+      description: The time in 24-hour format based on the timezone parameter.
+      example: '12:34'
+    Timestamp:
+      type: number
+      description: The timestamp represented in milliseconds.
+      example: 1594557263000
+    Signature:
+      type: object
+      description: The properties of the signature.
+      properties:
+        generatorid:
+          type: number
+          description: The unique ID that is assigned to the part of the IPS, which generated the event.
+        id:
+          type: number
+          description: The ID that is used to uniquely identify signatures.
+        label:
+          type: string
+          description: A descriptive label for the the signature.
+        cves:
+          type: array
+          description: The list of common vulnerabilites and exposures (CVEs).
+          items:
+            $ref: '#/components/schemas/CVE'
+      required:
+      - generatorid
+      - id
+      - label
+      - cves
+      example:
+        generatorid: 148
+        id: 2
+        label: (cip) CIP data is non-conforming to ODVA standard
+        cves:
+        - cve-2015-0279
+    Date:
+      type: string
+      description: The date from the timestamp based on the timezone parameter.
+      example: '2020-07-12'
+    verdict:
+      type: string
+      description: The verdict for the entry.
+      enum:
+      - allowed
+      - blocked
+      example: allowed
+    Threat:
+      type: object
+      description: The information about the threat.
+      properties:
+        label:
+          type: string
+          description: The descriptive label for the threat name.
+        type:
+          type: string
+          description: The type of the threat.
+    DestinationPort:
+      type: number
+      description: The destination port for entry.
+      example: 89
+    Severity:
+      type: string
+      description: The severity level of the rule.
+      enum:
+      - HIGH
+      - MEDIUM
+      - LOW
+      - VERY LOW
+      example: HIGH
+    SourceIp:
+      type: string
+      description: The source IP for the entry.
+      example: 10.11.10.10
+    SourcePort:
+      type: number
+      description: The source port for the entry.
+      example: 3000
+    Rule:
+      type: object
+      description: The properties of the firewall rule.
+      properties:
+        id:
+          type: number
+          description: The ID of the rule.
+        label:
+          type: string
+          description: The name of the rule.
+        privateapplicationgroup:
+          $ref: '#/components/schemas/PrivateApplicationGroup'
+      required:
+      - id
+      - label
+    policycategories:
+      type: array
+      description: The list of policy categories.
+      items:
+        $ref: '#/components/schemas/Category'
+    FirewallApplication:
+      type: object
+      description: The information about the applications managed by the firewall.
+      properties:
+        id:
+          type: number
+          description: The ID of the application or protocol.
+        label:
+          type: string
+          description: The descriptive label for the application or protocol.
+        app:
+          type: string
+          description: The information about the app type.
+          example: IT Service Management (string) - application/protocol type
+    ActivityProxy:
+      type: object
+      description: The activity of the proxy.
+      properties:
+        externalip:
+          type: string
+          description: The external IP for the entry.
+        internalip:
+          type: string
+          description: The internal IP for the entry.
+        policycategories:
+          $ref: '#/components/schemas/policycategories'
+        categories:
+          $ref: '#/components/schemas/categories'
+        verdict:
+          $ref: '#/components/schemas/verdict'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        identities:
+          $ref: '#/components/schemas/identities'
+        allapplications:
+          $ref: '#/components/schemas/allapplications'
+        allowedapplications:
+          type: array
+          description: The list of allowed applications for the entry.
+          items:
+            $ref: '#/components/schemas/Application'
+        blockedapplications:
+          type: array
+          description: The list of blocked applications for the entry.
+          items:
+            $ref: '#/components/schemas/Application'
+        responsefilename:
+          type: string
+          description: The response filename for the entry.
+        blockedfiletype:
+          type: string
+          description: The blocked file type for the entry.
+        bundleid:
+          type: number
+          description: The ID of the bundle type.
+        amp:
+          $ref: '#/components/schemas/CiscoAMP'
+        type:
+          type: string
+          description: The type of the request. A proxy request is always of type 'proxy'.
+        tenantcontrols:
+          type: boolean
+          description: Specifies whether the request is part of a tenant control policy.
+        port:
+          type:
+          - number
+          - 'null'
+          description: The port used to make the request.
+        antivirusthreats:
+          $ref: '#/components/schemas/AntivirusThreats'
+        policy:
+          $ref: '#/components/schemas/Policy'
+        requestmethod:
+          type: string
+          description: The HTTP request method.
+          example: GET
+        responsesize:
+          type: number
+          description: The response size in bytes.
+        requestsize:
+          type: number
+          description: The response size in bytes.
+        statuscode:
+          type: number
+          description: The HTTP status code (`200` or `201`).
+          enum:
+          - 200
+          - 201
+          example: 200
+        useragent:
+          type: string
+          description: The name of the browser that made the request.
+        referer:
+          type: string
+          description: The referring domain or URL.
+        warnstatus:
+          type: string
+          description: The warning status.
+        sha256:
+          type: string
+          description: The hex digest of the response content.
+        isolated:
+          $ref: '#/components/schemas/Isolated'
+        datalossprevention:
+          $ref: '#/components/schemas/DataLossPreventionState'
+        securityoverridden:
+          type: boolean
+          description: Specifies whether security overrides are configured.
+        contenttype:
+          type: string
+          description: The type of web content, typically text/html.
+          example: text/html
+        forwardingmethod:
+          type: string
+          description: The request method (GET, POST, HEAD, etc.)
+          example: GET
+        httperrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/HttpError'
+          description: Certificate & TLS Errors
+        threats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Threat'
+        egress:
+          $ref: '#/components/schemas/Egress'
+        datacenter:
+          $ref: '#/components/schemas/DataCenter'
+        date:
+          $ref: '#/components/schemas/Date'
+        time:
+          $ref: '#/components/schemas/Time'
+        destinationip:
+          $ref: '#/components/schemas/DestinationIp'
+        url:
+          type: string
+          description: The URL that was requested.
+      required:
+      - allapplications
+      - allowedapplications
+      - amp
+      - antivirusthreats
+      - blockedapplications
+      - blockedfiletype
+      - bundleid
+      - categories
+      - contenttype
+      - datacenter
+      - datalossprevention
+      - date
+      - destinationip
+      - egress
+      - externalip
+      - forwardingmethod
+      - httperrors
+      - identities
+      - internalip
+      - isolated
+      - policy
+      - policycategories
+      - port
+      - referer
+      - requestsize
+      - responsefilename
+      - responsesize
+      - securityoverridden
+      - sha256
+      - statuscode
+      - tenantcontrols
+      - threats
+      - time
+      - timestamp
+      - type
+      - url
+      - useragent
+      - verdict
+      - warnstatus
+      example:
+        destinationip: ''
+        externalip: 32.4.91.7
+        responsesize: 3329530
+        allapplications:
+        - id: 1313
+          label: Netflix
+          category:
+            id: 47
+            label: Media
+        date: '2022-02-18'
+        datalossprevention:
+          state: ''
+        antivirusthreats:
+          puas: []
+          viruses: []
+          others: []
+        internalip: 192.168.1.43
+        referer: ''
+        contenttype: ''
+        tenantcontrols: false
+        securityoverridden: false
+        useragent: ''
+        time: '23:29:42'
+        amp:
+          disposition: ''
+          score: 0
+          malware: ''
+        policycategories: []
+        type: proxy
+        requestsize: 1996
+        port: 443
+        policy:
+          ruleid: 0
+          rulesetid: 0
+          destinationlistids: []
+          timebasedrule: false
+        forwardingmethod: ''
+        categories:
+        - id: 17
+          type: content
+          label: Movies
+          integration: false
+          deprecated: true
+        isolated:
+          state: not-isolated
+          fileaction: ''
+        statuscode: 200
+        egress:
+          ip: 155.190.3.8
+          type: shared
+        blockedfiletype: ''
+        url: https://ipv4-lax2-ix.1.oca.anothervideo.net
+        verdict: allowed
+        responsefilename: ''
+        warnstatus: ''
+        sha256: ''
+        timestamp: 1645226982000
+        blockedapplications: []
+        allowedapplications: []
+        identities:
+        - id: 1
+          type:
+            id: 34
+            type: anyconnect
+            label: Anyconnect Roaming Client
+          label: Vincent's Macbook
+          deleted: false
+        datacenter:
+          label: Atlanta, US
+          id: ATL
+        threats: []
+        httperrors: []
+        bundleid: 3
+    ActivityDns:
+      type: object
+      description: The information about the DNS activity.
+      properties:
+        externalip:
+          type: string
+          description: The external IP for the entry.
+        internalip:
+          type: string
+          description: The internal IP for the entry.
+        policycategories:
+          type: array
+          description: The list of the policy categories.
+          items:
+            $ref: '#/components/schemas/Category'
+        categories:
+          $ref: '#/components/schemas/categories'
+        verdict:
+          $ref: '#/components/schemas/verdict'
+        domain:
+          type: string
+          description: The domain name for the entry.
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        identities:
+          $ref: '#/components/schemas/identities'
+        allapplications:
+          type: array
+          description: The list of all applications for the entry.
+          items:
+            $ref: '#/components/schemas/Application'
+        threats:
+          type: array
+          description: The list of threats for the entry.
+          items:
+            $ref: '#/components/schemas/Threat'
+        type:
+          type: string
+          description: The type of the request. A DNS request always has the type dns.
+          enum:
+          - dns
+          example: dns
+        querytype:
+          type: string
+          description: 'The type of DNS request that was made. For more information,
+
+            see Common DNS Request Types.'
+        date:
+          $ref: '#/components/schemas/Date'
+        time:
+          $ref: '#/components/schemas/Time'
+        returncode:
+          type: number
+          description: 'The DNS return code for this request.
+
+            For more information, see Common DNS return codes for any
+
+            DNS service (and Umbrella).'
+        allowedapplications:
+          type: array
+          description: The list of allowed applications.
+          items:
+            $ref: '#/components/schemas/Application'
+        blockedapplications:
+          type: array
+          description: The list of blocked applications.
+          items:
+            $ref: '#/components/schemas/Application'
+      required:
+      - allapplications
+      - allowedapplications
+      - blockedapplications
+      - categories
+      - date
+      - domain
+      - externalip
+      - identities
+      - internalip
+      - policycategories
+      - querytype
+      - returncode
+      - threats
+      - time
+      - timestamp
+      - type
+      - verdict
+      example:
+        externalip: 52.8.160.247
+        internalip: 52.8.160.247
+        policycategories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        categories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        verdict: allowed
+        domain: google.com
+        timestamp: 1548311506000
+        time: 06:31:46
+        date: '2019-01-24'
+        identities:
+        - id: 1
+          label: Catch Rate Testing System
+          type:
+            id: 21
+            label: Sites
+            type: site
+          deleted: true
+        threats:
+        - label: Wannacry
+          type: Ransomware
+        allapplications:
+        - id: 1
+          label: label
+          type: NBAR
+          category:
+            id: 1
+            label: category
+        allowedapplications:
+        - id: 1
+          label: label
+          type: NBAR
+          category:
+            id: 1
+            label: category
+        querytype: MX
+        returncode: 2
+        blockedapplications: []
+        type: dns
+    IdentityType:
+      type: object
+      description: The information about the identity including the type.
+      properties:
+        id:
+          type: number
+          description: The ID of the origin type for the identity.
+        label:
+          type: string
+          description: The label of the origin type for the identity.
+        type:
+          type: string
+          description: The name of the origin type for the identity.
+    Protocol:
+      type: object
+      description: The properties of the protocol.
+      properties:
+        id:
+          type: number
+          description: The ID of protocol.
+        label:
+          type: string
+          description: The name of the protocol.
+      required:
+      - id
+      - label
+    Isolated:
+      type: object
+      description: The properties of the isolated file.
+      properties:
+        state:
+          type: string
+          description: The state of the isolated file.
+        fileaction:
+          type: string
+          description: The action taken for the file.
+      required:
+      - state
+      - fileaction
+      example:
+        state: not-isolated
+        fileaction: ''
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
+    Application:
+      type: object
+      description: The information about the application.
+      properties:
+        id:
+          type: number
+          description: The ID of the application.
+        label:
+          type: string
+          description: The descriptive label for the application.
+        type:
+          type: string
+          description: 'The type of the application: NBAR or AVC.'
+          enum:
+          - NBAR
+          - AVC
+          example: AVC
+        category:
+          type: object
+          description: The category of the application.
+          properties:
+            id:
+              type: number
+              description: The ID of the application category.
+            label:
+              type: string
+              description: The label of the application category.
+      example:
+        id: 1
+        label: malware
+        type: AVC
+        category:
+          id: 2
+          label: Education
+    ActivityIntrusion:
+      type: object
+      description: The information about the intrusion activity.
+      properties:
+        classification:
+          $ref: '#/components/schemas/Classification'
+        date:
+          $ref: '#/components/schemas/Date'
+        destinationip:
+          $ref: '#/components/schemas/DestinationIp'
+        destinationport:
+          $ref: '#/components/schemas/DestinationPort'
+        identities:
+          $ref: '#/components/schemas/identities'
+        protocol:
+          $ref: '#/components/schemas/Protocol'
+        sessionid:
+          $ref: '#/components/schemas/SessionId'
+        severity:
+          $ref: '#/components/schemas/Severity'
+        signature:
+          $ref: '#/components/schemas/Signature'
+        signaturelist:
+          $ref: '#/components/schemas/SignatureList'
+        sourceip:
+          $ref: '#/components/schemas/SourceIp'
+        sourceport:
+          $ref: '#/components/schemas/SourcePort'
+        time:
+          $ref: '#/components/schemas/Time'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        type:
+          type: string
+          description: The type of the request. An intrusion request always has type intrusion.
+          example: intrusion
+        verdict:
+          $ref: '#/components/schemas/verdictDetected'
+      required:
+      - classification
+      - date
+      - destinationip
+      - destinationport
+      - identities
+      - protocol
+      - sessionid
+      - severity
+      - signature
+      - signaturelist
+      - sourceip
+      - sourceport
+      - time
+      - timestamp
+      - type
+      - verdict
+      example:
+        type: intrusion
+        date: 12-02-22
+        destinationip: 10.10.10.10
+        protocol:
+          id: 17
+          label: UDP
+        sourceip: 10.10.10.10
+        signaturelist:
+          id: 1111
+        classification: malicious
+        sourceport: 22
+        sessionid: 190898098
+        verdict: detected
+        destinationport: 33
+        timestamp: 1594557262000
+        time: 09:30
+        identities:
+        - id: 211034846
+          type:
+            id: 34
+            type: anyconnect
+            label: Anyconnect Roaming Client
+          label: omerta
+          deleted: false
+        severity: HIGH
+        signature:
+          generatorid: 1
+          id: 47829
+          label: SERVER-OTHER JBoss Richfaces expression language injection attempt
+          cves:
+          - cve-2015-0279
+          - cve-2018-12532
+    ActivityFirewall:
+      type: object
+      description: The information about the firewall activity.
+      properties:
+        date:
+          $ref: '#/components/schemas/Date'
+        destinationip:
+          $ref: '#/components/schemas/DestinationIp'
+        sourceip:
+          $ref: '#/components/schemas/SourceIp'
+        sourceport:
+          $ref: '#/components/schemas/SourcePort'
+        destinationport:
+          $ref: '#/components/schemas/DestinationPort'
+        categories:
+          $ref: '#/components/schemas/categories'
+        verdict:
+          $ref: '#/components/schemas/verdict'
+        time:
+          $ref: '#/components/schemas/Time'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        identities:
+          $ref: '#/components/schemas/identities'
+        protocol:
+          $ref: '#/components/schemas/Protocol'
+        rule:
+          $ref: '#/components/schemas/Rule'
+        type:
+          type: string
+          description: The type of the request. A firewall request always has type firewall.
+          example: firewall
+        allapplications:
+          type: array
+          description: A list of firewall applications
+          items:
+            $ref: '#/components/schemas/FirewallApplication'
+        applicationprotocols:
+          type: array
+          description: A list of firewall application protocols.
+          items:
+            $ref: '#/components/schemas/FirewallApplication'
+        direction:
+          type: string
+          description: The direction of the packet. It is destined either towards the internet or to the customer's network.
+        packetsize:
+          type: number
+          description: The size of the packet that was received.
+      required:
+      - allapplications
+      - applicationprotocols
+      - date
+      - destinationip
+      - destinationport
+      - direction
+      - identities
+      - packetsize
+      - protocol
+      - rule
+      - sourceip
+      - sourceport
+      - time
+      - timestamp
+      - type
+      - verdict
+      example:
+        date: ''
+        destinationip: 52.8.160.247
+        sourceip: 192.168.0.1
+        sourceport: 0
+        destinationport: 0
+        direction: toward
+        categories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        verdict: allowed
+        time: '12:34'
+        timestamp: 1548311506000
+        packetsize: 32
+        identities:
+        - id: 1
+          label: Catch Rate Testing System
+          type:
+            id: 21
+            label: Sites
+            type: site
+          deleted: false
+        protocol:
+          id: 17
+          label: UDP
+        rule:
+          id: 1
+          label: Default Rule
+        type: firewall
+        allapplications:
+        - id: 72
+          label: dns IT Service Management
+          app: ''
+        applicationprotocols:
+        - id: 72
+          label: dns IT Service Management
+          app: ''
+    Identity:
+      type: object
+      description: The information about the identity.
+      properties:
+        id:
+          type: number
+          description: The ID of the identity.
+        label:
+          type: string
+          description: The descriptive label for the identity.
+        type:
+          $ref: '#/components/schemas/IdentityType'
+        deleted:
+          type: boolean
+          description: Indicates whether the identity was deleted.
+          example: true
+      required:
+      - id
+      - label
+      - type
+      - deleted
+      example:
+        id: 1
+        label: Catch Rate Testing System
+        type:
+          id: 21
+          label: Sites
+          type: site
+        deleted: false
+    Category:
+      type: object
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
+    DataCenter:
+      type: object
+      description: The information about the data center.
+      properties:
+        id:
+          type: string
+          description: The unique ID for the data center.
+        label:
+          type: string
+          description: The name of the data center.
+      required:
+      - id
+      - label
+      example:
+        id: LAX
+        label: Los Angeles, US
+    verdictDetected:
+      type: string
+      description: The verdict for the entry.
+      enum:
+      - detected
+      example: detected
+    CiscoAMP:
+      type: object
+      description: The properties of the AMP disposition and score for the malware.
+      properties:
+        score:
+          type: number
+          description: The AMP score.
+        disposition:
+          type: string
+          description: The AMP disposition.
+        malware:
+          type: string
+          description: The AMP malware.
+      required:
+      - disposition
+      - malware
+      - score
+    DestinationIp:
+      type: string
+      description: The destination IP for the entry.
+      example: 12.10.10.10
+    DataLossPreventionState:
+      type: object
+      description: The information about the Data Loss Prevention state.
+      properties:
+        state:
+          type: string
+          description: Indicates the status of the DLP. The state is either `blocked` or the empty string (` `).
+          enum:
+          - blocked
+          - ''
+      required:
+      - state
+      example:
+        state: blocked
+    AntivirusThreats:
+      type: object
+      description: The information about the antivirus threats.
+      properties:
+        puas:
+          type: array
+          description: The list of potentially unwanted applications.
+          items:
+            type: object
+        viruses:
+          type: array
+          description: The list of viruses.
+          items:
+            type: string
+        others:
+          type: array
+          description: The list of other antivirus threats.
+          items:
+            type: object
+      required:
+      - others
+      - puas
+      - viruses
+    PrivateApplicationGroup:
+      type: object
+      description: The private application group.
+      properties:
+        id:
+          type:
+          - number
+          - 'null'
+          description: The ID of application group.
+        label:
+          type:
+          - string
+          - 'null'
+          description: The name of the application group.
+    identities:
+      type: array
+      description: The list of identities for the entry.
+      items:
+        $ref: '#/components/schemas/Identity'
+    CVE:
+      type: string
+      description: An identifier for a known security vulnerability/exposure.
+      example: cve-2015-0279
+    allapplications:
+      type: array
+      description: The list of applications for the entry.
+      items:
+        $ref: '#/components/schemas/Application'
+    HttpError:
+      type: object
+      description: The properties of the HTTP error.
+      properties:
+        type:
+          type: string
+          description: The type of the error, either `CertificateError` or `TLSError`.
+          enum:
+          - CertificateError
+          - TLSError
+        code:
+          type: number
+          description: The HTTP error code.
+        reason:
+          type: string
+          description: The name of the error.
+        attributes:
+          type: object
+          description: The properties of the additional information for the error.
+    SessionId:
+      type: number
+      description: The unique identifier of a session, which is used to group the correlated events between various services.
+      example: 7878797
+    categories:
+      type: array
+      description: The list of categories.
+      items:
+        $ref: '#/components/schemas/Category'
+    SignatureList:
+      type: object
+      description: The properties of the signature list.
+      properties:
+        id:
+          type: number
+          description: The unique ID assigned to a default or custom signature list.
+      required:
+      - id
+      example:
+        id: 1112
+    sha256:
+      type: string
+      description: The SHA256 hash for the entry.
+  responses:
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            reports.granularEvents:read: Read reports granular events
+            reports.utilities:read: Read reports utilities
+            reports.aggregations:read: Read reports aggregations
+            reports.summariesByRule:read: Read reports for the summaries of the rule
+            reports.customers:read: Read reports for the customers
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/reports/reporting.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

@@ -1,0 +1,307 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Network Tunnels Data Center API
+  description: Manage the network tunnels in the organization.
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: deployments/v2
+security:
+- oauthFlow: []
+tags:
+- name: Data Center
+paths:
+  /datacenters:
+    get:
+      summary: List Data Centers
+      operationId: getDatacenters
+      security:
+      - oauthFlow:
+        - deployments.datacenters:read
+      description: 'List the information about the IPsec-enabled data centers.
+
+        The data center information includes the IP address and location details.'
+      tags:
+      - Data Center
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The information about the IPsec-enabled data centers.
+                properties:
+                  continents:
+                    type: array
+                    description: The list of continents.
+                    items:
+                      type: object
+                      description: The properties of the continent.
+                      properties:
+                        cities:
+                          type: array
+                          description: The list of cities.
+                          items:
+                            type: object
+                            description: The properties of the city.
+                            properties:
+                              latitude:
+                                type: string
+                                description: The latitude of the city.
+                                example: '52.354662'
+                              longitude:
+                                type: string
+                                description: The longitude of the city.
+                                example: '4.955532'
+                              name:
+                                type: string
+                                description: The name of the city.
+                                example: Amsterdam
+                              dc:
+                                type: string
+                                description: The domain of the data center located in the city.
+                                example: ams1.edc
+                              range:
+                                type: string
+                                description: The IP or CIDR range of the data center that is located in the city.
+                                example: 146.112.98.2/32
+                              fqdn:
+                                type: string
+                                example: eu2-b.vpn.sig.umbrella.com
+                                description: The FQDN associated with the city. Returns the FQDN if available.
+                        name:
+                          type: string
+                          description: The name of the continent.
+                          example: Europe
+              example:
+                continents:
+                - cities:
+                  - latitude: '52.354662'
+                    longitude: '4.955532'
+                    name: Amsterdam
+                    dc: ams1.edc
+                    range: 146.112.98.2/32
+                    fqdn: eu2-b.vpn.sig.umbrella.com
+                  name: Europe
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Unauthorized
+                description: A brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
+    BadRequest:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation Error
+                description: a brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
+              validationErrors:
+                type: object
+                properties:
+                  someProperty:
+                    type: string
+                    example: must not be empty
+                    description: the name of the property failing validation.
+    ServerError:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+                description: HTTP status code
+              error:
+                type: string
+                example: Internal Server Error
+                description: a brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
+    NotFound:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+                description: HTTP status code
+              error:
+                type: string
+                example: Not Found
+                description: A brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
+    Forbidden:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 1
+            required:
+            - message
+            properties:
+              statusCode:
+                type: integer
+                example: 403
+                description: HTTP status code
+              message:
+                type: string
+                example: 'SIG is not enabled, please check with Cisco Support.
+
+                  You have reached the maximum number of network tunnels for this organization.
+
+                  To increase the limit, contact your administrator.
+
+                  '
+                description: Error message explaining the reason for failure
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: client credential flow
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            deployments.tunnels:write: Write deployments tunnels
+            deployments.tunnels:read: Read deployments tunnels
+            deployments.datacenters:read: Read deployments datacenters
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/network-tunnels.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/deployments/network-tunnels.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

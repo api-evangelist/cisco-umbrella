@@ -1,0 +1,250 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Entities API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Entities
+paths:
+  /entities:
+    get:
+      tags:
+      - Entities
+      description: Get the data for the asset list page and asset list exports. This endpoint requires the Entity Cache feature. If you do not have this feature enabled, refer to the incident entitites endpoint as an alternative.
+      operationId: listEntities
+      summary: List Entities
+      parameters:
+      - name: platform
+        schema:
+          type: string
+        in: query
+        description: The application supplying the underlying data.
+        example: google_document,google_site
+      - name: owners
+        in: query
+        schema:
+          type: string
+        description: comma delimited list of owner email addresses
+      - name: exposure
+        schema:
+          type: string
+        in: query
+        description: exposure level of the document
+        example: public, externally shared, organization-wide, internally shared, private
+      - name: asset_type
+        schema:
+          type: string
+        in: query
+        description: 'google_document, google_spreadsheet, google_presentation, google_form,
+
+          google_drawing, google_site, google_plus_post (future),
+
+          google_non_native_file, pdf, folder'
+      - name: mime_type
+        schema:
+          type: string
+        in: query
+        description: 'spreadsheet (.xlsx, application/vnd-google-apps.spreadsheet), document
+
+          (.docx, application/vnd-google-apps.document)'
+      - name: updated_before
+        schema:
+          type: string
+        description: Filters assets updated before the specified timestamp.
+        in: query
+      - name: updated_after
+        in: query
+        description: Filters assets updated after the specified timestamp.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntitiesCollection'
+              examples:
+                response:
+                  value:
+                  - asset_type: google_document
+                    collaborators:
+                    - name: Admin Admin
+                      role: writer
+                      type: user
+                      value: admin@testcloudlockdev9.com
+                    collaborators_count: 1
+                    created_at: '2016-03-15T14:27:33.013000+00:00'
+                    direct_url: https://docs.google.com/a/testcloudlockdev5.com/document/d/15RvNK8Ahz_kiszqfs3oLopxZyBRi5_yAIyo5ans/edit?usp=drivesdk
+                    exposure: organization_wide
+                    id: MxylKdo1b4
+                    mime_type: application/vnd.google-apps.document
+                    name: Domain-wide Share 3/15/16
+                    origin_id: 15RvNK8Ahz_kiszqfs3oLopOAGUxZyBRi5_yAIyo5ans
+                    origin_type: document
+                    owners:
+                    - type: user
+                      role: writer
+                      vaue: admin@testcloudlockdev9.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    EntitiesCollection:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique internal identifier for the asset.
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+        origin_id:
+          type: string
+          description: The unique identifier for the asset provided by the origin platform/vendor.
+        origin_type:
+          type: string
+          description: The equivalent to vendor_type.
+          example: document, post, event, app, site
+        asset_type:
+          type: string
+          description: google_document, google_spreadsheet, google_form, google_drawing
+          example: google_presentation, google_site, folder, non_native_file, pdf
+        owners:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionResource'
+        mime_type:
+          type: string
+        exposure:
+          type: string
+          description: The exposure level of the document.
+          example: public, externally shared, organization-wide, internally shared, private
+        collaborators_count:
+          type: integer
+          description: The total number of collaborators on an asset.
+        name:
+          type: string
+          description: The title, name of the asset.
+        size:
+          type: integer
+          description: The size of the asset in bytes.
+        updated_at:
+          type: string
+          description: The last time the asset has been modified, specified as a timestamp in UTC.
+        created_at:
+          type: string
+          description: The time at which the asset was created, specified as a timestamp in UTC.
+        direct_url:
+          type: string
+          description: The URL for the asset.
+        collaborators:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionResource'
+    PermissionResource:
+      type: object
+      description: The permissions corresponding to the owners of the asset.
+      properties:
+        type:
+          type: string
+          description: The type of permission.
+          example: (current values are Google specific)
+        role:
+          type: string
+          description: The role associated with the permission (current values are Google specific).
+          example: reader, writer, owner
+        value:
+          type: string
+          description: The email address or domain address for the permission.
+          example: admin@domain.com
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the vendor. For example: google.'
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

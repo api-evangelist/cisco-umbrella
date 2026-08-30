@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Service Providers Console Cnames API
+  version: 2.0.0
+  description: Configure the Service Providers console.
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: admin/v2
+security:
+- oauthFlow: []
+tags:
+- name: Cnames
+paths:
+  /config/cnames:
+    get:
+      tags:
+      - Cnames
+      description: List the cname information for the service providers console.
+      summary: List Cnames
+      operationId: getCnames
+      security:
+      - oauthFlow:
+        - admin.config:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List the cname information for the service providers console.
+                items:
+                  $ref: '#/components/schemas/GetCname'
+              example:
+              - cnameId: 1234567
+                cname: examples.com
+                organizationid: 2345677
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    post:
+      tags:
+      - Cnames
+      description: Add the cname information for the service providers console.
+      summary: Create Cname
+      operationId: createCname
+      security:
+      - oauthFlow:
+        - admin.config:write
+      requestBody:
+        $ref: '#/components/requestBodies/CnameRequestBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCname'
+              example:
+                cnameId: 1234567
+                cname: examples.com
+                organizationid: 2345677
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /config/cnames/{cnameId}:
+    get:
+      tags:
+      - Cnames
+      description: Get the cname information for the service providers console.
+      summary: Get Cname
+      operationId: getCname
+      security:
+      - oauthFlow:
+        - admin.config:read
+      parameters:
+      - $ref: '#/components/parameters/cnameIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCname'
+              example:
+                cnameId: 1234567
+                cname: examples.com
+                organizationid: 2345677
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Cnames
+      description: Update the cname information for the service providers console.
+      summary: Update Cname
+      operationId: updateCname
+      security:
+      - oauthFlow:
+        - admin.config:write
+      requestBody:
+        $ref: '#/components/requestBodies/CnameRequestBody'
+      parameters:
+      - $ref: '#/components/parameters/cnameIdParam'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCname'
+              example:
+                cnameId: 1234567
+                cname: examples.com
+                organizationid: 2345677
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    delete:
+      tags:
+      - Cnames
+      description: Delete a cname for the service providers console.
+      operationId: deleteCname
+      summary: Delete Cname
+      security:
+      - oauthFlow:
+        - admin.config:write
+      parameters:
+      - $ref: '#/components/parameters/cnameIdParam'
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Delete a cname for the service providers console. Returns no content.
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
+    500Error:
+      description: Internal Server error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Internal Server Error
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Unauthorized
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Not Found
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Bad Request
+  schemas:
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 1345556
+    GetCname:
+      type: object
+      description: The cname information for the service provider.
+      required:
+      - cnameId
+      - cname
+      properties:
+        cnameId:
+          type: integer
+          description: The cname ID.
+          example: 1234325
+        cname:
+          type: string
+          description: The cname for the service providers console.
+          example: examples.com
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+      example:
+        cnameId: 1234567
+        cname: examples.com
+        organizationid: 2345677
+  requestBodies:
+    CnameRequestBody:
+      description: Add the cname information for the service providers console.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cname:
+                type: string
+                description: Add the cname information for the service providers console.
+                example: examples.com
+          example:
+            cname: examples.com
+  parameters:
+    cnameIdParam:
+      name: cnameId
+      description: The cname ID.
+      schema:
+        type: integer
+      in: path
+      required: true
+      example: 1234
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+          scopes:
+            admin.config:read: Read admin config
+            admin.config:write: Write admin config
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/admin/service-providers-console.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

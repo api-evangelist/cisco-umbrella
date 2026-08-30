@@ -1,0 +1,337 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate AS Information for a Domain API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: AS Information for a Domain
+paths:
+  /bgp_routes/ip/{ip}/as_for_ip.json:
+    get:
+      summary: Get BGP Route Information for IP
+      operationId: getBgpRoutesIp
+      tags:
+      - AS Information for a Domain
+      description: 'This endpoint provides data about ASN and IP relationships,
+
+        showing how IP addresses are related to each other and to the regional registries.
+
+        You can find out more about the IP space associated with an AS
+
+        and correlate BGP routing information between AS.
+
+
+        When querying an IP to find which AS (Autonomous System), it is helpful
+
+        to find associated IP addresses. The AS is part of the BGP routing for that IP.
+
+
+        A valid result returns an array of hash references.
+
+        The hash reference contains information about the AS such as the ASN,
+
+        the CIDR prefix of the AS, the Internet Registry (RIR) number (0 through 6),
+
+        the Description of the AS and the creation date for the AS.
+
+        An empty response returns an empty array ([]).'
+      parameters:
+      - name: ip
+        in: path
+        required: true
+        description: The IPv4 address where you can obtain the AS information.
+        schema:
+          type: string
+        example: 1.2.3.4
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The properties of the AS information.
+                properties:
+                  creation_date:
+                    type: string
+                    description: The date when the AS was first created.
+                    example: '2002-08-01'
+                  ir:
+                    type: integer
+                    description: "The IR number corresponds to one of the 5 Regional Internet Registries (RIR).\n| Registry | Number |\tRegion |\n|-----|-----|-----|\n| Registry | 1 | AfriNIC: Africa |\n| Registry | 2 | APNIC: Asia, Australia, New Zealand, and neighboring countries. |\n| Registry | 3 | ARIN: United States, Canada, several parts of the Caribbean region, and Antarctica. |\n| Registry | 4 | LACNIC: Latin America and parts of the Caribbean region. |\n| Registry | 5 | RIPE NCC: Europe, Russia, the Middle East, and Central Asia. |\n| Registry | 0 | Unknown / Not Available |"
+                    example: 2
+                  description:
+                    type: string
+                    description: Network Owner Description as provided by the network owner.
+                    example: CHINANET-BACKBONE No.31,Jin-rong Street,CN 86400
+                  asn:
+                    type: string
+                    description: The autonomous system number (ASN) associated with the IP address.
+                    example: '4134'
+                  cidr:
+                    type: string
+                    description: The IP CIDR for the ASN.
+                    example: 123.172.0.0/15
+              example:
+                creation_date: '2002-08-01'
+                ir: 2
+                description: CHINANET-BACKBONE No.31,Jin-rong Street,CN 86400
+                asn: '4134'
+                cidr: 123.172.0.0/15
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /bgp_routes/asn/{asn}/prefixes_for_asn.json:
+    get:
+      summary: Get BGP Route Information for ASN
+      operationId: getBgpRoutesAsn
+      tags:
+      - AS Information for a Domain
+      description: 'A response to a valid ASN returns an array of hash references.
+
+        Each hash reference contains two keys: `geo` and `cidr`.
+
+        Geo is a hash reference with the country name and country code
+
+        (the code corresponds to the country code list for ISO-3166-1 alpha-2).
+
+        CIDR contains the IP prefix for this ASN.
+
+        '
+      parameters:
+      - name: asn
+        in: path
+        required: true
+        description: Autonomous System Number (ASN) for the AS.
+        schema:
+          type: string
+        example: '4134'
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The properties of the BGP route information.
+                properties:
+                  cidr:
+                    type: array
+                    items:
+                      type: string
+                      description: A CIDR range of IP addresses.
+                      example: 98.143.32.0/20
+                    description: 'A list of the CIDR range of IP addresses associated with this AS.
+
+                      The CIDR contains the IP prefix for the ASN.'
+                    example:
+                    - 98.143.32.0/20
+                  geo:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The ID of the geolocation.
+                        example: 10
+                      name:
+                        type: string
+                        description: The name of the geolocation.
+                        example: United States
+                    description: 'Geo is a hash reference with the country name and country code
+
+                      (the code corresponds to the country code list for ISO-3166-1 alpha-2).
+
+                      For more information, see [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).'
+                    example:
+                      name: United States
+                      id: 10
+              example:
+                cidr:
+                - 98.143.32.0/20
+                geo:
+                  name: United States
+                  id: 10
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

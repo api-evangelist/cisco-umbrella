@@ -1,0 +1,541 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Incidents API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Incidents
+paths:
+  /incidents:
+    get:
+      tags:
+      - Incidents
+      description: 'Incidents are a key resource in CloudLock. Incidents are
+
+        triggered by the CloudLock policy engine when a policy''s detection
+
+        criteria results in a match in object (document, field, folder, post, or
+
+        file).
+
+        Incidents can be changed manually by a
+
+        user (by updating incidents fields such as status or severity) or
+
+        automatically as objects or events are reevaluated by the policy
+
+        engine. Depending on the incident type, different incident information may be
+
+        available.
+
+
+        Key information about an incident:
+
+        Summary - Basic incident information and
+
+        status
+
+        Details - Information about the relevant object(s) associated with this incident
+
+        Entity - Information about the object related
+
+        to the incident
+
+        Matches - Matches represent the actual hits
+
+        within the content (for content type policies)'
+      operationId: listIncidents
+      summary: List Incidents
+      parameters:
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - name: incident_type
+        schema:
+          type: string
+        in: query
+        description: Filter based on the incident type.
+        example: COMPLIANCE
+      - name: severity
+        schema:
+          type: string
+        in: query
+        description: Filter based on the incident severity.
+        example: CRITICAL
+      - name: policy_id
+        schema:
+          type: string
+        in: query
+        description: Filter based on the policy ID.
+        example: rNP3Dd3By0
+      - $ref: '#/components/parameters/createdBeforeParam'
+      - $ref: '#/components/parameters/createdAfterParam'
+      - name: updated_before
+        in: query
+        schema:
+          type: string
+        description: Filter based on incidents updated before a given date.
+        example: 2021-01-18T16:55
+      - name: updated_after
+        in: query
+        schema:
+          type: string
+        description: Filter based on incidents updated after a given date.
+        example: 2021-01-18T16:55
+      - name: incident_status
+        schema:
+          type: string
+        in: query
+        description: Filter based on the incident status.
+        example: RESOLVED
+      - name: vendor
+        schema:
+          type: string
+        in: query
+        description: 'Filter based on the platform (for example: google, salesforce)'
+        example: salesforce
+      - name: customer_key
+        schema:
+          type: string
+        in: query
+        description: Filter based on the customer_key field.
+        example: 123 abc
+      - name: fields
+        schema:
+          type: string
+        in: query
+        description: 'Return only the selected parent fields. For example: id and entity fields.
+
+          Provide a comma-delimited list of parent fields.'
+        example: id,entity
+      - name: order
+        schema:
+          type: string
+        in: query
+        description: Sort by the date when the incident was created (A dash (`-`) denotes descending order).
+        example: created_at
+      - name: flat
+        schema:
+          type: string
+        in: query
+        description: If set to `true`, flatten the output to simplify ingestion of data by tabular systems.
+        example: 'true'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentsCollection'
+              examples:
+                response:
+                  value:
+                  - created_at: '2014-08-08T05:09:53.218594+00:00'
+                    customer_key: ''
+                    entity:
+                      direct_url: https://na15.salesforce.com/00Qi00000088wrBEAQ
+                      extra:
+                        origin_type_label: Lead
+                        origin_type_label_plural: Leads
+                    id: GM46KpY7xO
+                    mime_type: ''
+                    name: Gautum Trentson
+                    origin_id: 00Qi00000088wrBEAQ
+                    origin_type: document
+                    owner_email: jennifer@cloudlock.com
+                    owner_name: Jennifer McClain
+                    vendor:
+                      name: salesforce
+                      id: '320831601'
+                      incident_status: IN PROGRESS
+                      match_count: 1
+                    matches:
+                    - created_at: '2014-08-08T05:09:53.218594+00:00'
+                      ctx_after: can we use this on the up
+                      ctx_before: ard number on an old invoice
+                      field_name: Description
+                      text: XXXXXXXXXXXX6966
+                    policy:
+                      id: eyaznBzYKv
+                      name: PCI
+                    severity: WARNING
+                    updated_at: '2014-08-08T05:09:52.930752+00:00'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /incidents/{id}:
+    get:
+      tags:
+      - Incidents
+      description: Get the information about a specific incident.
+      operationId: getIncident
+      summary: Get Incident
+      parameters:
+      - description: The ID of the incident.
+        example: 320831601
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentsCollection'
+              examples:
+                response:
+                  value:
+                    created_at: '2014-08-08T05:09:58.861954+00:00'
+                    customer_key: ''
+                    entity:
+                      direct_url: https://na15.salesforce.com/0D5i000000jY0GvCAK
+                      extra:
+                        origin_type_label: Feed Item
+                        origin_type_label_plural: Feed Items
+                      id: vXxjnWAexL
+                      mime_type: ''
+                      name: Feed Item by John Demo
+                      origin_id: 0D5i000000jY0GvCAK
+                      origin_type: document
+                      owner_email: demoUser@cloudlockdemo.com
+                      owner_name: John Demo
+                      vendor:
+                        name: salesforce
+                    id: '320831601'
+                    incident_status: IN PROGRESS
+                    match_count: 1
+                    matches:
+                    - created_at: '2014-08-08T05:09:58.861954+00:00'
+                      ctx_after: 638 1
+                      ctx_before: 'UPS Tracking Number: 1Z W18'
+                      field_name: Body
+                      policy_criteria:
+                        id: '23'
+                      text: XXX XX 7502
+                    policy:
+                      id: Bdb475zMDK
+                      name: SSN
+                    severity: WARNING
+                    updated_at: '2014-08-08T05:09:58.572845+00:00'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+    put:
+      tags:
+      - Incidents
+      description: Update a specific incident.
+      operationId: updateIncident
+      summary: Update Incident
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                incident_status: RESOLVED
+              properties:
+                incident_status:
+                  type: string
+              type: object
+      parameters:
+      - description: The ID of the incident.
+        example: 320831601
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentsCollection'
+              examples:
+                response:
+                  value:
+                    created_at: '2014-08-08T05:10:00.326727+00:00'
+                    customer_key: ExternalID
+                    entity:
+                      direct_url: https://na15.salesforce.com/0D5i000000XWpE0CAL
+                      extra:
+                        origin_type_label: Feed Item
+                        origin_type_label_plural: Feed Items
+                      id: 1MxyLjlA4B
+                      mime_type: ''
+                      name: Feed Item by Jennifer McClain
+                      origin_id: 0D5i000000XWpE0CAL
+                      origin_type: document
+                      owner_email: jennifer@cloudlock.com
+                      owner_name: Jennifer McClain
+                      vendor:
+                        name: salesforce
+                    id: '320831601'
+                    incident_status: RESOLVED
+                    match_count: 1
+                    matches:
+                    - created_at: '2014-08-08T05:10:00.326727+00:00'
+                      ctx_after: ''
+                      ctx_before: ''
+                      field_name: Body
+                      text: Confidential
+                    policy:
+                      created_at: null
+                      id: ''
+                      name: Confidential/Password Regular Expression24
+                      state: null
+                      updated_at: null
+                    severity: WARNING
+                    updated_at: '2015-06-16T17:29:39.697785+00:00'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
+    createdAfterParam:
+      name: created_after
+      schema:
+        type: string
+      in: query
+      description: Filter the collection by the creation date.
+      example: '2021-01-01'
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+    createdBeforeParam:
+      name: created_before
+      in: query
+      schema:
+        type: string
+      description: Filter based on incidents created before a given date.
+      example: 2021-01-18T16:55
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    Entity:
+      type: object
+      description: The information about the object relating to this incident.
+      properties:
+        direct_url:
+          type: string
+          description: The URL to the object.
+        extra:
+          type: object
+          description: The additional information related to the incident.
+          properties:
+            origin_type_label:
+              type: string
+              description: This field gives additional info regarding the scanned object that triggered the policy violation.
+            origin_type_label_plural:
+              type: string
+              description: Similar to the origin_type_label but for a plural label
+        id:
+          type: string
+          description: This is Cloudlock Internal Identifier for an entity.
+        mime_type:
+          type: string
+          description: The mime type of the object/document (if any)
+        name:
+          type: string
+          description: The name of the underlying object represented by this entity.
+        origin_id:
+          type: string
+          description: This is the identifier of the object in the vendor system.
+        origin_type:
+          type: string
+          description: The object type (i.e. document, post, app, event).
+        owner_email:
+          type: string
+          description: Object owner's email address (e.g. user@cloudlock.com).
+        owner_name:
+          type: string
+          description: Object owner's name (i.e. John Q. User).
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+    Policy:
+      type: object
+      description: The policy that triggered the incident.
+      properties:
+        id:
+          type: string
+          description: The Cloudlock Internal Identifier for a policy.
+        name:
+          type: string
+          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
+    Match:
+      type: object
+      description: 'A Match represents an occurrence of a content pattern in an object (such as a file).
+
+        The content pattern is defined in a policy.'
+      properties:
+        created_at:
+          type: string
+          description: The time when this match was detected. Time expressed as a timestamp in UTC.
+        ctx_after:
+          type: string
+          description: The characters after the match.
+        ctx_before:
+          type: string
+          description: The characters before the match.
+        field_name:
+          type: string
+          description: The field or object for this match.
+        text:
+          type: string
+          description: Provide string to identify object. Relevant for content detection criteria='Custom regex criteria' only.
+        policy_criteria:
+          type: object
+          description: A description of the policy criteria.
+          properties:
+            id:
+              type: string
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the vendor. For example: google.'
+    IncidentsCollection:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The internal CloudLock incident ID, which can be used to
+
+            call or update a specific incident.'
+        customer_key:
+          type: string
+          description: An empty field to be used as a system ID (a customer can set this or leave it empty).
+        incident_status:
+          type: string
+          description: 'The status of the incident. Possible values: NEW, RESOLVED, IN PROGRESS, DISMISSED.'
+        severity:
+          type: string
+          description: 'The severity of the incident. Possible values: INFO, WARNING, CRITICAL, ALERT.'
+        created_at:
+          type: string
+          description: The incident creation time, in UTC.
+        updated_at:
+          type: string
+          description: The incident last upate time, in UTC.
+        match_count:
+          type: integer
+          description: The total number of matches."
+        entity:
+          $ref: '#/components/schemas/Entity'
+        policy:
+          $ref: '#/components/schemas/Policy'
+        matches:
+          description: The list of matches for the incident.
+          type: array
+          items:
+            $ref: '#/components/schemas/Match'
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

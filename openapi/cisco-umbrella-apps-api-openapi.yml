@@ -1,0 +1,504 @@
+openapi: 3.2.0
+info:
+  title: Cisco Cloudlock Apps API
+  description: The Cloudlock API provides data about an organization's activities, apps, incidents, and policies.
+  version: 1.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.cloudlock.com/api/v2
+tags:
+- name: Apps
+paths:
+  /apps:
+    get:
+      tags:
+      - Apps
+      description: 'Get all of the organization''s installed applications and their current status.
+
+        To get the uninstalled applications, use the `install_state` filter.'
+      operationId: listApplications
+      summary: List Applications for the Organization
+      parameters:
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/offsetParam'
+      - name: classification
+        schema:
+          type: string
+        in: query
+        description: Filter based on the application classification
+        example: trusted
+      - name: vendor
+        schema:
+          type: string
+        in: query
+        description: Filter based on the vendor platform.
+        example: google
+      - name: app_category
+        schema:
+          type: string
+        in: query
+        description: The application category.
+        example: CIT
+      - name: detected_at_after
+        schema:
+          type: string
+        in: query
+        description: Specify a timestamp. Filter for applications detected after a given date.
+        example: '2021-04-21T08:22:40'
+      - name: detected_at_before
+        schema:
+          type: string
+        in: query
+        description: Specify a timestamp. Filter for applications detected before a given date.
+        example: '2021-04-21T08:22:40'
+      - name: app_ids
+        schema:
+          type: string
+        in: query
+        description: Filter for applications based on their id. Provide a comma-delimited string of IDs.
+        example: 1,2,3
+      - name: scope_categories
+        schema:
+          type: string
+        in: query
+        description: Filter for applications based on their scope category. Provide a comma-delimited string of scope category.
+        example: LACES,BINFO
+      - name: install_state
+        schema:
+          type: string
+        in: query
+        description: Filter for applications based on their state (installed or not installed).
+        example: installed
+      - name: count_total
+        schema:
+          type: string
+        in: query
+        description: 'Determines whether the `total` field returns a valid count of the applications.
+
+          Use the `count_total` value with the `offset` parameter to paginate the results.
+
+          Default value is `false`. Set to `true` to return a valid apps count.'
+        example: 'true'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppsCollection'
+              examples:
+                response:
+                  value:
+                  - admins_count: 0
+                    app:
+                      category: ''
+                      id: RkJx2JxK2O
+                      install_type: user
+                      is_revokable: true
+                      name: Cloudlock
+                      origin_id: 144711811583-2ra0eotmtsb3p7f48eie68d4rfeghl7q.apps.googleusercontent.com
+                      trust_rating: ''
+                      vendor:
+                        name: google
+                    classification:
+                      method: ''
+                      reason: ''
+                      type: unclassified
+                      updated_at: ''
+                    detected_at: '2016-02-19T08:22:40.382224+00:00'
+                    id: RkJx2JxK2O
+                    scope_categories:
+                    - category_id: BINFO
+                      title: Basic information
+                    users_count: 3
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /apps/{id}/access_scopes:
+    get:
+      tags:
+      - Apps
+      description: Get all of the access scopes for a given application.
+      operationId: listApplicationAccessScopes
+      summary: List Application Access Scopes
+      parameters:
+      - description: The ID of the app.
+        example: G8qz0A239V
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessScope'
+              examples:
+                response:
+                  value:
+                  - category:
+                      id: BINFO
+                      title: Basic Information
+                    description: View your email address
+                    friendly_name: Userinfo - Email
+                    id: 1gk4vvW4Mq
+                    url: https://www.googleapis.com/auth/userinfo.email
+                  - category:
+                      id: LACES
+                      title: Limited Access to Data and Files
+                    description: Insert moments to a Google+ profile.
+                    friendly_name: 'Google+ API: Moments'
+                    id: ZkL4dryz1o
+                    url: https://www.googleapis.com/auth/plus.moments.write
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /apps/{id}/classification:
+    post:
+      tags:
+      - Apps
+      description: Update the application's classification.
+      summary: Update Classification for Application
+      operationId: updateAppsClassification
+      parameters:
+      - description: The ID of the incident.
+        example: Aj54oPkx8m
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                other_reason: Other Custom Reason
+                reason_id: 4
+                type: trusted
+              properties:
+                other_reason:
+                  type: string
+                reason_id:
+                  type: number
+                type:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppsCollection'
+              examples:
+                response:
+                  value:
+                  - app1: null
+                    app:
+                      category: ''
+                      id: Aj54oPkx8m
+                      install_type: user
+                      is_revokable: true
+                      name: CloudLock Collaboration Security
+                      origin_id: 150079143025-d1lebr0q2pdf3i9vp2o3gb9dhm6nahq1.apps.googleusercontent.com
+                      vendor:
+                        name: google
+                    classification:
+                      method: manual
+                      other_reason: Other Custom Reason
+                      reason: Internal reason
+                      reason_id: 4
+                      type: trusted
+                    updated_at: '2016-01-17T20:43:08.465267+00:00'
+                    detected_at: '2015-04-13T11:54:47.403000+00:00'
+                    id: Aj54oPkx8m
+                    scope_categories:
+                    - category_id: BINFO
+                    users_count: 1
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+  /apps/{id}/installs:
+    get:
+      tags:
+      - Apps
+      description: List the application's installations.
+      operationId: listApplicationInstallations
+      summary: List Installations of Application
+      parameters:
+      - description: The ID of the app.
+        example: G8qz0A239V
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppsCollection'
+              examples:
+                response:
+                  value:
+                  - response:
+                      app:
+                        id: rNP3DKdzBy
+                        install_type: user
+                        name: Balsamiq Mockups 3 for Google Drive
+                        origin_id: 199991064517-4p9fkqt42jbsg361b4lu8fsuob161vhn.apps.googleusercontent.com
+                        access_risk: 2
+                        is_revokable: true
+                        category: ''
+                        client_type: not_native
+                        risk_level: 1
+                        trust_rating: 100
+                      vendor:
+                        name: google
+                      detection_date: '2015-04-07T07:42:11.452682+00:00'
+                      domain: cloudlockplus.com
+                      family_name: Admin
+                      given_name: Admin
+                      scope_id: 15926475
+                      scope_type: user
+                      scope_value: admin@cloudlockplus.com
+                      state: not_installed
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  parameters:
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+  responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    App:
+      type: object
+      description: The information about the application.
+      properties:
+        category:
+          type: string
+          description: The app's category.
+        id:
+          type: string
+          description: The internal Cloudlock id for the application.
+        install_type:
+          type: string
+          description: 'A string that describes the installation type (across the domain or by a user). Possible values are: domain_wide, user.'
+        is_revokable:
+          type: boolean
+          description: Indicates whether the app can be revoked.
+        name:
+          type: string
+          description: 'The name of the application, for example: Google Drive.'
+        origin_id:
+          type: string
+          description: The location where the app was installed.
+        trust_rating:
+          type: string
+          description: The community trust rating score.
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+    ScopeCategory:
+      type: object
+      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
+
+        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
+
+        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
+      properties:
+        title:
+          type: string
+          description: 'The categories title, for example: `Basic Information`.'
+        category_id:
+          type: string
+          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
+          example: FDATA
+    AccessScope:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/ScopeCategory'
+        id:
+          type: string
+          description: The internal Cloudlock ID for the access scope.
+        description:
+          type: string
+          description: 'A verbose description of the access scope, for example: `View your email address`.'
+        friendly_name:
+          type: string
+          description: 'The name of the access scope. In the UI this is the `ACCESS SCOPE` in the Access Scopes table. For example: `Userinfo - Email`.'
+        url:
+          type: string
+          description: 'The url to the access scope. For example: ''https://www.googleapis.com/auth/userinfo.email''.'
+    Classification:
+      type: object
+      properties:
+        method:
+          type: string
+          description: 'The method where the classification was changed. Possible values are: manual, policy.'
+        reason:
+          type: string
+          description: The reason for the classification.
+        type:
+          type: string
+          description: 'Application''s classification type. Possible values are: unclassified, trusted, restricted, banned.'
+        updated_at:
+          type: string
+          description: The classification's last update time, specified as a timestamp in UTC.
+      description: The application's classification resource.
+    AppsCollection:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The application's internal CloudLock ID.
+        app:
+          $ref: '#/components/schemas/App'
+        scope_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeCategory'
+          description: The list of application scope category.
+        classification:
+          $ref: '#/components/schemas/Classification'
+        detected_at:
+          type: string
+          description: The time when the app was detected, specified as a timestamp in UTC.
+        users_count:
+          type: integer
+          description: The number of users that have the application installed.
+        admins_count:
+          type: integer
+          description: The number of administrators that have the application installed.
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the vendor. For example: google.'
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/cloudlock/cloudlock.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/

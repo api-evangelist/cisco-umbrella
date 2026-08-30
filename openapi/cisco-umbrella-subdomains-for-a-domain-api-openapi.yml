@@ -1,0 +1,264 @@
+openapi: 3.2.0
+info:
+  title: Cisco Umbrella Investigate Subdomains for a Domain API
+  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
+
+    You can get the following domain information:
+
+
+    * Domain status, risk score, and geolocation
+
+    * Number of domain searches
+
+    * Co-occurring domains
+
+    * Subdomains of a domain
+
+    * Tagged timeline of a domain, IP, or URL
+
+    * Security reputation of a domain
+
+    * Top accessed domains
+
+    * WHOIS information for the domain
+
+    * Threat intelligence data for domains, IPs, and URLs
+
+    * Threat intelligence samples by file hash'
+  version: 2.0.0
+  contact:
+    name: Cloud Security Developer Community
+  x-provenance:
+    method: harvested
+    authored_by: Cisco Umbrella
+    harvested_by: API Evangelist
+    harvested_on: '2026-08-19'
+    first_party: true
+    provider_published: true
+    source_host: pubhub.devnetcloud.com
+    note: 26 first-party OpenAPI 3.0 documents (256 operations) listed by Cisco's own docs-nav config and fetched anonymously. Byte-identity reconfirmed 2026-08-19 by SHA-256 against the live source.
+  x-evidence:
+  - type: source
+    url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/umbrella-config.json
+  - type: source
+    url: https://developer.cisco.com/docs/cloud-security/
+servers:
+- url: https://api.umbrella.com/{basePath}
+  variables:
+    basePath:
+      default: investigate/v2
+security:
+- oauthFlow: []
+tags:
+- name: Subdomains for a Domain
+paths:
+  /subdomains/{domain}:
+    get:
+      operationId: getSubDomains
+      tags:
+      - Subdomains for a Domain
+      description: 'Get the subdomains of a given domain. If there is no subdomain for the domain, Investigate returns an empty array.
+
+        '
+      summary: Get Subdomains for Domain
+      parameters:
+      - name: domain
+        in: path
+        required: true
+        description: A domain name.
+        schema:
+          type: string
+        example: cisco.com
+      - name: limit
+        in: query
+        required: false
+        description: 'The number of records to return in the collection.
+
+          The default limit is 20 records. The maximum number of records is 100.'
+        example: 50
+        schema:
+          type: integer
+      - name: offsetName
+        in: query
+        required: false
+        description: 'Specify the subdomain to filter the collection. For example: https://api.umbrella.com/investigate/v2/subdomains/cisco.com?offsetName=api.cisco.com
+
+          The default value is the target domain.'
+        schema:
+          type: string
+        example: api.cisco.com
+      security:
+      - oauthFlow:
+        - investigate.investigate:read
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Date:
+              $ref: '#/components/headers/Date'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subdomains'
+              example:
+              - securityCategories:
+                - Cryptomining
+                firstSeen: 1612088333
+                name: api.c3pool.com
+              - securityCategories:
+                - Cryptomining
+                firstSeen: 1615427410
+                name: asia.c3pool.com
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+        '500':
+          $ref: '#/components/responses/500Error'
+components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+  responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    firstSeen:
+      type: integer
+      format: int64
+      description: 'The first time Umbrella related the domain for the resource record, specified
+
+        in Unix Epoch time.'
+      example: 1615427410
+    Subdomains:
+      type: array
+      description: The list of subdomain information for the domain.
+      items:
+        type: object
+        description: The information about the subdomain.
+        properties:
+          name:
+            type: string
+            description: The name of the subdomain.
+            example: shop.cisco.com
+          securityCategories:
+            type: array
+            items:
+              type: string
+              description: 'The list of security categories that are tagged on this subdomain.
+
+                If no security categories match the subdomain, Investigate returns an empty array.'
+          firstSeen:
+            $ref: '#/components/schemas/firstSeen'
+        example:
+          name: shop.cisco.com
+          securityCategories: []
+          firstSeen: 1615427410000
+      example:
+      - name: shop.cisco.com
+        securityCategories: []
+        firstSeen: 1615427410000
+  securitySchemes:
+    oauthFlow:
+      type: oauth2
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            investigate.investigate:read: Investigate read access
+            investigate.bulk:read: Investigate bulk read access
+          tokenUrl: https://api.umbrella.com/auth/v2/token
+x-provenance:
+  method: harvested
+  first_party: true
+  harvested: '2026-08-19'
+  source: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  publisher: Cisco Systems, Inc. (Cisco DevNet Cloud Security docs)
+x-evidence:
+  fetched: '2026-08-19'
+  url: https://pubhub.devnetcloud.com/media/cloud-security-apis-in-eft/docs/reference/investigate/investigate.yaml
+  http_status: 200
+  docs: https://developer.cisco.com/docs/cloud-security/
