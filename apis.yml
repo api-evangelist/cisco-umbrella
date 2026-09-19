@@ -4380,6 +4380,8 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
   baseURL: https://api.umbrella.com/admin/v2
   tags:
+  - Destination
+  tags_raw:
   - Destinations
   properties:
   - type: OpenAPI
@@ -7096,6 +7098,8 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
   baseURL: https://api.umbrella.com/admin/v2
   tags:
+  - Logo
+  tags_raw:
   - Logos
   properties:
   - type: OpenAPI
@@ -10272,6 +10276,8 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
   baseURL: https://api.umbrella.com/admin/v2
   tags:
+  - Protocol
+  tags_raw:
   - Protocols
   properties:
   - type: OpenAPI
@@ -15943,6 +15949,8 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
   baseURL: https://api.umbrella.com/admin/v2
   tags:
+  - Tokens
+  tags_raw:
   - Token
   properties:
   - type: OpenAPI
