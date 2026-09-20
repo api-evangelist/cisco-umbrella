@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 19
+edge_count: 25
 edges:
 - tag: Incidents
   spec_file: cisco-umbrella-incidents-api-openapi.yml
@@ -60,6 +60,29 @@ edges:
   evidence: GET /top-threat-types "Get Top Threat Types (All)", schema TopThreatTypes
   reason: Reporting on detected threat types from the security service — squarely security threat detection
     and response monitoring.
+- tag: API Keys
+  spec_file: cisco-umbrella-api-keys-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.75
+  evidence: '"Manage your Umbrella API keys."; POST /apiKeys createAPIKeys; schemas clientId, clientSecret,
+    scopes, allowedIPs'
+  reason: Issuance, refresh, scoping and revocation of OAuth client credentials used by developers to
+    consume the vendor's public API — Developer Identity & Credential Management. Alternative reading
+    as generic IAM is weaker since these are machine API credentials for the platform's API ecosystem.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: API Usage Report
+  spec_file: cisco-umbrella-api-usage-report-api-openapi.yml
+  capability_id: BC-4270.50
+  capability_id_l1: BC-4270
+  capability_name: API Consumption Governance
+  confidence: 0.75
+  evidence: '"Get the Umbrella API usage reports for an organization."; GET /apiUsage/requests getAPIUsageRequests;
+    GET /apiUsage/summary'
+  reason: Reporting of API request/response volumes per key for an organisation — API consumption analytics,
+    which is the usage-analytics element of API Consumption Governance.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: Domain Status and Categorization
   spec_file: cisco-umbrella-domain-status-and-categorization-api-openapi.yml
   capability_id: BC-620.30
@@ -119,6 +142,17 @@ edges:
     for domains, IPs, and URLs'''
   reason: Passive DNS resource-record lookups used for threat investigation and intelligence enrichment
     — threat detection and response tooling.
+- tag: Related Domains for a Domain
+  spec_file: cisco-umbrella-related-domains-for-a-domain-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.72
+  evidence: '"The Umbrella Investigate API provides a complete view of domains... Threat intelligence
+    data for domains, IPs, and URLs" — GET /links/name/{domain} "Get Related Domains for Domain"'
+  reason: Threat-intelligence lookup of co-occurring/related domains used in investigation, which sits
+    under threat detection and response.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: WHOIS Information for a Domain
   spec_file: cisco-umbrella-whois-information-for-a-domain-api-openapi.yml
   capability_id: BC-620.30
@@ -130,6 +164,18 @@ edges:
     getWhoisHistory'
   reason: WHOIS lookup and history within the Investigate threat-intelligence API, used for security investigation
     and enrichment of domains/IPs — threat detection and response tooling.
+- tag: AS Information for a Domain
+  spec_file: cisco-umbrella-as-information-for-a-domain-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: '"Threat intelligence data for domains, IPs, and URLs"; GET /bgp_routes/ip/{ip}/as_for_ip.json
+    ''Get BGP Route Information for IP'''
+  reason: Investigate API lookups of ASN/BGP routing and reputation data for domains and IPs are threat-intelligence
+    enrichment used in detection and investigation, hence Threat Detection & Response Management. Slight
+    uncertainty because the two operations themselves are pure routing lookups.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: Co-occurrences for a Domain
   spec_file: cisco-umbrella-co-occurrences-for-a-domain-api-openapi.yml
   capability_id: BC-620.30
@@ -177,6 +223,16 @@ edges:
   evidence: 'GET /incident_entities/{id} "List Incident Entities"; schemas: "Entity, IncidentEntity, Vendor"'
   reason: Entities associated with CASB security incidents; part of the security incident response surface.
     Thin surface (one read operation) so confidence is moderate.
+- tag: Roles
+  spec_file: cisco-umbrella-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: '"Manage the Umbrella user accounts and roles." — GET /roles "List Roles", schema RoleObject'
+  reason: Administrative role definitions governing user access to the console, i.e. role-based access
+    control under Identity & Access Management.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: Tagging Timeline
   spec_file: cisco-umbrella-tagging-timeline-api-openapi.yml
   capability_id: BC-620.30
@@ -187,6 +243,16 @@ edges:
     IP, or URL"'
   reason: Historical security-categorisation timeline for a destination is threat-intelligence data used
     in detection and investigation workflows.
+- tag: Top Files
+  spec_file: cisco-umbrella-top-files-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: GET /top-files  getTopFilesProxy  Get Top Files (Proxy); schemas TopFile, sha256
+  reason: Reporting of files observed through the secure web proxy keyed by SHA-256 hash — file/malware
+    inspection telemetry supporting threat detection and response.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: Users
   spec_file: cisco-umbrella-users-api-openapi.yml
   capability_id: BC-620.20
