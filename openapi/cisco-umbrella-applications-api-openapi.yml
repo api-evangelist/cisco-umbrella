@@ -471,65 +471,203 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
-    ApplicationAttributeCategoryList:
+    Error:
       type: object
-      description: The list of application attribute category.
+      description: The error message returned in the response.
       properties:
-        attributesCategories:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApplicationAttributeCategory'
-      example:
-        attributesCategories:
-        - id: '2'
-          name: Data Security
-          attributes:
-          - id: '17'
-            name: SSL Cert Key Size
-            description: The SSL certificate key size refers to the length of the cryptographic key.
-            values:
-            - name: size
-              value: '2048'
-              createdOn: '2023-07-06T09:23:53.552924+00:00'
-              updatedOn: '2023-08-21T16:49:19.151159+00:00'
-    ApplicationAttributeCategory:
+        message:
+          type: string
+    CdfwSource:
       type: object
-      description: The application's attribute category.
+      description: The properties of the app's requests that are managed by the cloud-delivered firewall (CDFW).
+      properties:
+        name:
+          type: string
+          description: The type of traffic associated with the source.
+          enum:
+          - cdfw
+          example: cdfw
+        events:
+          type: integer
+          description: The number of CDFW L7 events for this app.
+          example: 100
+        blockedEvents:
+          type: integer
+          description: The number of CDFW L7 events that are blocked.
+          example: 50
+      example:
+        name: cdfw
+        events: 50
+        blockedEvents: 25
+    ApplicationObject:
+      type: object
+      description: The properties of the app.
+      required:
+      - id
+      - name
+      - description
+      - label
+      - weightedRisk
+      - category
+      - appType
+      - url
+      - vendor
+      - identitiesCount
+      - sources
+      - firstDetected
+      - lastDetected
       properties:
         id:
           type: string
-          description: The ID of the attribute category.
-          example: '2'
+          description: The ID of the app.
+          example: eaqYExba
         name:
           type: string
-          description: The name of the attribute category.
-          example: Data Security
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApplicationAttribute'
+          description: The name of the app.
+          example: Umbrella
+        description:
+          type: string
+          description: The description of the app.
+          example: Offers threat intelligence solutions.
+        label:
+          $ref: '#/components/schemas/Label'
+        weightedRisk:
+          $ref: '#/components/schemas/WeightedRisk'
+        category:
+          type: string
+          description: The category applied to the app.
+          example: Security
+        subcategory:
+          $ref: '#/components/schemas/subcategory'
+        subcategory_content_types:
+          $ref: '#/components/schemas/subcategory_content_types'
+        appType:
+          $ref: '#/components/schemas/AppType'
+        url:
+          type: string
+          description: The URL of the app.
+          example: https://umbrella.cisco.com/products/umbrella-investigate
+        vendor:
+          type: string
+          description: The vendor that owns the app.
+          example: Cisco
+        identitiesCount:
+          type: integer
+          description: The number of identities.
+          example: 5
+        sources:
+          $ref: '#/components/schemas/Sources'
+        firstDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system first detected the app.
+          example: '2022-01-01T00:00:00.000Z'
+        lastDetected:
+          type: string
+          description: The date and time (ISO 8601 timestamp) when the system last detected the app.
+          format: date-time
+          example: '2022-01-01T00:00:00.000Z'
       example:
-        id: '2'
-        name: Data Security
-        attributes:
-        - id: '17'
-          name: SSL Cert Key Size
-          description: The SSL certificate key size refers to the length of the cryptographic key.
-          values:
-          - name: size
-            value: '2048'
-            createdOn: '2023-07-06T09:23:53.552924+00:00'
-            updatedOn: '2023-08-21T16:49:19.151159+00:00'
-    FinancialViability:
+        id: eaqYExba
+        name: Umbrella
+        description: The properties of the app.
+        label: unreviewed
+        weightedRisk: low
+        category: Security
+        appType: saas
+        url: https://umbrella.cisco.com/products/umbrella-investigate
+        vendor: Cisco Systems
+        identitiesCount: 25
+        sources:
+        - name: dns
+          requests: 100
+          blockedRequests: 100
+        firstDetected: '2022-01-01T00:00:00.000Z'
+        lastDetected: '2022-01-01T00:00:00.000Z'
+    ApplicationRisk:
+      type: object
+      description: The information about the application risk.
+      properties:
+        id:
+          type: string
+          description: The ID of app.
+          example: eaqYExba
+        name:
+          type: string
+          description: The name of the app.
+          example: Umbrella
+        weightedRisk:
+          $ref: '#/components/schemas/WeightedRisk'
+        businessRisk:
+          $ref: '#/components/schemas/BusinessRisk'
+        usageType:
+          $ref: '#/components/schemas/UsageType'
+        webReputation:
+          type: integer
+          description: 'Provides accurate conclusions about a given host by tracking a broad set
+
+            of attributes and using sophisticated security modeling.
+
+            Powered by Talos Security Intelligence.'
+          example: 50
+        financialViability:
+          $ref: '#/components/schemas/FinancialViability'
+        dataStorage:
+          $ref: '#/components/schemas/DataStorage'
+        vendorCompliance:
+          type: array
+          description: The list of compliance information for the vendor.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the certificate.
+                enum:
+                - PCI_DSS
+                - HIPAA
+                - FEDRAMP
+                - ISO 27001 / 27002
+                - COBIT
+                - SP800_53
+                - BITS
+                - GAPP
+              description:
+                type: string
+                description: The description of the certificate.
+                example: 'The Payment Card Industry Data Security Standard (PCI DSS)
+
+                  is a widely accepted set of policies and procedures intended to optimize
+
+                  the security of credit, debit and cash card transactions and protect
+
+                  cardholders against misuse of their personal information.'
+              status:
+                type: boolean
+                description: Specifies whether the certificate is verified.
+                example: true
+    UsageType:
       type: string
-      description: Financial risk to the service provider, based on Dun & Bradstreet's Dynamic Risk Score.
+      description: 'The type of usage. Valid values are: `personal`, `corporate` (higher risk), or
+
+        `indirect` (lower risk, e.g. content delivery network).'
       enum:
-      - low
-      - medium
-      - high
-      - veryHigh
+      - indirect
+      - personal
+      - corporate
       - na
-      example: high
+      example: na
+    DataStorage:
+      type: string
+      description: 'The form of the stored data.
+
+        Valid values are: `noStorage`, `structured`, `unstructured`, or `na`.'
+      enum:
+      - noStorage
+      - structured
+      - unstructured
+      - na
+      example: noStorage
     ApplicationListWithInfo:
       type: object
       description: The properties of the information for the applications.
@@ -647,75 +785,27 @@ components:
           blockedRequests: 100
         firstDetected: '2022-01-01T00:00:00.000Z'
         lastDetected: '2022-01-01T00:00:00.000Z'
-    ApplicationIdentity:
+    ApplicationAttributeCategoryList:
       type: object
-      required:
-      - id
-      - name
-      - sources
-      - firstDetected
-      - lastDetected
-      description: The application identity information.
+      description: The list of application attribute category.
       properties:
-        id:
-          type: integer
-          description: The ID of the identity.
-          example: 10000
-        name:
-          type: string
-          description: The name of the identity.
-          example: My Identity
-        sources:
-          $ref: '#/components/schemas/Sources'
-        firstDetected:
-          type: string
-          format: date-time
-          description: The date and time (ISO 8601 timestamp) when the system first detected the identity for the application.
-          example: '2022-01-01T00:00:00.000Z'
-        lastDetected:
-          type: string
-          format: date-time
-          description: The date and time (ISO 8601 timestamp) when the system last detected the identity for the application.
-          example: '2022-01-01T00:00:00.000Z'
+        attributesCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationAttributeCategory'
       example:
-        id: 10000
-        name: My identity
-        sources:
-        - name: dns
-          requests: 100
-          blockedRequests: 100
-        firstDetected: '2022-01-01T00:00:00.000Z'
-        lastDetected: '2022-01-01T00:00:00.000Z'
-    DataStorage:
-      type: string
-      description: 'The form of the stored data.
-
-        Valid values are: `noStorage`, `structured`, `unstructured`, or `na`.'
-      enum:
-      - noStorage
-      - structured
-      - unstructured
-      - na
-      example: noStorage
-    UsageType:
-      type: string
-      description: 'The type of usage. Valid values are: `personal`, `corporate` (higher risk), or
-
-        `indirect` (lower risk, e.g. content delivery network).'
-      enum:
-      - indirect
-      - personal
-      - corporate
-      - na
-      example: na
-    AppType:
-      type: string
-      description: The type of the app.
-      enum:
-      - saas
-      - paas
-      - iaas
-      example: saas
+        attributesCategories:
+        - id: '2'
+          name: Data Security
+          attributes:
+          - id: '17'
+            name: SSL Cert Key Size
+            description: The SSL certificate key size refers to the length of the cryptographic key.
+            values:
+            - name: size
+              value: '2048'
+              createdOn: '2023-07-06T09:23:53.552924+00:00'
+              updatedOn: '2023-08-21T16:49:19.151159+00:00'
     ApplicationIdentityList:
       type: object
       description: The list of identity information for the application.
@@ -734,236 +824,6 @@ components:
             blockedRequests: 100
           firstDetected: '2022-01-01T00:00:00.000Z'
           lastDetected: '2022-01-01T00:00:00.000Z'
-    ApplicationAttribute:
-      type: object
-      description: The application attribute information.
-      properties:
-        id:
-          type: string
-          description: The ID of the attribute.
-          example: '17'
-        name:
-          type: string
-          description: The name of the attribute.
-          example: SSL Cert Key Size
-        description:
-          type: string
-          description: The description of the attribute.
-          example: The SSL certificate key size refers to the length of the cryptographic key.
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApplicationAttributeValue'
-      example:
-        id: '17'
-        name: SSL Cert Key Size
-        description: The SSL certificate key size refers to the length of the cryptographic key
-        values:
-        - name: size
-          value: '2048'
-          createdOn: '2023-07-06T09:23:53.552924+00:00'
-          updatedOn: '2023-08-21T16:49:19.151159+00:00'
-    subcategory_content_types:
-      type: array
-      description: The list of content types for the subcategory applied to the app.
-      items:
-        type: string
-        description: The content type of the subcategory applied to the app.
-      example:
-      - Conversational Chat
-      - Other
-    Label:
-      type: string
-      description: 'The application label. Valid values are: `unreviewed`, `approved`, `notApproved`, `underAudit`.'
-      enum:
-      - unreviewed
-      - approved
-      - notApproved
-      - underAudit
-      example: approved
-    Error:
-      type: object
-      description: The error message returned in the response.
-      properties:
-        message:
-          type: string
-    ApplicationObject:
-      type: object
-      description: The properties of the app.
-      required:
-      - id
-      - name
-      - description
-      - label
-      - weightedRisk
-      - category
-      - appType
-      - url
-      - vendor
-      - identitiesCount
-      - sources
-      - firstDetected
-      - lastDetected
-      properties:
-        id:
-          type: string
-          description: The ID of the app.
-          example: eaqYExba
-        name:
-          type: string
-          description: The name of the app.
-          example: Umbrella
-        description:
-          type: string
-          description: The description of the app.
-          example: Offers threat intelligence solutions.
-        label:
-          $ref: '#/components/schemas/Label'
-        weightedRisk:
-          $ref: '#/components/schemas/WeightedRisk'
-        category:
-          type: string
-          description: The category applied to the app.
-          example: Security
-        subcategory:
-          $ref: '#/components/schemas/subcategory'
-        subcategory_content_types:
-          $ref: '#/components/schemas/subcategory_content_types'
-        appType:
-          $ref: '#/components/schemas/AppType'
-        url:
-          type: string
-          description: The URL of the app.
-          example: https://umbrella.cisco.com/products/umbrella-investigate
-        vendor:
-          type: string
-          description: The vendor that owns the app.
-          example: Cisco
-        identitiesCount:
-          type: integer
-          description: The number of identities.
-          example: 5
-        sources:
-          $ref: '#/components/schemas/Sources'
-        firstDetected:
-          type: string
-          format: date-time
-          description: The date and time (ISO 8601 timestamp) when the system first detected the app.
-          example: '2022-01-01T00:00:00.000Z'
-        lastDetected:
-          type: string
-          description: The date and time (ISO 8601 timestamp) when the system last detected the app.
-          format: date-time
-          example: '2022-01-01T00:00:00.000Z'
-      example:
-        id: eaqYExba
-        name: Umbrella
-        description: The properties of the app.
-        label: unreviewed
-        weightedRisk: low
-        category: Security
-        appType: saas
-        url: https://umbrella.cisco.com/products/umbrella-investigate
-        vendor: Cisco Systems
-        identitiesCount: 25
-        sources:
-        - name: dns
-          requests: 100
-          blockedRequests: 100
-        firstDetected: '2022-01-01T00:00:00.000Z'
-        lastDetected: '2022-01-01T00:00:00.000Z'
-    BusinessRisk:
-      type: string
-      description: The business risk of the app.
-      enum:
-      - veryLow
-      - low
-      - medium
-      - high
-      - veryHigh
-      - na
-      example: na
-    ApplicationAttributeValue:
-      type: object
-      description: The app's attribute value information.
-      properties:
-        name:
-          type: string
-          description: The name of the attribute value.
-          example: size
-        value:
-          type: string
-          description: The value of the attribute value.
-          example: '2048'
-        createdOn:
-          type: string
-          format: date-time
-          description: The date and time (ISO 8601 timestamp) when the system created the application attribute.
-          example: '2023-07-06T09:23:53.552924+00:00'
-        updatedOn:
-          type: string
-          format: date-time
-          description: The date and time (ISO 8601 timestamp) when the system updated the application attribute.
-          example: '2023-08-21T16:49:19.151159+00:00'
-      example:
-        name: size
-        value: '2048'
-        createdOn: '2023-07-06T09:23:53.552924+00:00'
-        updatedOn: '2023-08-21T16:49:19.151159+00:00'
-    SwgSource:
-      type: object
-      description: The properties of the app's web requests.
-      properties:
-        name:
-          type: string
-          description: The type of traffic associated with the source.
-          enum:
-          - swg
-          example: swg
-        totalTraffic:
-          type: integer
-          description: The total number of bytes inbound and outbound for this app in your environment.
-          example: 150
-        bytesIn:
-          type: integer
-          description: The number of bytes received (inbound).
-          example: 50
-        bytesOut:
-          type: integer
-          description: The number of bytes sent (outbound).
-          example: 100
-        blockedBytesOut:
-          type: integer
-          description: The number of bytes of outbound traffic that are blocked.
-          example: 90
-      example:
-        name: swg
-        totalTraffic: 200
-        bytesIn: 100
-        bytesOut: 100
-        blockedBytesOut: 49
-    DnsSource:
-      type: object
-      description: The properties of the app's DNS requests.
-      properties:
-        name:
-          type: string
-          description: The type of traffic associated with the source.
-          enum:
-          - dns
-          example: dns
-        requests:
-          type: integer
-          description: The number of DNS requests for this app.
-          example: 100
-        blockedRequests:
-          type: integer
-          description: The number of DNS requests blocked, based on the policy configurations.
-          example: 50
-      example:
-        name: dns
-        requests: 100
-        blockedRequests: 35
     ApplicationList:
       type: object
       description: The object that contains the list of application properties.
@@ -1006,42 +866,66 @@ components:
         currentPage: 1
         totalPages: 126
         itemsCount: 251
-    CdfwSource:
+    ApplicationAttributeCategory:
       type: object
-      description: The properties of the app's requests that are managed by the cloud-delivered firewall (CDFW).
+      description: The application's attribute category.
+      properties:
+        id:
+          type: string
+          description: The ID of the attribute category.
+          example: '2'
+        name:
+          type: string
+          description: The name of the attribute category.
+          example: Data Security
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationAttribute'
+      example:
+        id: '2'
+        name: Data Security
+        attributes:
+        - id: '17'
+          name: SSL Cert Key Size
+          description: The SSL certificate key size refers to the length of the cryptographic key.
+          values:
+          - name: size
+            value: '2048'
+            createdOn: '2023-07-06T09:23:53.552924+00:00'
+            updatedOn: '2023-08-21T16:49:19.151159+00:00'
+    SwgSource:
+      type: object
+      description: The properties of the app's web requests.
       properties:
         name:
           type: string
           description: The type of traffic associated with the source.
           enum:
-          - cdfw
-          example: cdfw
-        events:
+          - swg
+          example: swg
+        totalTraffic:
           type: integer
-          description: The number of CDFW L7 events for this app.
-          example: 100
-        blockedEvents:
+          description: The total number of bytes inbound and outbound for this app in your environment.
+          example: 150
+        bytesIn:
           type: integer
-          description: The number of CDFW L7 events that are blocked.
+          description: The number of bytes received (inbound).
           example: 50
+        bytesOut:
+          type: integer
+          description: The number of bytes sent (outbound).
+          example: 100
+        blockedBytesOut:
+          type: integer
+          description: The number of bytes of outbound traffic that are blocked.
+          example: 90
       example:
-        name: cdfw
-        events: 50
-        blockedEvents: 25
-    Sources:
-      type: array
-      description: 'The list of app sources where the sources are DNS, Web (Secure Web Gateway), and cloud-delivered firewall (CDFW) traffic events.
-
-        The list can contain one or more of the source types.'
-      items:
-        anyOf:
-        - $ref: '#/components/schemas/DnsSource'
-        - $ref: '#/components/schemas/SwgSource'
-        - $ref: '#/components/schemas/CdfwSource'
-      example:
-      - name: cdfw
-        events: 50
-        blockedEvents: 25
+        name: swg
+        totalTraffic: 200
+        bytesIn: 100
+        bytesOut: 100
+        blockedBytesOut: 49
     BulkLabelApplications:
       type: object
       description: The properties of multiple apps that are updated at the same time.
@@ -1058,68 +942,32 @@ components:
       example:
         timestamp: '2022-01-01T00:00:00.000Z'
         number_of_apps: 45
-    ApplicationRisk:
+    subcategory:
+      type: string
+      description: The subcategory applied to the app.
+      example: Security
+    DnsSource:
       type: object
-      description: The information about the application risk.
+      description: The properties of the app's DNS requests.
       properties:
-        id:
-          type: string
-          description: The ID of app.
-          example: eaqYExba
         name:
           type: string
-          description: The name of the app.
-          example: Umbrella
-        weightedRisk:
-          $ref: '#/components/schemas/WeightedRisk'
-        businessRisk:
-          $ref: '#/components/schemas/BusinessRisk'
-        usageType:
-          $ref: '#/components/schemas/UsageType'
-        webReputation:
+          description: The type of traffic associated with the source.
+          enum:
+          - dns
+          example: dns
+        requests:
           type: integer
-          description: 'Provides accurate conclusions about a given host by tracking a broad set
-
-            of attributes and using sophisticated security modeling.
-
-            Powered by Talos Security Intelligence.'
+          description: The number of DNS requests for this app.
+          example: 100
+        blockedRequests:
+          type: integer
+          description: The number of DNS requests blocked, based on the policy configurations.
           example: 50
-        financialViability:
-          $ref: '#/components/schemas/FinancialViability'
-        dataStorage:
-          $ref: '#/components/schemas/DataStorage'
-        vendorCompliance:
-          type: array
-          description: The list of compliance information for the vendor.
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the certificate.
-                enum:
-                - PCI_DSS
-                - HIPAA
-                - FEDRAMP
-                - ISO 27001 / 27002
-                - COBIT
-                - SP800_53
-                - BITS
-                - GAPP
-              description:
-                type: string
-                description: The description of the certificate.
-                example: 'The Payment Card Industry Data Security Standard (PCI DSS)
-
-                  is a widely accepted set of policies and procedures intended to optimize
-
-                  the security of credit, debit and cash card transactions and protect
-
-                  cardholders against misuse of their personal information.'
-              status:
-                type: boolean
-                description: Specifies whether the certificate is verified.
-                example: true
+      example:
+        name: dns
+        requests: 100
+        blockedRequests: 35
     WeightedRisk:
       type: string
       description: The risk the app poses to the environment.
@@ -1130,15 +978,200 @@ components:
       - high
       - veryHigh
       example: low
+    subcategory_content_types:
+      type: array
+      description: The list of content types for the subcategory applied to the app.
+      items:
+        type: string
+        description: The content type of the subcategory applied to the app.
+      example:
+      - Conversational Chat
+      - Other
+    ApplicationIdentity:
+      type: object
+      required:
+      - id
+      - name
+      - sources
+      - firstDetected
+      - lastDetected
+      description: The application identity information.
+      properties:
+        id:
+          type: integer
+          description: The ID of the identity.
+          example: 10000
+        name:
+          type: string
+          description: The name of the identity.
+          example: My Identity
+        sources:
+          $ref: '#/components/schemas/Sources'
+        firstDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system first detected the identity for the application.
+          example: '2022-01-01T00:00:00.000Z'
+        lastDetected:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system last detected the identity for the application.
+          example: '2022-01-01T00:00:00.000Z'
+      example:
+        id: 10000
+        name: My identity
+        sources:
+        - name: dns
+          requests: 100
+          blockedRequests: 100
+        firstDetected: '2022-01-01T00:00:00.000Z'
+        lastDetected: '2022-01-01T00:00:00.000Z'
+    Label:
+      type: string
+      description: 'The application label. Valid values are: `unreviewed`, `approved`, `notApproved`, `underAudit`.'
+      enum:
+      - unreviewed
+      - approved
+      - notApproved
+      - underAudit
+      example: approved
     category:
       type: string
       description: The category of the app.
       example: Security
-    subcategory:
+    FinancialViability:
       type: string
-      description: The subcategory applied to the app.
-      example: Security
+      description: Financial risk to the service provider, based on Dun & Bradstreet's Dynamic Risk Score.
+      enum:
+      - low
+      - medium
+      - high
+      - veryHigh
+      - na
+      example: high
+    AppType:
+      type: string
+      description: The type of the app.
+      enum:
+      - saas
+      - paas
+      - iaas
+      example: saas
+    BusinessRisk:
+      type: string
+      description: The business risk of the app.
+      enum:
+      - veryLow
+      - low
+      - medium
+      - high
+      - veryHigh
+      - na
+      example: na
+    ApplicationAttribute:
+      type: object
+      description: The application attribute information.
+      properties:
+        id:
+          type: string
+          description: The ID of the attribute.
+          example: '17'
+        name:
+          type: string
+          description: The name of the attribute.
+          example: SSL Cert Key Size
+        description:
+          type: string
+          description: The description of the attribute.
+          example: The SSL certificate key size refers to the length of the cryptographic key.
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationAttributeValue'
+      example:
+        id: '17'
+        name: SSL Cert Key Size
+        description: The SSL certificate key size refers to the length of the cryptographic key
+        values:
+        - name: size
+          value: '2048'
+          createdOn: '2023-07-06T09:23:53.552924+00:00'
+          updatedOn: '2023-08-21T16:49:19.151159+00:00'
+    ApplicationAttributeValue:
+      type: object
+      description: The app's attribute value information.
+      properties:
+        name:
+          type: string
+          description: The name of the attribute value.
+          example: size
+        value:
+          type: string
+          description: The value of the attribute value.
+          example: '2048'
+        createdOn:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system created the application attribute.
+          example: '2023-07-06T09:23:53.552924+00:00'
+        updatedOn:
+          type: string
+          format: date-time
+          description: The date and time (ISO 8601 timestamp) when the system updated the application attribute.
+          example: '2023-08-21T16:49:19.151159+00:00'
+      example:
+        name: size
+        value: '2048'
+        createdOn: '2023-07-06T09:23:53.552924+00:00'
+        updatedOn: '2023-08-21T16:49:19.151159+00:00'
+    Sources:
+      type: array
+      description: 'The list of app sources where the sources are DNS, Web (Secure Web Gateway), and cloud-delivered firewall (CDFW) traffic events.
+
+        The list can contain one or more of the source types.'
+      items:
+        anyOf:
+        - $ref: '#/components/schemas/DnsSource'
+        - $ref: '#/components/schemas/SwgSource'
+        - $ref: '#/components/schemas/CdfwSource'
+      example:
+      - name: cdfw
+        events: 50
+        blockedEvents: 25
   parameters:
+    applicationsSort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        enum:
+        - firstDetected
+        - lastDetected
+        - weightedRisk
+        - name
+      description: Specify the name of a field to sort the applications.
+      example: firstDetected
+    applicationId:
+      in: path
+      name: applicationId
+      description: The ID of the application.
+      required: true
+      schema:
+        type: string
+    weightedRisk:
+      in: query
+      name: weightedRisk
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/WeightedRisk'
+      style: form
+      explode: false
+      description: 'Specify the list of application weighted risk to filter the collection.
+
+        Valid values are: `veryLow`, `low`, `medium`, `high`, `veryHigh`.'
+      example:
+      - low
     sources:
       in: query
       name: sources
@@ -1157,12 +1190,6 @@ components:
         Valid values are: `dns`, `swg`, `cdfw`.'
       example:
       - cdfw
-    offset:
-      in: query
-      name: offset
-      schema:
-        type: integer
-      description: The number of items to skip before starting to collect the result set.
     appTypes:
       in: query
       name: appTypes
@@ -1181,30 +1208,22 @@ components:
         Valid values are: `saas`, `paas`, and `iaas`.'
       example:
       - paas
-    subcategory_content_types:
+    label_timestamp:
       in: query
-      name: subcategory_content_types
+      name: label_timestamp
       schema:
-        type: array
-        items:
-          type: string
-      style: form
-      explode: false
-      description: Specify the list of content types for the application subcategory to filter the collection.
-      example:
-      - Conversational Chat
-    attributeCategories:
+        type: string
+        format: date-time
+      example: '2022-01-01T00:00:00.000Z'
+      description: Filter the result set on the date and time (ISO 8601 timestamp) when the system updated the label.
+    limit:
       in: query
-      name: categories
+      name: limit
       schema:
-        type: array
-        items:
-          type: string
-      style: form
-      explode: false
-      description: The categories of the attributes to use when filtering the collection.
-      example:
-      - Compliance
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
     applicationsInfoSort:
       in: query
       name: sort
@@ -1228,20 +1247,6 @@ components:
         - labels
         - subcategory
       description: Specify the name of a field to sort the information for the applications.
-    labels:
-      in: query
-      name: labels
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/Label'
-      style: form
-      explode: false
-      description: 'Specify the types of application classification to filter the collection.
-
-        Valid values are: `unreviewed`, `approved`, `notApproved`, `underAudit`.'
-      example:
-      - approved
     identitiesSort:
       in: query
       name: sort
@@ -1252,14 +1257,6 @@ components:
         - lastDetected
       description: Specify the name of a field to sort the application identities.
       example: lastDetected
-    limit:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
     date:
       in: query
       name: date
@@ -1294,54 +1291,38 @@ components:
       description: Specify the list of application category to filter the collection.
       example:
       - Security
-    label_timestamp:
+    offset:
       in: query
-      name: label_timestamp
-      schema:
-        type: string
-        format: date-time
-      example: '2022-01-01T00:00:00.000Z'
-      description: Filter the result set on the date and time (ISO 8601 timestamp) when the system updated the label.
-    weightedRisk:
-      in: query
-      name: weightedRisk
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/WeightedRisk'
-      style: form
-      explode: false
-      description: 'Specify the list of application weighted risk to filter the collection.
-
-        Valid values are: `veryLow`, `low`, `medium`, `high`, `veryHigh`.'
-      example:
-      - low
-    identity:
-      in: query
-      name: identity
+      name: offset
       schema:
         type: integer
-      description: Specify the entity ID to filter the collection.
-      example: 12355
-    subcategory:
+      description: The number of items to skip before starting to collect the result set.
+    attributeCategories:
       in: query
-      name: subcategory
+      name: categories
       schema:
         type: array
         items:
           type: string
       style: form
       explode: false
-      description: Specify the list of application subcategory to filter the collection.
+      description: The categories of the attributes to use when filtering the collection.
       example:
-      - Security
-    applicationId:
-      in: path
-      name: applicationId
-      description: The ID of the application.
-      required: true
+      - Compliance
+    labels:
+      in: query
+      name: labels
       schema:
-        type: string
+        type: array
+        items:
+          $ref: '#/components/schemas/Label'
+      style: form
+      explode: false
+      description: 'Specify the types of application classification to filter the collection.
+
+        Valid values are: `unreviewed`, `approved`, `notApproved`, `underAudit`.'
+      example:
+      - approved
     controllable:
       in: query
       name: controllable
@@ -1354,18 +1335,18 @@ components:
 
         Valid values are: `all`, `advanced`.'
       example: advanced
-    applicationsSort:
+    subcategory:
       in: query
-      name: sort
+      name: subcategory
       schema:
-        type: string
-        enum:
-        - firstDetected
-        - lastDetected
-        - weightedRisk
-        - name
-      description: Specify the name of a field to sort the applications.
-      example: firstDetected
+        type: array
+        items:
+          type: string
+      style: form
+      explode: false
+      description: Specify the list of application subcategory to filter the collection.
+      example:
+      - Security
     order:
       in: query
       name: order
@@ -1378,48 +1359,25 @@ components:
 
         or `desc` (descending).'
       example: asc
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ServerError:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  headers:
-    Link:
+    subcategory_content_types:
+      in: query
+      name: subcategory_content_types
       schema:
-        type: string
-      description: 'Links to related resources, in the format defined by
-
-        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
-
-        If there is a next page, this header includes a link with relation type
-
-        `next` to the next page.'
+        type: array
+        items:
+          type: string
+      style: form
+      explode: false
+      description: Specify the list of content types for the application subcategory to filter the collection.
+      example:
+      - Conversational Chat
+    identity:
+      in: query
+      name: identity
+      schema:
+        type: integer
+      description: Specify the entity ID to filter the collection.
+      example: 12355
   requestBodies:
     BulkApplicationBody:
       description: A JSON object containing application information for bulk label update.
@@ -1445,6 +1403,48 @@ components:
             applicationsList:
             - 1a
             - 2bcsd
+  headers:
+    Link:
+      schema:
+        type: string
+      description: 'Links to related resources, in the format defined by
+
+        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
+
+        If there is a next page, this header includes a link with relation type
+
+        `next` to the next page.'
+  responses:
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     oauthFlow:
       type: oauth2

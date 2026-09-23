@@ -1,30 +1,7 @@
 openapi: 3.2.0
 info:
   title: Cisco Umbrella Investigate Tagging Timeline API
-  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
-
-    You can get the following domain information:
-
-
-    * Domain status, risk score, and geolocation
-
-    * Number of domain searches
-
-    * Co-occurring domains
-
-    * Subdomains of a domain
-
-    * Tagged timeline of a domain, IP, or URL
-
-    * Security reputation of a domain
-
-    * Top accessed domains
-
-    * WHOIS information for the domain
-
-    * Threat intelligence data for domains, IPs, and URLs
-
-    * Threat intelligence samples by file hash'
+  description: The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
   version: 2.0.0
   contact:
     name: Cloud Security Developer Community
@@ -82,9 +59,7 @@ paths:
 
         Umbrella removed the security category, type of attack,
 
-        or threat type.
-
-        '
+        or threat type.'
       parameters:
       - name: name
         in: path
@@ -135,19 +110,21 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   responses:
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     403Error:
       description: Forbidden
       headers:
@@ -162,8 +139,8 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Internal Server Error
+    400Error:
+      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -190,22 +167,8 @@ components:
             properties:
               message:
                 type: string
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    400Error:
-      description: Bad Request
+    500Error:
+      description: Internal Server Error
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -260,6 +223,18 @@ components:
 
             The date and time is specified in milliseconds elapsed since the Unix epoch.'
           example: 1615427410000
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

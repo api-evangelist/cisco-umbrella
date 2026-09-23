@@ -186,200 +186,96 @@ paths:
         default:
           $ref: '#/components/responses/invalidRequestError'
 components:
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   schemas:
-    lastRefreshedAt:
+    lastUsedAt:
       type: string
       format: date-time
-      description: The date and time when the key was last refreshed, specified in the ISO 8601 format.
-      example: '2021-12-02T20:00:00Z'
+      description: The date and time when the key was last used, specified in the ISO 8601 format.
+      example: '2021-10-02T20:00:00'
+    modifiedAt:
+      type: string
+      format: date-time
+      description: The date and time when the key was updated, specified in the ISO 8601 format.
+      example: '2021-11-02T20:00:00Z'
     clientSecret:
       type: string
       description: 'The client secret. The client secret is used with the client ID to attain a token for making API calls.
 
         '
       example: '1023845394834890324032948233'
-    createdAt:
-      type: string
-      format: date-time
-      description: The date and time when the key was created, specified in the ISO 8601 format.
-      example: '2021-10-02T20:00:00Z'
-    KeyForList:
-      type: object
-      description: The API key information.
-      properties:
-        name:
-          $ref: '#/components/schemas/name'
-        id:
-          $ref: '#/components/schemas/id'
-        clientId:
-          $ref: '#/components/schemas/clientId'
-        creatorKeyId:
-          $ref: '#/components/schemas/creatorKeyId'
-        creatorName:
-          $ref: '#/components/schemas/creatorName'
-        creatorEmail:
-          $ref: '#/components/schemas/creatorEmail'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        description:
-          $ref: '#/components/schemas/description'
-        expireAt:
-          $ref: '#/components/schemas/expireAt'
-        modifiedAt:
-          $ref: '#/components/schemas/modifiedAt'
-        lastUsedAt:
-          $ref: '#/components/schemas/lastUsedAt'
-        lastRefreshedAt:
-          $ref: '#/components/schemas/lastRefreshedAt'
-        scopes:
-          $ref: '#/components/schemas/scopes'
-      required:
-      - id
-      - creatorName
-      - creatorEmail
-      - createdAt
-      - expireAt
-      - modifiedAt
-      - lastUsedAt
-      - lastRefreshedAt
-      - scopes
-      example:
-        name: Networks RW
-        id: 39b18499-4cf3-470d-997b-960e55ee0085
-        clientId: '1023845394834890324032948234'
-        creatorName: Name of API key creator
-        creatorEmail: yourname@cisco.com
-        createdAt: '2021-10-02T20:00:00Z'
-        description: An API key to create and modify network deployments.
-        expireAt: '2023-12-05T19:34:00Z'
-        lastUsedAt: '2021-10-05T19:34:00Z'
-        modifiedAt: '2021-10-02T20:00:00Z'
-        lastRefreshedAt: '2021-10-02T20:00:00Z'
-        scopes:
-        - deployments.networks:read
-        - deployments.networks:write
-    Key:
-      type: object
-      description: The API key information.
-      properties:
-        name:
-          $ref: '#/components/schemas/name'
-        id:
-          $ref: '#/components/schemas/id'
-        clientId:
-          $ref: '#/components/schemas/clientId'
-        creatorKeyId:
-          $ref: '#/components/schemas/creatorKeyId'
-        creatorName:
-          $ref: '#/components/schemas/creatorName'
-        creatorEmail:
-          $ref: '#/components/schemas/creatorEmail'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        description:
-          $ref: '#/components/schemas/description'
-        expireAt:
-          $ref: '#/components/schemas/expireAt'
-        modifiedAt:
-          $ref: '#/components/schemas/modifiedAt'
-        lastUsedAt:
-          $ref: '#/components/schemas/lastUsedAt'
-        lastRefreshedAt:
-          $ref: '#/components/schemas/lastRefreshedAt'
-        scopes:
-          $ref: '#/components/schemas/scopes'
-        allowedIPs:
-          $ref: '#/components/schemas/allowedIPs'
-      required:
-      - id
-      - creatorName
-      - creatorEmail
-      - createdAt
-      - expireAt
-      - modifiedAt
-      - lastUsedAt
-      - lastRefreshedAt
-      - scopes
-      example:
-        name: Networks RW
-        id: 39b18499-4cf3-470d-997b-960e55ee0085
-        clientId: '1023845394834890324032948234'
-        creatorName: Name of API key creator
-        creatorEmail: yourname@cisco.com
-        createdAt: '2021-10-02T20:00:00Z'
-        description: An API key to create and modify network deployments.
-        expireAt: '2023-12-05T19:34:00Z'
-        lastUsedAt: '2021-10-05T19:34:00Z'
-        modifiedAt: '2021-10-02T20:00:00Z'
-        lastRefreshedAt: '2021-10-02T20:00:00Z'
-        scopes:
-        - deployments.networks:read
-        - deployments.networks:write
-        allowedIPs:
-        - 2001:420:c0c4:1006::427
-        - 143.10.10.0/24
-    creatorEmail:
-      type: string
-      description: The email address of the user who created the key.
-      example: yourname@cisco.com
-    creatorKeyId:
-      type: string
-      description: The ID of the KeyAdmin key that generated the key.
-      example: 130eec4c3825463e8d06f1dd9c0b2c19
-    description:
-      type: string
-      maxLength: 256
-      description: The text that describes the purpose of the API key.
-      example: An API key to create and modify network deployments.
-    allowedIPs:
-      type: array
-      description: The list of public IP addresses and CIDR blocks that can make API requests with the API key.
-      items:
-        type: string
-        description: An IP address that can make API requests with the API key.
-        example: 2001:420:c0c4:1006::427
-      example:
-      - 2001:420:c0c4:1006::427
-    lastUsedAt:
-      type: string
-      format: date-time
-      description: The date and time when the key was last used, specified in the ISO 8601 format.
-      example: '2021-10-02T20:00:00'
     clientId:
       type: string
       description: 'The client ID associated with the API key. The client ID is used with the client secret to attain a token for making API calls.
 
         '
       example: '1023845394834890324032948234'
-    expireAt:
+    KeyRefreshSecret:
+      type: object
+      description: The API key information including the client id and secret.
+      properties:
+        name:
+          $ref: '#/components/schemas/name'
+        id:
+          $ref: '#/components/schemas/id'
+        clientId:
+          $ref: '#/components/schemas/clientId'
+        clientSecret:
+          $ref: '#/components/schemas/clientSecret'
+        creatorKeyId:
+          $ref: '#/components/schemas/creatorKeyId'
+        creatorName:
+          $ref: '#/components/schemas/creatorName'
+        creatorEmail:
+          $ref: '#/components/schemas/creatorEmail'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        description:
+          $ref: '#/components/schemas/description'
+        expireAt:
+          $ref: '#/components/schemas/expireAt'
+        modifiedAt:
+          $ref: '#/components/schemas/modifiedAt'
+        lastUsedAt:
+          $ref: '#/components/schemas/lastUsedAt'
+        lastRefreshedAt:
+          $ref: '#/components/schemas/lastRefreshedAt'
+        scopes:
+          $ref: '#/components/schemas/scopes'
+      required:
+      - id
+      - clientId
+      - clientSecret
+      - creatorName
+      - creatorEmail
+      - createdAt
+      - expireAt
+      - modifiedAt
+      - lastUsedAt
+      - lastRefreshedAt
+      - scopes
+      example:
+        name: Networks RW
+        id: 39b18499-4cf3-470d-997b-960e55ee0085
+        clientId: '1023845394834890324032948234'
+        clientSecret: '1023845394834890324032948233'
+        creatorKeyId: 130eec4c3825463e8d06f1dd9c0b2c19
+        creatorName: Name of API key creator
+        creatorEmail: ''
+        createdAt: '2021-10-02T20:00:00Z'
+        description: An API key to create and modify network deployments.
+        expireAt: '2022-01-12T20:00:00Z'
+        lastUsedAt: '2021-10-05T19:34:00Z'
+        modifiedAt: '2021-10-02T20:00:00Z'
+        lastRefreshedAt: '2021-10-02T20:00:00Z'
+        scopes:
+        - deployments.networks:read
+        - deployments.networks:write
+    name:
+      description: The unique descriptive label for the API key.
       type: string
-      description: 'The date and time when the key is set to expire. The timestamp is specified as an ISO 8601 formatted string,
-
-        or an empty string (`''''`).  An empty string indicates that the key never expires.
-
-        '
-      example: '2022-10-02T20:00:00Z'
-    creatorName:
-      type: string
-      description: The name of the user who created the key.
-      example: The name of API key creator.
-    modifiedAt:
-      type: string
-      format: date-time
-      description: The date and time when the key was updated, specified in the ISO 8601 format.
-      example: '2021-11-02T20:00:00Z'
+      pattern: ^[a-zA-Z0-9:.-_+=\s]+$
+      maxLength: 256
+      example: Network deployments
     KeyWithSecret:
       type: object
       description: The API key information including the client id and secret.
@@ -445,9 +341,19 @@ components:
         - deployments.networks:write
         allowedIPs:
         - 2001:420:c0c4:1006::427
-    KeyRefreshSecret:
+    description:
+      type: string
+      maxLength: 256
+      description: The text that describes the purpose of the API key.
+      example: An API key to create and modify network deployments.
+    createdAt:
+      type: string
+      format: date-time
+      description: The date and time when the key was created, specified in the ISO 8601 format.
+      example: '2021-10-02T20:00:00Z'
+    KeyForList:
       type: object
-      description: The API key information including the client id and secret.
+      description: The API key information.
       properties:
         name:
           $ref: '#/components/schemas/name'
@@ -455,8 +361,6 @@ components:
           $ref: '#/components/schemas/id'
         clientId:
           $ref: '#/components/schemas/clientId'
-        clientSecret:
-          $ref: '#/components/schemas/clientSecret'
         creatorKeyId:
           $ref: '#/components/schemas/creatorKeyId'
         creatorName:
@@ -479,8 +383,6 @@ components:
           $ref: '#/components/schemas/scopes'
       required:
       - id
-      - clientId
-      - clientSecret
       - creatorName
       - creatorEmail
       - createdAt
@@ -493,19 +395,51 @@ components:
         name: Networks RW
         id: 39b18499-4cf3-470d-997b-960e55ee0085
         clientId: '1023845394834890324032948234'
-        clientSecret: '1023845394834890324032948233'
-        creatorKeyId: 130eec4c3825463e8d06f1dd9c0b2c19
         creatorName: Name of API key creator
-        creatorEmail: ''
+        creatorEmail: yourname@cisco.com
         createdAt: '2021-10-02T20:00:00Z'
         description: An API key to create and modify network deployments.
-        expireAt: '2022-01-12T20:00:00Z'
+        expireAt: '2023-12-05T19:34:00Z'
         lastUsedAt: '2021-10-05T19:34:00Z'
         modifiedAt: '2021-10-02T20:00:00Z'
         lastRefreshedAt: '2021-10-02T20:00:00Z'
         scopes:
         - deployments.networks:read
         - deployments.networks:write
+    creatorName:
+      type: string
+      description: The name of the user who created the key.
+      example: The name of API key creator.
+    allowedIPs:
+      type: array
+      description: The list of public IP addresses and CIDR blocks that can make API requests with the API key.
+      items:
+        type: string
+        description: An IP address that can make API requests with the API key.
+        example: 2001:420:c0c4:1006::427
+      example:
+      - 2001:420:c0c4:1006::427
+    lastRefreshedAt:
+      type: string
+      format: date-time
+      description: The date and time when the key was last refreshed, specified in the ISO 8601 format.
+      example: '2021-12-02T20:00:00Z'
+    id:
+      type: string
+      description: A unique identifier for the key.
+      example: 39b18499-4cf3-470d-997b-960e55ee0085
+    expireAt:
+      type: string
+      description: 'The date and time when the key is set to expire. The timestamp is specified as an ISO 8601 formatted string,
+
+        or an empty string (`''''`).  An empty string indicates that the key never expires.
+
+        '
+      example: '2022-10-02T20:00:00Z'
+    creatorKeyId:
+      type: string
+      description: The ID of the KeyAdmin key that generated the key.
+      example: 130eec4c3825463e8d06f1dd9c0b2c19
     scopes:
       type: array
       description: A list of scopes and permissions attached to the API key.
@@ -514,19 +448,73 @@ components:
       example:
       - deployments.networks:read
       - deployments.networks:write
-    id:
+    Key:
+      type: object
+      description: The API key information.
+      properties:
+        name:
+          $ref: '#/components/schemas/name'
+        id:
+          $ref: '#/components/schemas/id'
+        clientId:
+          $ref: '#/components/schemas/clientId'
+        creatorKeyId:
+          $ref: '#/components/schemas/creatorKeyId'
+        creatorName:
+          $ref: '#/components/schemas/creatorName'
+        creatorEmail:
+          $ref: '#/components/schemas/creatorEmail'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        description:
+          $ref: '#/components/schemas/description'
+        expireAt:
+          $ref: '#/components/schemas/expireAt'
+        modifiedAt:
+          $ref: '#/components/schemas/modifiedAt'
+        lastUsedAt:
+          $ref: '#/components/schemas/lastUsedAt'
+        lastRefreshedAt:
+          $ref: '#/components/schemas/lastRefreshedAt'
+        scopes:
+          $ref: '#/components/schemas/scopes'
+        allowedIPs:
+          $ref: '#/components/schemas/allowedIPs'
+      required:
+      - id
+      - creatorName
+      - creatorEmail
+      - createdAt
+      - expireAt
+      - modifiedAt
+      - lastUsedAt
+      - lastRefreshedAt
+      - scopes
+      example:
+        name: Networks RW
+        id: 39b18499-4cf3-470d-997b-960e55ee0085
+        clientId: '1023845394834890324032948234'
+        creatorName: Name of API key creator
+        creatorEmail: yourname@cisco.com
+        createdAt: '2021-10-02T20:00:00Z'
+        description: An API key to create and modify network deployments.
+        expireAt: '2023-12-05T19:34:00Z'
+        lastUsedAt: '2021-10-05T19:34:00Z'
+        modifiedAt: '2021-10-02T20:00:00Z'
+        lastRefreshedAt: '2021-10-02T20:00:00Z'
+        scopes:
+        - deployments.networks:read
+        - deployments.networks:write
+        allowedIPs:
+        - 2001:420:c0c4:1006::427
+        - 143.10.10.0/24
+    creatorEmail:
       type: string
-      description: A unique identifier for the key.
-      example: 39b18499-4cf3-470d-997b-960e55ee0085
-    name:
-      description: The unique descriptive label for the API key.
-      type: string
-      pattern: ^[a-zA-Z0-9:.-_+=\s]+$
-      maxLength: 256
-      example: Network deployments
+      description: The email address of the user who created the key.
+      example: yourname@cisco.com
   responses:
-    invalidRequestError:
-      description: Bad Request
+    notFoundError:
+      description: Not Found
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -536,26 +524,7 @@ components:
         application/json:
           schema:
             type: object
-            properties:
-              message:
-                type: string
-              description:
-                type: string
-            example:
-              message: error
-              description: Bad Request
-    unsupportedMediaError:
-      description: Unsupported Media Type
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The request failed because the Content-Type was not an allowed media type.
+            description: The request failed because the resource doesn't exist.
             properties:
               message:
                 type: string
@@ -567,7 +536,7 @@ components:
                 type: string
             example:
               message: error
-              description: Unsupported Media Type
+              description: Not Found
     unauthorizedError:
       description: Unauthorized
       headers:
@@ -596,8 +565,51 @@ components:
             example:
               message: error
               description: Unauthorized request
-    KeyResponseWithSecret:
-      description: Created
+    serviceUnavailableError:
+      description: Service Unavailable
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The request failed because a dependent service is temporarily unavailable.
+            properties:
+              message:
+                type: string
+                example: error
+                enum:
+                - success
+                - error
+              description:
+                type: string
+            example:
+              message: error
+              description: Service Unavailable
+    invalidRequestError:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              description:
+                type: string
+            example:
+              message: error
+              description: Bad Request
+    KeyResponse:
+      description: OK
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -612,31 +624,77 @@ components:
               message:
                 type: string
                 description: The status message that describes the response.
-                enum:
-                - success
-                - error
-                example: success
               key:
-                $ref: '#/components/schemas/KeyWithSecret'
+                $ref: '#/components/schemas/Key'
           example:
             message: success
             key:
               name: Networks RW
               id: 39b18499-4cf3-470d-997b-960e55ee0085
               clientId: '1023845394834890324032948234'
-              clientSecret: '1023845394834890324032948233'
-              creatorKeyId: 130eec4c3825463e8d06f1dd9c0b2c19
-              creatorName: ''
-              creatorEmail: ''
-              createdAt: '2022-10-02T20:00:00Z'
+              creatorKeyId: ''
+              creatorName: Name of API key creator
+              creatorEmail: yourname@cisco.com
+              createdAt: '2021-10-02T20:00:00Z'
               description: An API key to create and modify network deployments.
-              expireAt: ''
-              lastUsedAt: '2022-10-05T19:34:00Z'
-              modifiedAt: '2022-10-02T20:00:00Z'
-              lastRefreshedAt: '2022-10-05T20:00:00Z'
+              expireAt: 2022-01-12T20:00:00Z00:00
+              lastUsedAt: '2021-10-05T19:34:00Z'
+              modifiedAt: '2021-10-02T20:00:00Z'
+              lastRefreshedAt: '2021-10-02T20:00:00Z'
               scopes:
               - deployments.networks:read
               - deployments.networks:write
+              allowedIPs:
+              - 2001:420:c0c4:1006::427
+              - 143.10.10.0/24
+    unsupportedMediaError:
+      description: Unsupported Media Type
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The request failed because the Content-Type was not an allowed media type.
+            properties:
+              message:
+                type: string
+                example: error
+                enum:
+                - success
+                - error
+              description:
+                type: string
+            example:
+              message: error
+              description: Unsupported Media Type
+    forbiddenError:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The request is forbidden.
+            properties:
+              message:
+                type: string
+                example: success
+                enum:
+                - success
+                - error
+              description:
+                type: string
+            example:
+              message: error
+              description: Forbidden
     KeyResponseRefreshSecret:
       description: OK
       headers:
@@ -678,32 +736,8 @@ components:
               scopes:
               - deployments.networks:read
               - deployments.networks:write
-    serviceUnavailableError:
-      description: Service Unavailable
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The request failed because a dependent service is temporarily unavailable.
-            properties:
-              message:
-                type: string
-                example: error
-                enum:
-                - success
-                - error
-              description:
-                type: string
-            example:
-              message: error
-              description: Service Unavailable
-    KeyResponse:
-      description: OK
+    KeyResponseWithSecret:
+      description: Created
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -718,53 +752,31 @@ components:
               message:
                 type: string
                 description: The status message that describes the response.
+                enum:
+                - success
+                - error
+                example: success
               key:
-                $ref: '#/components/schemas/Key'
+                $ref: '#/components/schemas/KeyWithSecret'
           example:
             message: success
             key:
               name: Networks RW
               id: 39b18499-4cf3-470d-997b-960e55ee0085
               clientId: '1023845394834890324032948234'
-              creatorKeyId: ''
-              creatorName: Name of API key creator
-              creatorEmail: yourname@cisco.com
-              createdAt: '2021-10-02T20:00:00Z'
+              clientSecret: '1023845394834890324032948233'
+              creatorKeyId: 130eec4c3825463e8d06f1dd9c0b2c19
+              creatorName: ''
+              creatorEmail: ''
+              createdAt: '2022-10-02T20:00:00Z'
               description: An API key to create and modify network deployments.
-              expireAt: 2022-01-12T20:00:00Z00:00
-              lastUsedAt: '2021-10-05T19:34:00Z'
-              modifiedAt: '2021-10-02T20:00:00Z'
-              lastRefreshedAt: '2021-10-02T20:00:00Z'
+              expireAt: ''
+              lastUsedAt: '2022-10-05T19:34:00Z'
+              modifiedAt: '2022-10-02T20:00:00Z'
+              lastRefreshedAt: '2022-10-05T20:00:00Z'
               scopes:
               - deployments.networks:read
               - deployments.networks:write
-              allowedIPs:
-              - 2001:420:c0c4:1006::427
-              - 143.10.10.0/24
-    alreadyExistsError:
-      description: Already Exists
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The request failed because the `APIKey` with that `name` already exists.
-            properties:
-              message:
-                type: string
-                example: error
-                enum:
-                - success
-                - error
-              description:
-                type: string
-            example:
-              message: error
-              description: Already Exists
     KeysResponseList:
       description: OK
       headers:
@@ -824,8 +836,8 @@ components:
               scopes:
               - deployments.networks:read
               - deployments.networks:write
-    notFoundError:
-      description: Not Found
+    alreadyExistsError:
+      description: Already Exists
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -835,7 +847,7 @@ components:
         application/json:
           schema:
             type: object
-            description: The request failed because the resource doesn't exist.
+            description: The request failed because the `APIKey` with that `name` already exists.
             properties:
               message:
                 type: string
@@ -847,41 +859,8 @@ components:
                 type: string
             example:
               message: error
-              description: Not Found
-    forbiddenError:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The request is forbidden.
-            properties:
-              message:
-                type: string
-                example: success
-                enum:
-                - success
-                - error
-              description:
-                type: string
-            example:
-              message: error
-              description: Forbidden
+              description: Already Exists
   parameters:
-    offset:
-      in: query
-      name: offset
-      description: The place to start reading in the collection. The default offset is 0.
-      schema:
-        type: integer
-        format: int64
-        default: 0
-      example: 1
     apiKeyId:
       in: path
       name: apiKeyId
@@ -899,34 +878,16 @@ components:
         format: int64
         default: 0
       example: 25
+    offset:
+      in: query
+      name: offset
+      description: The place to start reading in the collection. The default offset is 0.
+      schema:
+        type: integer
+        format: int64
+        default: 0
+      example: 1
   requestBodies:
-    KeyRequestPatch:
-      description: Request body for updating an API key.
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              name:
-                $ref: '#/components/schemas/name'
-              description:
-                $ref: '#/components/schemas/description'
-              scopes:
-                $ref: '#/components/schemas/scopes'
-              allowedIPs:
-                $ref: '#/components/schemas/allowedIPs'
-            required:
-            - name
-            - scopes
-          example:
-            name: Network RW
-            scopes:
-            - deployments.networks:write
-            description: An API key to create and modify network deployments.
-            allowedIPs:
-            - 2001:420:c0c4:1006::427
-            - 143.10.10.0/24
     KeysRequest:
       description: Request body for creating an API key.
       required: true
@@ -958,6 +919,45 @@ components:
             scopes:
             - deployments.networks:write
             description: An API key to create and modify network deployments.
+    KeyRequestPatch:
+      description: Request body for updating an API key.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/name'
+              description:
+                $ref: '#/components/schemas/description'
+              scopes:
+                $ref: '#/components/schemas/scopes'
+              allowedIPs:
+                $ref: '#/components/schemas/allowedIPs'
+            required:
+            - name
+            - scopes
+          example:
+            name: Network RW
+            scopes:
+            - deployments.networks:write
+            description: An API key to create and modify network deployments.
+            allowedIPs:
+            - 2001:420:c0c4:1006::427
+            - 143.10.10.0/24
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

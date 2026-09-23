@@ -1,30 +1,7 @@
 openapi: 3.2.0
 info:
   title: Cisco Umbrella Investigate AS Information for a Domain API
-  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
-
-    You can get the following domain information:
-
-
-    * Domain status, risk score, and geolocation
-
-    * Number of domain searches
-
-    * Co-occurring domains
-
-    * Subdomains of a domain
-
-    * Tagged timeline of a domain, IP, or URL
-
-    * Security reputation of a domain
-
-    * Top accessed domains
-
-    * WHOIS information for the domain
-
-    * Threat intelligence data for domains, IPs, and URLs
-
-    * Threat intelligence samples by file hash'
+  description: The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
   version: 2.0.0
   contact:
     name: Cloud Security Developer Community
@@ -156,9 +133,7 @@ paths:
 
         (the code corresponds to the country code list for ISO-3166-1 alpha-2).
 
-        CIDR contains the IP prefix for this ASN.
-
-        '
+        CIDR contains the IP prefix for this ASN.'
       parameters:
       - name: asn
         in: path
@@ -231,63 +206,23 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     404Error:
       description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -314,6 +249,46 @@ components:
             properties:
               message:
                 type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

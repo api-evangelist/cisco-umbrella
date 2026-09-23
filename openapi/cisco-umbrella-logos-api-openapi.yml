@@ -242,69 +242,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        format: iso-date-time
-      description: 'The date and time of the request that is represented in ISO 8601 format.
-
-        The timestamp uses Greenwich Mean Time (GMT).'
-      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Forbidden
-    500Error:
-      description: Internal Server error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Internal Server Error
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Unauthorized
     404Error:
       description: Not Found
       headers:
@@ -321,6 +259,22 @@ components:
                 type: string
           example:
             message: Not Found
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
     400Error:
       description: Bad Request
       headers:
@@ -337,51 +291,38 @@ components:
                 type: string
           example:
             message: Bad Request
-  requestBodies:
-    LogoRequestBody:
-      description: Add the logo information for the service providers console.
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
       content:
-        multipart/form-data:
+        application/json:
           schema:
             type: object
-            description: Add the logo information for the service providers console.
-            required:
-            - imageKey
-            - token
-            - enabled
-            - brandingTypeId
-            - imageUrl
             properties:
-              imageKey:
+              message:
                 type: string
-                format: binary
-                description: The key for the logo.
-                example: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
-              imageUrl:
-                type: string
-                description: The URL for the logo.
-                format: url
-                example: https://examples.com
-              token:
-                type: string
-                minLength: 64
-                maxLength: 64
-                example: '1234567889123456789123456789123456789123456789123456789123456789'
-                description: The token for the logo.
-              enabled:
-                type: boolean
-                default: false
-                example: true
-              brandingTypeId:
-                type: integer
-                description: The ID of the type of branding.
-                example: 4
           example:
-            imageUrl: https://examples.com
-            imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
-            token: '1234567889123456789123456789123456789123456789123456789123456789'
-            enabled: true
-            brandingTypeId: 4
+            message: Unauthorized
+    500Error:
+      description: Internal Server error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Internal Server Error
   parameters:
     logoIdParam:
       name: logoId
@@ -457,6 +398,65 @@ components:
         modifiedAt: 1559836800
         enabled: true
         brandingTypeId: 4
+  requestBodies:
+    LogoRequestBody:
+      description: Add the logo information for the service providers console.
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            description: Add the logo information for the service providers console.
+            required:
+            - imageKey
+            - token
+            - enabled
+            - brandingTypeId
+            - imageUrl
+            properties:
+              imageKey:
+                type: string
+                format: binary
+                description: The key for the logo.
+                example: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+              imageUrl:
+                type: string
+                description: The URL for the logo.
+                format: url
+                example: https://examples.com
+              token:
+                type: string
+                minLength: 64
+                maxLength: 64
+                example: '1234567889123456789123456789123456789123456789123456789123456789'
+                description: The token for the logo.
+              enabled:
+                type: boolean
+                default: false
+                example: true
+              brandingTypeId:
+                type: integer
+                description: The ID of the type of branding.
+                example: 4
+          example:
+            imageUrl: https://examples.com
+            imageKey: a/9/a91cafcae22469451ddb449a547a508ac8b2b12aee6f0bac336445f971de628c232b042ef812a4138c7eab51b64b0df1af591a5c56d73bae14c3179db9198d12.png
+            token: '1234567889123456789123456789123456789123456789123456789123456789'
+            enabled: true
+            brandingTypeId: 4
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
   securitySchemes:
     oauthFlow:
       type: oauth2

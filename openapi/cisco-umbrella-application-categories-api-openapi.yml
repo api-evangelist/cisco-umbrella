@@ -64,6 +64,49 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
+  schemas:
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
+    ApplicationCategoryList:
+      type: object
+      description: The list of application categories.
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationCategory'
+      example:
+        items:
+        - name: Security
+    ApplicationCategory:
+      type: object
+      description: The application category information.
+      properties:
+        name:
+          type: string
+          description: The name of the application category.
+          example: Security
+      example:
+        name: Security
+  parameters:
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
   headers:
     Link:
       schema:
@@ -76,6 +119,12 @@ components:
 
         `next` to the next page.'
   responses:
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Unauthorized request
       content:
@@ -88,61 +137,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ServerError:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    offset:
-      in: query
-      name: offset
-      schema:
-        type: integer
-      description: The number of items to skip before starting to collect the result set.
-    limit:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
-  schemas:
-    Error:
-      type: object
-      description: The error message returned in the response.
-      properties:
-        message:
-          type: string
-    ApplicationCategory:
-      type: object
-      description: The application category information.
-      properties:
-        name:
-          type: string
-          description: The name of the application category.
-          example: Security
-      example:
-        name: Security
-    ApplicationCategoryList:
-      type: object
-      description: The list of application categories.
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApplicationCategory'
-      example:
-        items:
-        - name: Security
   securitySchemes:
     oauthFlow:
       type: oauth2

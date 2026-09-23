@@ -76,22 +76,12 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
-    ProtocolIdentityList:
+    Error:
       type: object
-      description: The list of the app's identity information.
+      description: The error message returned in the response.
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProtocolIdentity'
-      example:
-        items:
-        - id: 10000
-          name: My Identity
-          events: 100
-          blockedEvents: 50
-          firstDetected: '2022-01-01T00:00:00.000Z'
-          lastDetected: '2022-01-01T00:00:00.000Z'
+        message:
+          type: string
     ProtocolIdentity:
       type: object
       description: The app's identity information.
@@ -129,12 +119,76 @@ components:
         blockedEvents: 40
         firstDetected: '2022-01-01T00:00:00.000Z'
         lastDetected: '2022-01-01T00:00:00.000Z'
-    Error:
+    ProtocolIdentityList:
       type: object
-      description: The error message returned in the response.
+      description: The list of the app's identity information.
       properties:
-        message:
-          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtocolIdentity'
+      example:
+        items:
+        - id: 10000
+          name: My Identity
+          events: 100
+          blockedEvents: 50
+          firstDetected: '2022-01-01T00:00:00.000Z'
+          lastDetected: '2022-01-01T00:00:00.000Z'
+  parameters:
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
+    order:
+      in: query
+      name: order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      description: 'Specify the order to sort the collection. Valid values are: `asc` (ascending)
+
+        or `desc` (descending).'
+      example: asc
+    identitiesSort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        enum:
+        - firstDetected
+        - lastDetected
+      description: Specify the name of a field to sort the application identities.
+      example: lastDetected
+    protocolId:
+      in: path
+      name: protocolId
+      description: The ID of the protocol.
+      required: true
+      schema:
+        type: string
+    date:
+      in: query
+      name: date
+      schema:
+        type: string
+        format: date
+      description: 'Specify a date to search for data within a twenty-four hour time period.
+
+        If you do not provide a date, the last 90 days period is used to query the collection.'
+      example: '2022-01-01'
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
   headers:
     Link:
       schema:
@@ -153,12 +207,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     InvalidRequest:
       description: Invalid request
       content:
@@ -171,66 +219,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    offset:
-      in: query
-      name: offset
-      schema:
-        type: integer
-      description: The number of items to skip before starting to collect the result set.
-    identitiesSort:
-      in: query
-      name: sort
-      schema:
-        type: string
-        enum:
-        - firstDetected
-        - lastDetected
-      description: Specify the name of a field to sort the application identities.
-      example: lastDetected
-    limit:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
-    date:
-      in: query
-      name: date
-      schema:
-        type: string
-        format: date
-      description: 'Specify a date to search for data within a twenty-four hour time period.
-
-        If you do not provide a date, the last 90 days period is used to query the collection.'
-      example: '2022-01-01'
-    order:
-      in: query
-      name: order
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-      description: 'Specify the order to sort the collection. Valid values are: `asc` (ascending)
-
-        or `desc` (descending).'
-      example: asc
-    protocolId:
-      in: path
-      name: protocolId
-      description: The ID of the protocol.
-      required: true
-      schema:
-        type: string
   securitySchemes:
     oauthFlow:
       type: oauth2

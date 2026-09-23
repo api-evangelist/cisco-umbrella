@@ -265,88 +265,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 403
-                description: HTTP status code
-              error:
-                type: string
-                example: Forbidden
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 500
-                description: HTTP status code
-              error:
-                type: string
-                example: Internal Server Error
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 401
-                description: HTTP status code
-              error:
-                type: string
-                example: Unauthorized
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
     404Error:
       description: Not Found
       headers:
@@ -366,6 +285,29 @@ components:
               error:
                 type: string
                 example: Not Found
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 403
+                description: HTTP status code
+              error:
+                type: string
+                example: Forbidden
                 description: A brief description of the error
               message:
                 type: string
@@ -393,39 +335,59 @@ components:
               message:
                 type: string
                 description: Detailed error message
-  parameters:
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-      example: 3
-    deviceId:
-      name: deviceId
-      in: path
-      description: The device ID (deviceId) of the roaming computer.
-      schema:
-        type: string
-      required: true
-      example: AB00C7DCEC99D211
-    paginationLimitParam:
-      name: limit
-      in: query
-      description: The number of records in the collection to return on the page.
-      required: false
-      schema:
-        default: 100
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-      example: 40
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Unauthorized
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+                description: HTTP status code
+              error:
+                type: string
+                example: Internal Server Error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
   schemas:
+    name:
+      type: string
+      description: The name of the roaming computer. `name` is a sequence of 1–50 characters.
+      minLength: 1
+      maxLength: 50
+      example: roaming-computer-one
     RoamingComputerObject:
       type: object
       description: The properties of the roaming computer.
@@ -563,12 +525,50 @@ components:
         osVersion: Microsoft Windows NT 10.0.19045.0
         osVersionName: Windows 10
         anyconnectDeviceId: 9e963836fef9429b66c3e47b58e496efce2b5003
-    name:
-      type: string
-      description: The name of the roaming computer. `name` is a sequence of 1–50 characters.
-      minLength: 1
-      maxLength: 50
-      example: roaming-computer-one
+  parameters:
+    deviceId:
+      name: deviceId
+      in: path
+      description: The device ID (deviceId) of the roaming computer.
+      schema:
+        type: string
+      required: true
+      example: AB00C7DCEC99D211
+    paginationLimitParam:
+      name: limit
+      in: query
+      description: The number of records in the collection to return on the page.
+      required: false
+      schema:
+        default: 100
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+      example: 40
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
+      example: 3
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

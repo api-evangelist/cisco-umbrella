@@ -150,125 +150,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    fromParam:
-      name: from
-      in: query
-      description: 'A timestamp or relative time string (for example: ''-1days'').
-
-        Filter for data that appears after this time.'
-      required: true
-      schema:
-        type: string
-      example: '1639146300000'
-    policyCategoriesParam:
-      name: policycategories
-      in: query
-      description: 'A category ID or comma-delimited list of category ID.
-
-        Filter the request by the categories that trigger a policy.'
-      schema:
-        type: string
-      example: 67,69
-    categoriesParam:
-      name: categories
-      in: query
-      description: A category ID or comma-delimited list of category ID.
-      schema:
-        type: string
-      example: 148,151,66
-    applicationIdParam:
-      name: applicationid
-      in: query
-      description: The ID of the application.
-      schema:
-        type: string
-      example: '1'
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
-    domainsParam:
-      name: domains
-      in: query
-      description: A domain name or comma-delimited list of domain name.
-      schema:
-        type: string
-      example: cisco.com,nasa.gov
-    threatsParam:
-      name: threats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-    ipParam:
-      name: ip
-      in: query
-      description: An IP address.
-      schema:
-        type: string
-      example: 10.10.10.10
-    timezoneParam:
-      name: timezone
-      in: query
-      description: 'Display the timestamp of the traffic events in the specified timezone.
-
-        For the timezone, provide a continent and city separated by an url-encoded forward slash (''/''), for example: timezone=''ASIA%2fCALCUTTA''.'
-      schema:
-        type: string
-      example: ASIA%2fCALCUTTA
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
-    threatTypesParam:
-      name: threattypes
-      in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
-    verdictParam:
-      name: verdict
-      in: query
-      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
-      schema:
-        type: string
-      example: allowed,blocked,proxied
-    identityIdsParam:
-      name: identityids
-      in: query
-      description: An identity ID or comma-delimited list of identity IDs.
-      schema:
-        type: string
-      example: 1,2,3
-    identityTypesParam:
-      name: identitytypes
-      in: query
-      description: An identity type or comma-delimited list of identity types.
-      schema:
-        type: string
-      example: network,roaming
   responses:
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
     403Error:
       description: Forbidden
       content:
@@ -291,17 +173,6 @@ components:
                 type: string
             example:
               message: Unauthorized
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
     400Error:
       description: Bad Request
       content:
@@ -313,6 +184,28 @@ components:
                 type: string
             example:
               message: Bad Request
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
   schemas:
     Meta:
       type: object
@@ -334,6 +227,113 @@ components:
       example:
         ip: 10.0.0.1
         count: 42
+  parameters:
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    timezoneParam:
+      name: timezone
+      in: query
+      description: 'Display the timestamp of the traffic events in the specified timezone.
+
+        For the timezone, provide a continent and city separated by an url-encoded forward slash (''/''), for example: timezone=''ASIA%2fCALCUTTA''.'
+      schema:
+        type: string
+      example: ASIA%2fCALCUTTA
+    verdictParam:
+      name: verdict
+      in: query
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      schema:
+        type: string
+      example: allowed,blocked,proxied
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    categoriesParam:
+      name: categories
+      in: query
+      description: A category ID or comma-delimited list of category ID.
+      schema:
+        type: string
+      example: 148,151,66
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
   securitySchemes:
     oauthFlow:
       type: oauth2

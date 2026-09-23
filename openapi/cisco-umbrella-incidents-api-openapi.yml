@@ -334,65 +334,18 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
-    createdAfterParam:
-      name: created_after
-      schema:
-        type: string
-      in: query
-      description: Filter the collection by the creation date.
-      example: '2021-01-01'
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return in the collection.
-      required: false
-      schema:
-        type: string
-    createdBeforeParam:
-      name: created_before
-      in: query
-      schema:
-        type: string
-      description: Filter based on incidents created before a given date.
-      example: 2021-01-18T16:55
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     404Error:
       description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -409,6 +362,53 @@ components:
             properties:
               message:
                 type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+    createdAfterParam:
+      name: created_after
+      schema:
+        type: string
+      in: query
+      description: Filter the collection by the creation date.
+      example: '2021-01-01'
+    createdBeforeParam:
+      name: created_before
+      in: query
+      schema:
+        type: string
+      description: Filter based on incidents created before a given date.
+      example: 2021-01-18T16:55
   schemas:
     Entity:
       type: object
@@ -450,16 +450,6 @@ components:
           description: Object owner's name (i.e. John Q. User).
         vendor:
           $ref: '#/components/schemas/Vendor'
-    Policy:
-      type: object
-      description: The policy that triggered the incident.
-      properties:
-        id:
-          type: string
-          description: The Cloudlock Internal Identifier for a policy.
-        name:
-          type: string
-          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
     Match:
       type: object
       description: 'A Match represents an occurrence of a content pattern in an object (such as a file).
@@ -528,6 +518,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Match'
+    Policy:
+      type: object
+      description: The policy that triggered the incident.
+      properties:
+        id:
+          type: string
+          description: The Cloudlock Internal Identifier for a policy.
+        name:
+          type: string
+          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
 x-provenance:
   method: harvested
   first_party: true

@@ -254,26 +254,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   parameters:
-    pageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-      example: 5
-    customerIdParam:
-      name: customerId
-      in: path
-      description: The ID of the customer.
-      schema:
-        type: integer
-        format: int64
-      required: true
-      example: 1235
     limitParam:
       name: limit
       in: query
@@ -286,21 +266,29 @@ components:
         minimum: 1
         maximum: 100
       example: 50
-  headers:
-    Content-Type:
+    customerIdParam:
+      name: customerId
+      in: path
+      description: The ID of the customer.
       schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
+        type: integer
+        format: int64
+      required: true
+      example: 1235
+    pageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
       schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
+      example: 5
   responses:
-    403Error:
-      description: Forbidden
+    404Error:
+      description: Not Found
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -313,8 +301,8 @@ components:
             properties:
               message:
                 type: string
-    401Error:
-      description: Unauthorized
+    403Error:
+      description: Forbidden
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -341,6 +329,20 @@ components:
             properties:
               message:
                 type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     500Error:
       description: Internal Server Error
       headers:
@@ -355,36 +357,18 @@ components:
             properties:
               message:
                 type: string
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   schemas:
-    customerId:
-      type: integer
-      description: The ID of the customer.
-      example: 14
-    seats:
-      type: integer
-      minimum: 1
-      description: The number of users.
-      example: 100
     customerName:
       type: string
       description: The customer's organization name.
       minLength: 1
       maxLength: 255
       example: Cisco
+    seats:
+      type: integer
+      minimum: 1
+      description: The number of users.
+      example: 100
     Customer:
       type: object
       description: The properties of the customer.
@@ -403,6 +387,22 @@ components:
         customerId: 124
         customerName: Cisco
         seats: 45
+    customerId:
+      type: integer
+      description: The ID of the customer.
+      example: 14
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

@@ -118,6 +118,15 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     403Error:
       description: Forbidden
       content:
@@ -127,8 +136,8 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Server error
+    400Error:
+      description: Invalid request
       content:
         application/json:
           schema:
@@ -145,17 +154,8 @@ components:
             properties:
               message:
                 type: string
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    400Error:
-      description: Invalid request
+    500Error:
+      description: Server error
       content:
         application/json:
           schema:

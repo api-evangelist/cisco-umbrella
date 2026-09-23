@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Cisco Umbrella Reporting Provider Requests by Organization API
+  title: Cisco Umbrella Reporting Provider Requests by Organization…
   description: The Reporting API provides the data to generate the Umbrella reports.
   version: 2.0.0
   contact:
@@ -87,39 +87,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
     404Error:
       description: Not Found
       content:
@@ -131,6 +98,28 @@ components:
                 type: string
             example:
               message: Not Found
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
     400Error:
       description: Bad Request
       content:
@@ -142,17 +131,84 @@ components:
                 type: string
             example:
               message: Bad Request
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
   schemas:
-    Organization:
+    Meta:
       type: object
-      description: The information about the organization.
+      description: The properties of the metadata.
+      example: {}
+    RequestsByOrgCounts:
+      type: object
+      description: The information about the number of requests by organization.
       properties:
-        id:
+        total:
           type: number
-          description: orgid
-        label:
-          type: string
-          description: The name of the organization.
+          description: The total number of requests.
+        totalblocked:
+          type: number
+          description: The total number of blocked requests.
+      required:
+      - total
+      - totalblocked
     RequestsbyOrganization:
       type: object
       description: The information about the requests by organization.
@@ -171,72 +227,16 @@ components:
         counts:
           total: 1
           totalblocked: 1
-    RequestsByOrgCounts:
+    Organization:
       type: object
-      description: The information about the number of requests by organization.
+      description: The information about the organization.
       properties:
-        total:
+        id:
           type: number
-          description: The total number of requests.
-        totalblocked:
-          type: number
-          description: The total number of blocked requests.
-      required:
-      - total
-      - totalblocked
-    Meta:
-      type: object
-      description: The properties of the metadata.
-      example: {}
-  parameters:
-    fromParam:
-      name: from
-      in: query
-      description: 'A timestamp or relative time string (for example: ''-1days'').
-
-        Filter for data that appears after this time.'
-      required: true
-      schema:
-        type: string
-      example: '1639146300000'
-    threatsParam:
-      name: threats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    threatTypesParam:
-      name: threattypes
-      in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
+          description: orgid
+        label:
+          type: string
+          description: The name of the organization.
   securitySchemes:
     oauthFlow:
       type: oauth2

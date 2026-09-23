@@ -219,69 +219,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        format: iso-date-time
-      description: 'The date and time of the request that is represented in ISO 8601 format.
-
-        The timestamp uses Greenwich Mean Time (GMT).'
-      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Forbidden
-    500Error:
-      description: Internal Server error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Internal Server Error
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Unauthorized
     404Error:
       description: Not Found
       headers:
@@ -298,6 +236,22 @@ components:
                 type: string
           example:
             message: Not Found
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
     400Error:
       description: Bad Request
       headers:
@@ -314,11 +268,62 @@ components:
                 type: string
           example:
             message: Bad Request
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Unauthorized
+    500Error:
+      description: Internal Server error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Internal Server Error
+  parameters:
+    cnameIdParam:
+      name: cnameId
+      description: The cname ID.
+      schema:
+        type: integer
+      in: path
+      required: true
+      example: 1234
+  requestBodies:
+    CnameRequestBody:
+      description: Add the cname information for the service providers console.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cname:
+                type: string
+                description: Add the cname information for the service providers console.
+                example: examples.com
+          example:
+            cname: examples.com
   schemas:
-    organizationId:
-      type: integer
-      description: The organization ID.
-      example: 1345556
     GetCname:
       type: object
       description: The cname information for the service provider.
@@ -340,29 +345,24 @@ components:
         cnameId: 1234567
         cname: examples.com
         organizationid: 2345677
-  requestBodies:
-    CnameRequestBody:
-      description: Add the cname information for the service providers console.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              cname:
-                type: string
-                description: Add the cname information for the service providers console.
-                example: examples.com
-          example:
-            cname: examples.com
-  parameters:
-    cnameIdParam:
-      name: cnameId
-      description: The cname ID.
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 1345556
+  headers:
+    Content-Type:
       schema:
-        type: integer
-      in: path
-      required: true
-      example: 1234
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
   securitySchemes:
     oauthFlow:
       type: oauth2

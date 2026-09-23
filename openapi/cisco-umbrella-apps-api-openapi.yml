@@ -324,51 +324,18 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return in the collection.
-      required: false
-      schema:
-        type: string
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     404Error:
       description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -385,6 +352,39 @@ components:
             properties:
               message:
                 type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
   schemas:
     App:
       type: object
@@ -413,38 +413,6 @@ components:
           description: The community trust rating score.
         vendor:
           $ref: '#/components/schemas/Vendor'
-    ScopeCategory:
-      type: object
-      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
-
-        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
-
-        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
-      properties:
-        title:
-          type: string
-          description: 'The categories title, for example: `Basic Information`.'
-        category_id:
-          type: string
-          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
-          example: FDATA
-    AccessScope:
-      type: object
-      properties:
-        category:
-          $ref: '#/components/schemas/ScopeCategory'
-        id:
-          type: string
-          description: The internal Cloudlock ID for the access scope.
-        description:
-          type: string
-          description: 'A verbose description of the access scope, for example: `View your email address`.'
-        friendly_name:
-          type: string
-          description: 'The name of the access scope. In the UI this is the `ACCESS SCOPE` in the Access Scopes table. For example: `Userinfo - Email`.'
-        url:
-          type: string
-          description: 'The url to the access scope. For example: ''https://www.googleapis.com/auth/userinfo.email''.'
     Classification:
       type: object
       properties:
@@ -461,6 +429,12 @@ components:
           type: string
           description: The classification's last update time, specified as a timestamp in UTC.
       description: The application's classification resource.
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the vendor. For example: google.'
     AppsCollection:
       type: object
       properties:
@@ -485,12 +459,38 @@ components:
         admins_count:
           type: integer
           description: The number of administrators that have the application installed.
-    Vendor:
+    AccessScope:
       type: object
       properties:
-        name:
+        category:
+          $ref: '#/components/schemas/ScopeCategory'
+        id:
           type: string
-          description: 'The name of the vendor. For example: google.'
+          description: The internal Cloudlock ID for the access scope.
+        description:
+          type: string
+          description: 'A verbose description of the access scope, for example: `View your email address`.'
+        friendly_name:
+          type: string
+          description: 'The name of the access scope. In the UI this is the `ACCESS SCOPE` in the Access Scopes table. For example: `Userinfo - Email`.'
+        url:
+          type: string
+          description: 'The url to the access scope. For example: ''https://www.googleapis.com/auth/userinfo.email''.'
+    ScopeCategory:
+      type: object
+      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
+
+        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
+
+        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
+      properties:
+        title:
+          type: string
+          description: 'The categories title, for example: `Basic Information`.'
+        category_id:
+          type: string
+          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
+          example: FDATA
 x-provenance:
   method: harvested
   first_party: true

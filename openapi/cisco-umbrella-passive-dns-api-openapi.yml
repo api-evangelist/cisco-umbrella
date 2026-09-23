@@ -1,30 +1,7 @@
 openapi: 3.2.0
 info:
   title: Cisco Umbrella Investigate Passive DNS API
-  description: 'The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
-
-    You can get the following domain information:
-
-
-    * Domain status, risk score, and geolocation
-
-    * Number of domain searches
-
-    * Co-occurring domains
-
-    * Subdomains of a domain
-
-    * Tagged timeline of a domain, IP, or URL
-
-    * Security reputation of a domain
-
-    * Top accessed domains
-
-    * WHOIS information for the domain
-
-    * Threat intelligence data for domains, IPs, and URLs
-
-    * Threat intelligence samples by file hash'
+  description: The Umbrella Investigate API provides a complete view of domains in relation to IP and autonomous system number (ASN) information.
   version: 2.0.0
   contact:
     name: Cloud Security Developer Community
@@ -313,33 +290,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   responses:
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     403Error:
       description: Forbidden
       headers:
@@ -368,20 +319,6 @@ components:
             properties:
               message:
                 type: string
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     400Error:
       description: Bad Request
       headers:
@@ -396,7 +333,220 @@ components:
             properties:
               message:
                 type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    sortCategoriesParam:
+      name: sortCategories
+      in: query
+      required: false
+      description: 'Sort the records by the specified security categories or all security categories (`All`).
+
+        The case-sensitive security category strings are: Drive-by Downloads/Exploits, Mobile Threats,
+
+        Dynamic DNS, High Risk Sites and Locations, Command and Control, Malware, Phishing,
+
+        Newly Seen Domains, Potentially Harmful,
+
+        DNS Tunneling VPN, and Cryptomining. Use commas to separate multiple security category strings.
+
+
+        Investigate lists the records that have at least one of these security categories at the top of the list.
+
+        The rest of the sorting parameters are applied within the records with and without any of
+
+        the security categories.'
+      schema:
+        type: string
+      example: All
+    maxFirstSeenParam:
+      name: maxFirstSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `firstSeen` <= the value of `maxFirstSeen`.
+      schema:
+        type: integer
+        format: int64
+    requiredCategoriesParam:
+      name: requiredCategories
+      in: query
+      required: false
+      description: 'Filter for records that are assigned the specified security categories.
+
+        The case-sensitive security category strings are: Drive-by Downloads/Exploits, Mobile Threats,
+
+        Dynamic DNS, High Risk Sites and Locations, Command and Control, Malware, Phishing,
+
+        Newly Seen Domains, Potentially Harmful,
+
+        DNS Tunneling VPN, and Cryptomining. Use commas to separate multiple security category strings.'
+      schema:
+        type: string
+      example: Mobile Threats, Phishing
+    sortorderParam:
+      name: sortorder
+      in: query
+      required: false
+      description: Sort records by ascending (`asc`) or descending (`desc`) order. By default, the records are returned in descending order.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+      example: asc
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
+    recordTypeParam:
+      name: recordType
+      in: query
+      required: false
+      description: 'The type of records. For example: ''A'', ''CNAME'', ''NS'', ''MX''.
+
+        Use commas to separate multiple types of record.'
+      schema:
+        type: string
+      example: A, CNAME
+    sortbyParam:
+      name: sortby
+      in: query
+      required: false
+      description: 'Sort records by one of the following fields: `minTtl`, `maxTtl`, `firstSeen`, or `lastSeen`.'
+      schema:
+        type: string
+        enum:
+        - minTtl
+        - maxTtl
+        - firstSeen
+        - lastSeen
+      example: minTtl
+    minFirstSeenParam:
+      name: minFirstSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `firstSeen` >= the value of `minFirstSeen`.
+      schema:
+        type: integer
+        format: int64
+    includeFeaturesParam:
+      name: includefeatures
+      in: query
+      required: false
+      description: Specify whether to add the feature sections to the response. The default value is 'false'.
+      schema:
+        type: boolean
+      example: true
+    minLastSeenParam:
+      name: minLastSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `lastSeen` >= the value of `minLastSeen`.
+      schema:
+        type: integer
+        format: int64
+    limitRecordsParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of records to return in the collection.
+
+        The default limit is 500 records. The maximum number of records
+
+        returned for all requests to the endpoint is 10,000.
+
+        '
+      schema:
+        type: integer
+        default: 500
+        maximum: 10000
+      example: 1000
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
+    maxLastSeenParam:
+      name: maxLastSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `lastSeen` <= the value of `maxLastSeen`.
+      schema:
+        type: integer
+        format: int64
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   schemas:
+    lastSeenISO:
+      type: string
+      description: 'The last time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+    firstSeen:
+      type: integer
+      format: int64
+      description: 'The first time Umbrella related the domain for the resource record, specified
+
+        in Unix Epoch time.'
+      example: 1615427410
+    firstSeenISO:
+      type: string
+      format: date-time
+      description: 'The first time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+    Records:
+      type: array
+      description: The list of records.
+      items:
+        $ref: '#/components/schemas/Record'
     Record:
       type: object
       description: The information about the record.
@@ -437,179 +587,6 @@ components:
           $ref: '#/components/schemas/firstSeenISO'
         lastSeenISO:
           $ref: '#/components/schemas/lastSeenISO'
-    Records:
-      type: array
-      description: The list of records.
-      items:
-        $ref: '#/components/schemas/Record'
-    firstSeenISO:
-      type: string
-      format: date-time
-      description: 'The first time Umbrella related the domain for the resource record,
-
-        specified in ISO date and time format.'
-      example: '2015-05-22T21:42:07.421Z'
-    lastSeenISO:
-      type: string
-      description: 'The last time Umbrella related the domain for the resource record,
-
-        specified in ISO date and time format.'
-      example: '2015-05-22T21:42:07.421Z'
-    firstSeen:
-      type: integer
-      format: int64
-      description: 'The first time Umbrella related the domain for the resource record, specified
-
-        in Unix Epoch time.'
-      example: 1615427410
-  parameters:
-    maxFirstSeenParam:
-      name: maxFirstSeen
-      in: query
-      required: false
-      description: Only returns records with the value of `firstSeen` <= the value of `maxFirstSeen`.
-      schema:
-        type: integer
-        format: int64
-    sortorderParam:
-      name: sortorder
-      in: query
-      required: false
-      description: Sort records by ascending (`asc`) or descending (`desc`) order. By default, the records are returned in descending order.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
-      example: asc
-    domainParam:
-      name: domain
-      in: path
-      required: true
-      description: A domain name.
-      schema:
-        type: string
-      example: cisco.com
-    requiredCategoriesParam:
-      name: requiredCategories
-      in: query
-      required: false
-      description: 'Filter for records that are assigned the specified security categories.
-
-        The case-sensitive security category strings are: Drive-by Downloads/Exploits, Mobile Threats,
-
-        Dynamic DNS, High Risk Sites and Locations, Command and Control, Malware, Phishing,
-
-        Newly Seen Domains, Potentially Harmful,
-
-        DNS Tunneling VPN, and Cryptomining. Use commas to separate multiple security category strings.'
-      schema:
-        type: string
-      example: Mobile Threats, Phishing
-    sortbyParam:
-      name: sortby
-      in: query
-      required: false
-      description: 'Sort records by one of the following fields: `minTtl`, `maxTtl`, `firstSeen`, or `lastSeen`.'
-      schema:
-        type: string
-        enum:
-        - minTtl
-        - maxTtl
-        - firstSeen
-        - lastSeen
-      example: minTtl
-    maxLastSeenParam:
-      name: maxLastSeen
-      in: query
-      required: false
-      description: Only returns records with the value of `lastSeen` <= the value of `maxLastSeen`.
-      schema:
-        type: integer
-        format: int64
-    minFirstSeenParam:
-      name: minFirstSeen
-      in: query
-      required: false
-      description: Only returns records with the value of `firstSeen` >= the value of `minFirstSeen`.
-      schema:
-        type: integer
-        format: int64
-    includeFeaturesParam:
-      name: includefeatures
-      in: query
-      required: false
-      description: Specify whether to add the feature sections to the response. The default value is 'false'.
-      schema:
-        type: boolean
-      example: true
-    minLastSeenParam:
-      name: minLastSeen
-      in: query
-      required: false
-      description: Only returns records with the value of `lastSeen` >= the value of `minLastSeen`.
-      schema:
-        type: integer
-        format: int64
-    offsetParam:
-      name: offset
-      in: query
-      required: false
-      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
-      schema:
-        type: integer
-        default: 0
-      example: 2
-    limitRecordsParam:
-      name: limit
-      in: query
-      required: false
-      description: 'The number of records to return in the collection.
-
-        The default limit is 500 records. The maximum number of records
-
-        returned for all requests to the endpoint is 10,000.
-
-        '
-      schema:
-        type: integer
-        default: 500
-        maximum: 10000
-      example: 1000
-    sortCategoriesParam:
-      name: sortCategories
-      in: query
-      required: false
-      description: 'Sort the records by the specified security categories or all security categories (`All`).
-
-        The case-sensitive security category strings are: Drive-by Downloads/Exploits, Mobile Threats,
-
-        Dynamic DNS, High Risk Sites and Locations, Command and Control, Malware, Phishing,
-
-        Newly Seen Domains, Potentially Harmful,
-
-        DNS Tunneling VPN, and Cryptomining. Use commas to separate multiple security category strings.
-
-
-        Investigate lists the records that have at least one of these security categories at the top of the list.
-
-        The rest of the sorting parameters are applied within the records with and without any of
-
-        the security categories.'
-      schema:
-        type: string
-      example: All
-    recordTypeParam:
-      name: recordType
-      in: query
-      required: false
-      description: 'The type of records. For example: ''A'', ''CNAME'', ''NS'', ''MX''.
-
-        Use commas to separate multiple types of record.'
-      schema:
-        type: string
-      example: A, CNAME
   securitySchemes:
     oauthFlow:
       type: oauth2

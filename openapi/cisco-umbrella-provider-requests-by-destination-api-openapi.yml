@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Cisco Umbrella Reporting Provider Requests by Destination API
+  title: Cisco Umbrella Reporting Provider Requests by Destination…
   description: The Reporting API provides the data to generate the Umbrella reports.
   version: 2.0.0
   contact:
@@ -91,39 +91,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
     404Error:
       description: Not Found
       content:
@@ -135,6 +102,28 @@ components:
                 type: string
             example:
               message: Not Found
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
     400Error:
       description: Bad Request
       content:
@@ -146,7 +135,40 @@ components:
                 type: string
             example:
               message: Bad Request
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
   parameters:
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
     fromParam:
       name: from
       in: query
@@ -157,21 +179,6 @@ components:
       schema:
         type: string
       example: '1639146300000'
-    threatsParam:
-      name: threats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
     threatTypesParam:
       name: threattypes
       in: query
@@ -188,14 +195,11 @@ components:
       schema:
         type: string
       example: '1640010300000'
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
   schemas:
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
     ProviderCountsByDestination:
       type: object
       description: The information about the provider's destinations.
@@ -213,10 +217,27 @@ components:
       - numberoforganizationsaffected
       - total
       - totalblocked
-    Meta:
+    Category:
       type: object
-      description: The properties of the metadata.
-      example: {}
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
     ProviderRequestsbyDestination:
       type: object
       description: The information about the provider's requests by destination.
@@ -244,27 +265,6 @@ components:
           total: 1
           totalblocked: 1
           numberoforganizationsaffected: 1
-    Category:
-      type: object
-      description: The properties of the category.
-      properties:
-        id:
-          type: number
-          description: The ID of the category.
-        label:
-          type: string
-          description: The descriptive label for the category.
-        type:
-          type: string
-          description: The type of the category.
-        integration:
-          type: boolean
-          description: Specifies whether the category is an integration.
-          example: true
-        deprecated:
-          type: boolean
-          description: Specifies whether the category is a legacy category.
-          example: true
   securitySchemes:
     oauthFlow:
       type: oauth2

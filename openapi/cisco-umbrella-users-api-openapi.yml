@@ -33,7 +33,26 @@ paths:
     post:
       tags:
       - Users
-      description: "Create an Umbrella user account with a designated role.\n\nOnce a user account is deleted, you can recreate the account through the `POST` operation.\nWhen you recreate the user account, only set the `email` and `roleId` fields in the Request Body.\n\nFor example: {\n  \"email\": \"DEVWKS-22@mailinator.com\",\n  \"roleId\": 1\n}\n\nIf you provide all fields for the user account in the Request Body, Umbrella returns an `HTTP/400` (Bad Request) with the\nmessage: `Email already in use`."
+      description: 'Create an Umbrella user account with a designated role.
+
+
+        Once a user account is deleted, you can recreate the account through the `POST` operation.
+
+        When you recreate the user account, only set the `email` and `roleId` fields in the Request Body.
+
+
+        For example: {
+
+        "email": "DEVWKS-22@mailinator.com",
+
+        "roleId": 1
+
+        }
+
+
+        If you provide all fields for the user account in the Request Body, Umbrella returns an `HTTP/400` (Bad Request) with the
+
+        message: `Email already in use`.'
       summary: Create User
       operationId: createUser
       security:
@@ -386,229 +405,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    pageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-      required: false
-      example: 2
-    offsetParam:
-      in: query
-      name: offset
-      required: false
-      description: The place to start reading in the collection. The default offset is 0.
-      schema:
-        type: integer
-        format: int64
-        default: 0
-      example: 10
-    customerIdParam:
-      name: customerId
-      in: path
-      description: The child (customer) organization ID.
-      required: true
-      schema:
-        type: integer
-        format: int32
-      example: 1234556
-    emailParam:
-      in: query
-      name: email
-      description: The email address for a member of a provider organization.
-      required: true
-      schema:
-        type: string
-      example: name@cisco.com
-    limitParam:
-      name: limit
-      in: query
-      description: The number of records from the collection to return on the page.
-      required: false
-      schema:
-        default: 100
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-      example: 50
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        format: iso-date-time
-      description: 'The date and time of the request that is represented in ISO 8601 format.
-
-        The timestamp uses Greenwich Mean Time (GMT).'
-      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
-  responses:
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Unauthorized request
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Server error
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Forbidden
-    404EmailError:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: 'The user identified by the email address
-
-              does not exist in the organization.'
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Not Found
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-          example:
-            message: Invalid request
   schemas:
-    UserObject:
-      type: object
-      properties:
-        firstname:
-          type: string
-          description: The user's first name.
-          minLength: 1
-        lastname:
-          type: string
-          description: The user's last name.
-          minLength: 1
-        email:
-          type: string
-          description: The user's email address.
-          minLength: 1
-        password:
-          type: string
-          description: The user's password.
-          minLength: 1
-        roleId:
-          type: integer
-          description: The role ID.
-          minimum: 1
-        role:
-          type: string
-          description: The user's role.
-        timezone:
-          type: string
-          description: The user's timezone.
-          minLength: 1
-        status:
-          type: string
-          description: The user's status.
-          example: 'on'
-        lastLoginTime:
-          type: string
-          format: date-time
-          description: The user's last login date and time (ISO8601 timestamp).
-          example: '2018-06-13T16:07:07.222Z'
-        twoFactorEnable:
-          type: boolean
-          description: Specifies whether two-factor authentication is enabled.
-      required:
-      - id
-      - email
-      - role
-      - roleId
-      - timezone
-      - status
-      - twoFactorEnable
-      example:
-        id: 123
-        email: myemail.com
-        role: full admin
-        roleId: 1
-        timezone: '2018-06-13T16:07:07.222Z'
-        status: 'on'
-        twoFactorEnable: true
     OrgInformation:
       type: object
       required:
@@ -689,6 +486,228 @@ components:
         modifiedAt: 1585081693
         salesforceAccountId: 0011T00002QfUGgQAN
         hasDelegatedAdmin: true
+    UserObject:
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: The user's first name.
+          minLength: 1
+        lastname:
+          type: string
+          description: The user's last name.
+          minLength: 1
+        email:
+          type: string
+          description: The user's email address.
+          minLength: 1
+        password:
+          type: string
+          description: The user's password.
+          minLength: 1
+        roleId:
+          type: integer
+          description: The role ID.
+          minimum: 1
+        role:
+          type: string
+          description: The user's role.
+        timezone:
+          type: string
+          description: The user's timezone.
+          minLength: 1
+        status:
+          type: string
+          description: The user's status.
+          example: 'on'
+        lastLoginTime:
+          type: string
+          format: date-time
+          description: The user's last login date and time (ISO8601 timestamp).
+          example: '2018-06-13T16:07:07.222Z'
+        twoFactorEnable:
+          type: boolean
+          description: Specifies whether two-factor authentication is enabled.
+      required:
+      - id
+      - email
+      - role
+      - roleId
+      - timezone
+      - status
+      - twoFactorEnable
+      example:
+        id: 123
+        email: myemail.com
+        role: full admin
+        roleId: 1
+        timezone: '2018-06-13T16:07:07.222Z'
+        status: 'on'
+        twoFactorEnable: true
+  parameters:
+    offsetParam:
+      in: query
+      name: offset
+      required: false
+      description: The place to start reading in the collection. The default offset is 0.
+      schema:
+        type: integer
+        format: int64
+        default: 0
+      example: 10
+    limitParam:
+      name: limit
+      in: query
+      description: The number of records from the collection to return on the page.
+      required: false
+      schema:
+        default: 100
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+      example: 50
+    emailParam:
+      in: query
+      name: email
+      description: The email address for a member of a provider organization.
+      required: true
+      schema:
+        type: string
+      example: name@cisco.com
+    customerIdParam:
+      name: customerId
+      in: path
+      description: The child (customer) organization ID.
+      required: true
+      schema:
+        type: integer
+        format: int32
+      example: 1234556
+    pageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+      required: false
+      example: 2
+  responses:
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Not Found
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Forbidden
+    404EmailError:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: 'The user identified by the email address
+
+              does not exist in the organization.'
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Invalid request
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Unauthorized request
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: Server error
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        format: iso-date-time
+      description: 'The date and time of the request that is represented in ISO 8601 format.
+
+        The timestamp uses Greenwich Mean Time (GMT).'
+      example: 'Date: Mon, 18 Apr 2022 11:11:11 GMT'
   securitySchemes:
     oauthFlow:
       type: oauth2

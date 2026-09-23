@@ -157,19 +157,52 @@ paths:
         '500':
           $ref: '#/components/responses/ServerErr'
 components:
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   schemas:
+    ServerError:
+      description: Internal Server Error
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+          description: HTTP status code
+        error:
+          type: string
+          example: Internal Server Error
+          description: The server has an internal error and could not process the request.
+        message:
+          type: string
+          description: Detailed error message
+    ForbiddenError:
+      description: Forbidden
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+          description: HTTP status code
+        error:
+          type: string
+          example: Forbidden, Invalid authentication credentials
+          description: a brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    NotFoundError:
+      description: Not Found
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+          description: HTTP status code
+        error:
+          type: string
+          example: Not Found
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
     BadRequestError:
       description: Bad Request
       type: object
@@ -192,33 +225,24 @@ components:
               type: string
               example: must not be empty
               description: the name of the property failing validation.
-    ServerError:
-      description: Internal Server Error
+    OriginId:
+      description: The origin ID of the identity.
+      type: integer
+      minimum: 1
+      format: int32
+      example: 358739
+    UnauthorizedError:
+      description: Unauthorized
       type: object
       properties:
         statusCode:
           type: integer
-          example: 500
+          example: 401
           description: HTTP status code
         error:
           type: string
-          example: Internal Server Error
-          description: The server has an internal error and could not process the request.
-        message:
-          type: string
-          description: Detailed error message
-    NotFoundError:
-      description: Not Found
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 404
-          description: HTTP status code
-        error:
-          type: string
-          example: Not Found
-          description: A brief description of the error
+          example: Unauthorized
+          description: The authorization header is missing or the token is unauthorized
         message:
           type: string
           description: Detailed error message
@@ -259,58 +283,63 @@ components:
           type: boolean
           example: true
           description: Specified whether the policy is the default.
-    UnauthorizedError:
-      description: Unauthorized
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 401
-          description: HTTP status code
-        error:
-          type: string
-          example: Unauthorized
-          description: The authorization header is missing or the token is unauthorized
-        message:
-          type: string
-          description: Detailed error message
     PolicyList:
       type: array
       items:
         $ref: '#/components/schemas/PolicyStub'
-    ForbiddenError:
-      description: Forbidden
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 403
-          description: HTTP status code
-        error:
-          type: string
-          example: Forbidden, Invalid authentication credentials
-          description: a brief description of the error
-        message:
-          type: string
-          description: Detailed error message
-    OriginId:
+  parameters:
+    networkDeviceOriginIdParam:
+      name: originId
+      in: path
       description: The origin ID of the identity.
-      type: integer
-      minimum: 1
-      format: int32
-      example: 358739
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
+    policyTypeParam:
+      name: type
+      in: query
+      description: The type of the policy (`dns` or `web`).
+      required: false
+      schema:
+        default: dns
+        enum:
+        - dns
+        - web
+        type: string
+      example: web
+    paginationLimitParam:
+      name: limit
+      in: query
+      description: The number of records from the collection to return on the page.
+      required: false
+      schema:
+        default: 100
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
+    policyIdParam:
+      name: policyId
+      in: path
+      description: The ID of the policy.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
   responses:
-    NotFound:
-      description: Not found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFoundError'
     ServerErr:
       description: Internal Server Error
       headers:
@@ -322,6 +351,17 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ServerError'
+    NotFound:
+      description: Not found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
     Unauthorized:
       description: Unauthorized
       headers:
@@ -355,58 +395,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ForbiddenError'
-  parameters:
-    networkDeviceOriginIdParam:
-      name: originId
-      in: path
-      description: The origin ID of the identity.
-      required: true
+  headers:
+    Content-Type:
       schema:
-        type: integer
-        minimum: 1
-        format: int32
-    policyTypeParam:
-      name: type
-      in: query
-      description: The type of the policy (`dns` or `web`).
-      required: false
-      schema:
-        default: dns
-        enum:
-        - dns
-        - web
         type: string
-      example: web
-    policyIdParam:
-      name: policyId
-      in: path
-      description: The ID of the policy.
-      required: true
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
       schema:
-        type: integer
-        minimum: 1
-        format: int32
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-    paginationLimitParam:
-      name: limit
-      in: query
-      description: The number of records from the collection to return on the page.
-      required: false
-      schema:
-        default: 100
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

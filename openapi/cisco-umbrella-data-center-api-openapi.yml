@@ -118,48 +118,7 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   responses:
-    Unauthorized:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            minProperties: 3
-            required:
-            - statusCode
-            - error
-            - txId
-            properties:
-              statusCode:
-                type: integer
-                example: 401
-                description: HTTP status code
-              error:
-                type: string
-                example: Unauthorized
-                description: A brief description of the error
-              txId:
-                type: string
-                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
-                description: a unique hex number that can be used for debugging
     BadRequest:
       description: Bad Request
       headers:
@@ -254,6 +213,35 @@ components:
                 type: string
                 example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
                 description: a unique hex number that can be used for debugging
+    Unauthorized:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Unauthorized
+                description: A brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
     Forbidden:
       description: Forbidden
       headers:
@@ -283,6 +271,18 @@ components:
 
                   '
                 description: Error message explaining the reason for failure
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

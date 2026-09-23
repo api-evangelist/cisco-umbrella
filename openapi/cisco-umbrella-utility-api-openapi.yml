@@ -541,94 +541,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    threatTypeIdParam:
-      name: threattypeid
-      in: path
-      description: The name of the threat type.
-      required: true
-      schema:
-        type: string
-      example: Ransomware
-    threatNameIdParam:
-      name: threatnameid
-      in: path
-      description: The name of the threat.
-      required: true
-      schema:
-        type: string
-      example: WannaCry
-    offsetParam:
-      name: offset
-      in: query
-      description: A number that represents an index in the collection.
-      schema:
-        type: number
-        default: 0
-      example: 0
-    identityIdParam:
-      name: identityid
-      in: path
-      description: An identity ID.
-      required: true
-      schema:
-        type: number
-      example: 42
-    searchParam:
-      name: search
-      in: query
-      description: 'A string that represents a search parameter.
-
-        Filter data for requests where the search string appears in the endpoint data.'
-      schema:
-        type: string
-      example: somelabel
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    limitParamIdentitiesUtility:
-      name: limit
-      in: query
-      description: '(Identities utility endpoint) The number of records to return from the collection.
-
-        The default limit is 100. In a single response, the server returns at most 5000 records from the collection.'
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    applicationNameParam:
-      name: application
-      in: query
-      description: Filter on the name of the application.
-      schema:
-        type: string
-      example: Games
-    identityTypesParam:
-      name: identitytypes
-      in: query
-      description: An identity type or comma-delimited list of identity types.
-      schema:
-        type: string
-      example: network,roaming
   responses:
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
     403Error:
       description: Forbidden
       content:
@@ -651,17 +564,6 @@ components:
                 type: string
             example:
               message: Unauthorized
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
     400Error:
       description: Bad Request
       content:
@@ -673,74 +575,77 @@ components:
                 type: string
             example:
               message: Bad Request
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
   schemas:
-    IdentityType:
+    Identity:
       type: object
-      description: The information about the identity including the type.
+      description: The information about the identity.
       properties:
         id:
           type: number
-          description: The ID of the origin type for the identity.
+          description: The ID of the identity.
         label:
           type: string
-          description: The label of the origin type for the identity.
+          description: The descriptive label for the identity.
         type:
-          type: string
-          description: The name of the origin type for the identity.
-    ThreatType:
-      type: object
-      description: The properties of the threat type.
-      properties:
-        name:
-          type: string
-          description: The name of the threat type.
-        description:
-          type: string
-          description: The name of the threat type.
+          $ref: '#/components/schemas/IdentityType'
+        deleted:
+          type: boolean
+          description: Indicates whether the identity was deleted.
+          example: true
       required:
-      - name
-      - description
+      - id
+      - label
+      - type
+      - deleted
       example:
-        name: Ransomware
-        description: a description
+        id: 1
+        label: Catch Rate Testing System
+        type:
+          id: 21
+          label: Sites
+          type: site
+        deleted: false
     Meta:
       type: object
       description: The properties of the metadata.
       example: {}
-    Application:
+    ApplicationCategories:
       type: object
-      description: The information about the application.
+      description: The information about the applications.
       properties:
         id:
           type: number
-          description: The ID of the application.
-        label:
+          description: The ID of the application category.
+          example: 1234
+        name:
           type: string
-          description: The descriptive label for the application.
-        type:
-          type: string
-          description: 'The type of the application: NBAR or AVC.'
-          enum:
-          - NBAR
-          - AVC
-          example: AVC
-        category:
-          type: object
-          description: The category of the application.
-          properties:
-            id:
-              type: number
-              description: The ID of the application category.
-            label:
-              type: string
-              description: The label of the application category.
+          description: The name of the application category.
+          example: Travel
       example:
-        id: 1
-        label: malware
-        type: AVC
-        category:
-          id: 2
-          label: Education
+        id: 1234
+        name: Travel
     CategoryWithLegacyId:
       type: object
       description: The information about the category with legacy ID.
@@ -778,35 +683,56 @@ components:
         type: security
         integration: true
         deprecated: false
-    Identity:
+    ThreatName:
       type: object
-      description: The information about the identity.
+      description: The properties of the threat name.
+      properties:
+        name:
+          type: string
+          description: The name of the threat.
+        description:
+          type: string
+          description: The description of the threat name.
+      required:
+      - name
+      - description
+      example:
+        name: WannaCry
+        description: a description
+    Application:
+      type: object
+      description: The information about the application.
       properties:
         id:
           type: number
-          description: The ID of the identity.
+          description: The ID of the application.
         label:
           type: string
-          description: The descriptive label for the identity.
+          description: The descriptive label for the application.
         type:
-          $ref: '#/components/schemas/IdentityType'
-        deleted:
-          type: boolean
-          description: Indicates whether the identity was deleted.
-          example: true
-      required:
-      - id
-      - label
-      - type
-      - deleted
+          type: string
+          description: 'The type of the application: NBAR or AVC.'
+          enum:
+          - NBAR
+          - AVC
+          example: AVC
+        category:
+          type: object
+          description: The category of the application.
+          properties:
+            id:
+              type: number
+              description: The ID of the application category.
+            label:
+              type: string
+              description: The label of the application category.
       example:
         id: 1
-        label: Catch Rate Testing System
-        type:
-          id: 21
-          label: Sites
-          type: site
-        deleted: false
+        label: malware
+        type: AVC
+        category:
+          id: 2
+          label: Education
     ApplicationsWithCategories:
       type: object
       description: The information about the applications and categories.
@@ -832,37 +758,111 @@ components:
         categories:
         - id: 42
           name: Education
-    ApplicationCategories:
+    ThreatType:
       type: object
-      description: The information about the applications.
-      properties:
-        id:
-          type: number
-          description: The ID of the application category.
-          example: 1234
-        name:
-          type: string
-          description: The name of the application category.
-          example: Travel
-      example:
-        id: 1234
-        name: Travel
-    ThreatName:
-      type: object
-      description: The properties of the threat name.
+      description: The properties of the threat type.
       properties:
         name:
           type: string
-          description: The name of the threat.
+          description: The name of the threat type.
         description:
           type: string
-          description: The description of the threat name.
+          description: The name of the threat type.
       required:
       - name
       - description
       example:
-        name: WannaCry
+        name: Ransomware
         description: a description
+    IdentityType:
+      type: object
+      description: The information about the identity including the type.
+      properties:
+        id:
+          type: number
+          description: The ID of the origin type for the identity.
+        label:
+          type: string
+          description: The label of the origin type for the identity.
+        type:
+          type: string
+          description: The name of the origin type for the identity.
+  parameters:
+    threatTypeIdParam:
+      name: threattypeid
+      in: path
+      description: The name of the threat type.
+      required: true
+      schema:
+        type: string
+      example: Ransomware
+    limitParamIdentitiesUtility:
+      name: limit
+      in: query
+      description: '(Identities utility endpoint) The number of records to return from the collection.
+
+        The default limit is 100. In a single response, the server returns at most 5000 records from the collection.'
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    searchParam:
+      name: search
+      in: query
+      description: 'A string that represents a search parameter.
+
+        Filter data for requests where the search string appears in the endpoint data.'
+      schema:
+        type: string
+      example: somelabel
+    threatNameIdParam:
+      name: threatnameid
+      in: path
+      description: The name of the threat.
+      required: true
+      schema:
+        type: string
+      example: WannaCry
+    applicationNameParam:
+      name: application
+      in: query
+      description: Filter on the name of the application.
+      schema:
+        type: string
+      example: Games
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    identityIdParam:
+      name: identityid
+      in: path
+      description: An identity ID.
+      required: true
+      schema:
+        type: number
+      example: 42
   securitySchemes:
     oauthFlow:
       type: oauth2

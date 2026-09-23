@@ -315,6 +315,21 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
   schemas:
     IPCollection:
       type: object
@@ -352,35 +367,17 @@ components:
           description: The creation date specified as a timestamp in UTC.
           example: '2016-06-20T13:05:23.034264+00:00'
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     404Error:
       description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -397,21 +394,24 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return in the collection.
-      required: false
-      schema:
-        type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
 x-provenance:
   method: harvested
   first_party: true

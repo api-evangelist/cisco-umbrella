@@ -174,35 +174,17 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     404Error:
       description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -219,14 +201,24 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    createdAfterParam:
-      name: created_after
-      schema:
-        type: string
-      in: query
-      description: Filter the collection by the creation date.
-      example: '2021-01-01'
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
     IncidentAggregates:
       type: object
@@ -256,6 +248,14 @@ components:
         name:
           type: string
           description: The name of the policy/status/user.
+  parameters:
+    createdAfterParam:
+      name: created_after
+      schema:
+        type: string
+      in: query
+      description: Filter the collection by the creation date.
+      example: '2021-01-01'
 x-provenance:
   method: harvested
   first_party: true

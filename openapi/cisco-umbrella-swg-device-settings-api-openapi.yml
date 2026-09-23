@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   version: 2.0.0
-  title: Cisco Umbrella Secure Web Gateway Device Settings SWG Device Settings API
+  title: Cisco Umbrella Secure Web Gateway Device Settings SWG…
   description: Manage the Secure Web Gateway (SWG) settings for the devices in an organization.
   contact:
     name: Cloud Security Developer Community
@@ -241,19 +241,30 @@ paths:
         '500':
           $ref: '#/components/responses/500ErrorSingle'
 components:
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   responses:
+    429Error:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            message: Too many requests. Retry request.
+    404ErrorSingle:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The information about the error condition.
+            required:
+            - Error
+            properties:
+              Error:
+                type: string
+                description: The message associated with the error condition.
+          example:
+            Error: Not Found
     403Error:
       description: Forbidden
       content:
@@ -270,44 +281,6 @@ components:
             $ref: '#/components/schemas/error'
           example:
             message: Unauthorized request
-    404ErrorSingle:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The information about the error condition.
-            required:
-            - Error
-            properties:
-              Error:
-                type: string
-                description: The message associated with the error condition.
-          example:
-            Error: Not Found
-    500ErrorSingle:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The information about the error condition.
-            required:
-            - Error
-            properties:
-              Error:
-                type: string
-                description: The message associated with the error condition.
-          example:
-            Error: Internal server error
-    429Error:
-      description: Too Many Requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/error'
-          example:
-            message: Too many requests. Retry request.
     413ErrorSingle:
       description: Content Too Large
       content:
@@ -339,6 +312,21 @@ components:
                 description: The message associated with the error condition.
           example:
             Error: Invalid request
+    500ErrorSingle:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The information about the error condition.
+            required:
+            - Error
+            properties:
+              Error:
+                type: string
+                description: The message associated with the error condition.
+          example:
+            Error: Internal server error
   schemas:
     error:
       type: object
@@ -350,6 +338,54 @@ components:
         error:
           type: string
           description: The status code for the error condition.
+    value:
+      type: string
+      enum:
+      - '0'
+      - '1'
+      description: 'Specifies whether to enable the Secure Web Gateway (SWG) device settings.
+
+        Valid values are: `0` or `1` where `1` indicates enable.'
+      example: '1'
+    ListSWGDeviceSettings:
+      type: array
+      description: The list of Secure Web Gateway (SWG) settings for the devices in the organization.
+      items:
+        type: object
+        description: The properties of the secure web gateway settings for the device.
+        required:
+        - originId
+        - name
+        - value
+        - modifiedAt
+        properties:
+          originId:
+            $ref: '#/components/schemas/originId'
+          name:
+            type: string
+            description: The name of the device setting.
+            example: SWG enabled device
+          value:
+            $ref: '#/components/schemas/value'
+          modifiedAt:
+            type: string
+            description: The date and time when the settings on the device were modified. The timestamp is in the ISO 8601 date format.
+            format: iso-date-time
+            example: '2021-04-26 13:12:11'
+      example:
+      - originId: 124131441
+        name: SWGEnabled
+        value: '1'
+        modifiedAt: '2021-04-26 13:12:11'
+      - originId: 124131442
+        name: SWG-not-enabled
+        value: '0'
+        modifiedAt: '2023-04-26 13:12:11'
+    originId:
+      description: The origin ID of the device.
+      type: integer
+      format: int64
+      example: 12321231
     RegisteredSWGDeviceSettings:
       type: object
       description: The information about the Secure Web Gateway (SWG) setting for the devices in the organization.
@@ -402,54 +438,18 @@ components:
           code: 404
           message: The origin ID does not exist.
         value: '1'
-    ListSWGDeviceSettings:
-      type: array
-      description: The list of Secure Web Gateway (SWG) settings for the devices in the organization.
-      items:
-        type: object
-        description: The properties of the secure web gateway settings for the device.
-        required:
-        - originId
-        - name
-        - value
-        - modifiedAt
-        properties:
-          originId:
-            $ref: '#/components/schemas/originId'
-          name:
-            type: string
-            description: The name of the device setting.
-            example: SWG enabled device
-          value:
-            $ref: '#/components/schemas/value'
-          modifiedAt:
-            type: string
-            description: The date and time when the settings on the device were modified. The timestamp is in the ISO 8601 date format.
-            format: iso-date-time
-            example: '2021-04-26 13:12:11'
-      example:
-      - originId: 124131441
-        name: SWGEnabled
-        value: '1'
-        modifiedAt: '2021-04-26 13:12:11'
-      - originId: 124131442
-        name: SWG-not-enabled
-        value: '0'
-        modifiedAt: '2023-04-26 13:12:11'
-    value:
-      type: string
-      enum:
-      - '0'
-      - '1'
-      description: 'Specifies whether to enable the Secure Web Gateway (SWG) device settings.
-
-        Valid values are: `0` or `1` where `1` indicates enable.'
-      example: '1'
-    originId:
-      description: The origin ID of the device.
-      type: integer
-      format: int64
-      example: 12321231
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2
