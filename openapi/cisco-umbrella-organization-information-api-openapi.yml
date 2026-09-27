@@ -63,30 +63,19 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   responses:
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 404
-                description: HTTP status code
-              error:
-                type: string
-                example: Not Found
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
     403Error:
       description: Forbidden
       headers:
@@ -106,6 +95,29 @@ components:
               error:
                 type: string
                 example: Forbidden
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+                description: HTTP status code
+              error:
+                type: string
+                example: Internal Server Error
                 description: A brief description of the error
               message:
                 type: string
@@ -133,6 +145,29 @@ components:
               message:
                 type: string
                 description: Detailed error message
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+                description: HTTP status code
+              error:
+                type: string
+                example: Not Found
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
     401Error:
       description: Unauthorized
       headers:
@@ -152,29 +187,6 @@ components:
               error:
                 type: string
                 example: Unauthorized
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 500
-                description: HTTP status code
-              error:
-                type: string
-                example: Internal Server Error
                 description: A brief description of the error
               message:
                 type: string
@@ -203,18 +215,6 @@ components:
           format: int32
           description: The first 32 bits of the API key ID.
           example: 1456890
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

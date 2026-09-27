@@ -113,14 +113,10 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   schemas:
-    organizationId:
+    id:
       type: integer
-      description: The organization ID.
-      example: 2456789
-    name:
-      type: string
-      description: The name of the tag.
-      example: tag-one
+      description: The unique ID of the tag.
+      example: 12345678
     originsModifiedAt:
       type: string
       format: date-time
@@ -128,6 +124,10 @@ components:
 
         The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
       example: '2022-04-12T23:20:50.52Z'
+    name:
+      type: string
+      description: The name of the tag.
+      example: tag-one
     modifiedAt:
       type: string
       format: date-time
@@ -135,10 +135,6 @@ components:
 
         The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
       example: '2022-04-12T23:20:50.52Z'
-    id:
-      type: integer
-      description: The unique ID of the tag.
-      example: 12345678
     createdAt:
       type: string
       format: date-time
@@ -146,6 +142,10 @@ components:
 
         The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
       example: '2022-04-12T23:20:50.52Z'
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 2456789
     tagInformation:
       type: object
       description: The tag information for the device.
@@ -176,9 +176,21 @@ components:
         originsModifiedAt: '2022-04-12T23:20:50.52Z'
         createdAt: '2022-04-12T23:20:50.52Z'
         modifiedAt: '2022-04-12T23:20:50.52Z'
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   responses:
-    404Error:
-      description: Not Found
+    403Error:
+      description: Forbidden
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -191,8 +203,8 @@ components:
             properties:
               Error:
                 type: string
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Internal Server Error
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -219,8 +231,8 @@ components:
             properties:
               Error:
                 type: string
-    401Error:
-      description: Unauthorized
+    404Error:
+      description: Not Found
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -233,8 +245,8 @@ components:
             properties:
               Error:
                 type: string
-    500Error:
-      description: Internal Server Error
+    401Error:
+      description: Unauthorized
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -266,18 +278,6 @@ components:
                 example: test-tag-name
           example:
             name: test-tag-name
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

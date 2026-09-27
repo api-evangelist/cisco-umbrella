@@ -158,51 +158,6 @@ paths:
           $ref: '#/components/responses/ServerErr'
 components:
   schemas:
-    ServerError:
-      description: Internal Server Error
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 500
-          description: HTTP status code
-        error:
-          type: string
-          example: Internal Server Error
-          description: The server has an internal error and could not process the request.
-        message:
-          type: string
-          description: Detailed error message
-    ForbiddenError:
-      description: Forbidden
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 403
-          description: HTTP status code
-        error:
-          type: string
-          example: Forbidden, Invalid authentication credentials
-          description: a brief description of the error
-        message:
-          type: string
-          description: Detailed error message
-    NotFoundError:
-      description: Not Found
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 404
-          description: HTTP status code
-        error:
-          type: string
-          example: Not Found
-          description: A brief description of the error
-        message:
-          type: string
-          description: Detailed error message
     BadRequestError:
       description: Bad Request
       type: object
@@ -225,27 +180,25 @@ components:
               type: string
               example: must not be empty
               description: the name of the property failing validation.
-    OriginId:
-      description: The origin ID of the identity.
-      type: integer
-      minimum: 1
-      format: int32
-      example: 358739
-    UnauthorizedError:
-      description: Unauthorized
+    ServerError:
+      description: Internal Server Error
       type: object
       properties:
         statusCode:
           type: integer
-          example: 401
+          example: 500
           description: HTTP status code
         error:
           type: string
-          example: Unauthorized
-          description: The authorization header is missing or the token is unauthorized
+          example: Internal Server Error
+          description: The server has an internal error and could not process the request.
         message:
           type: string
           description: Detailed error message
+    PolicyList:
+      type: array
+      items:
+        $ref: '#/components/schemas/PolicyStub'
     PolicyStub:
       type: object
       minProperties: 6
@@ -283,74 +236,58 @@ components:
           type: boolean
           example: true
           description: Specified whether the policy is the default.
-    PolicyList:
-      type: array
-      items:
-        $ref: '#/components/schemas/PolicyStub'
-  parameters:
-    networkDeviceOriginIdParam:
-      name: originId
-      in: path
+    NotFoundError:
+      description: Not Found
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+          description: HTTP status code
+        error:
+          type: string
+          example: Not Found
+          description: A brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    ForbiddenError:
+      description: Forbidden
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+          description: HTTP status code
+        error:
+          type: string
+          example: Forbidden, Invalid authentication credentials
+          description: a brief description of the error
+        message:
+          type: string
+          description: Detailed error message
+    OriginId:
       description: The origin ID of the identity.
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-        format: int32
-    policyTypeParam:
-      name: type
-      in: query
-      description: The type of the policy (`dns` or `web`).
-      required: false
-      schema:
-        default: dns
-        enum:
-        - dns
-        - web
-        type: string
-      example: web
-    paginationLimitParam:
-      name: limit
-      in: query
-      description: The number of records from the collection to return on the page.
-      required: false
-      schema:
-        default: 100
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-    policyIdParam:
-      name: policyId
-      in: path
-      description: The ID of the policy.
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-        format: int32
+      type: integer
+      minimum: 1
+      format: int32
+      example: 358739
+    UnauthorizedError:
+      description: Unauthorized
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 401
+          description: HTTP status code
+        error:
+          type: string
+          example: Unauthorized
+          description: The authorization header is missing or the token is unauthorized
+        message:
+          type: string
+          description: Detailed error message
   responses:
-    ServerErr:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ServerError'
     NotFound:
       description: Not found
       headers:
@@ -362,28 +299,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/NotFoundError'
-    Unauthorized:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UnauthorizedError'
-    InvalidRequest:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BadRequestError'
     Forbidden:
       description: Forbidden
       headers:
@@ -395,6 +310,39 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ForbiddenError'
+    InvalidRequest:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    ServerErr:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
   headers:
     Content-Type:
       schema:
@@ -407,6 +355,58 @@ components:
         pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
       description: The timestamp of the response.
       example: '2023-03-14T18:34:25Z'
+  parameters:
+    policyTypeParam:
+      name: type
+      in: query
+      description: The type of the policy (`dns` or `web`).
+      required: false
+      schema:
+        default: dns
+        enum:
+        - dns
+        - web
+        type: string
+      example: web
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
+    networkDeviceOriginIdParam:
+      name: originId
+      in: path
+      description: The origin ID of the identity.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
+    policyIdParam:
+      name: policyId
+      in: path
+      description: The ID of the policy.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
+    paginationLimitParam:
+      name: limit
+      in: query
+      description: The number of records from the collection to return on the page.
+      required: false
+      schema:
+        default: 100
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
   securitySchemes:
     oauthFlow:
       type: oauth2

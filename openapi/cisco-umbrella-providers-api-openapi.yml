@@ -1120,13 +1120,279 @@ paths:
         basePath:
           default: reports/v2
 components:
+  responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Server error
+            properties:
+              message:
+                type: string
+                description: Message for Server error
+          example:
+            message: server error
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Unauthorized request
+            properties:
+              message:
+                type: string
+                description: Message for Unauthorized request
+          example:
+            message: Unauthorized request
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Not Found
+            properties:
+              message:
+                type: string
+                description: Message for Not Found
+          example:
+            message: Not Found
+    400ErrorPutCustomerDeals:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The error that occurred for getting the list of the customer deal information.
+            properties:
+              message:
+                type: string
+          examples:
+            400NoParentOrg:
+              value:
+                message: Parent organization does not exist
+            400WrongParentOrg:
+              value:
+                message: Invalid parent organization type
+            400NoCcoId:
+              value:
+                message: No CCOID specified
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Forbidden
+            properties:
+              message:
+                type: string
+                description: Message for Forbidden
+          example:
+            message: Forbidden
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Message for Invalid request
+            properties:
+              message:
+                type: string
+                description: Message for Invalid request
+          example:
+            message: Invalid request
+    InvalidRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    ServerErr:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
   schemas:
-    streetAddress:
+    customerName:
       type: string
-      description: The street address for the customer.
+      description: The name of the customer's organization.
       minLength: 1
       maxLength: 255
-      example: One Penn Plaza
+      example: NameOfCustomer
+    packageName:
+      type: string
+      enum:
+      - Umbrella Professional
+      - Umbrella Platform
+      - Umbrella Insights
+      - Cisco Umbrella for Wireless LAN
+      - Cisco Umbrella for EDU
+      - Umbrella DNS Security Essentials
+      - Umbrella DNS Security Advantage
+      - Umbrella SIG Essentials
+      - Umbrella SIG Advantage
+      - Umbrella Not for Resale (NFR) MSP DNS Advantage
+      description: 'The name of the Umbrella package.
+
+        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
+
+        | Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `99`       | Umbrella Professional            |
+
+        | `101`      | Umbrella Platform                |
+
+        | `107`      | Umbrella Insights                |
+
+        | `171`      | Cisco Umbrella for Wireless LAN  |
+
+        | `202`      | Cisco Umbrella for EDU           |
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |
+
+        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
+
+
+        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
+      example: Umbrella SIG Advantage
+    countryCode:
+      type: string
+      description: The country code of the customer's organization.
+      minLength: 2
+      maxLength: 3
+      example: FR
+    packageIdTrialConversions:
+      type: integer
+      enum:
+      - 246
+      - 248
+      - 250
+      - 252
+      description: '| Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |'
+      example: 246
+    CustomerAddress:
+      type: object
+      description: The customer's address information.
+      required:
+      - accountId
+      - accountSiteId
+      - mappedCrPartyId
+      properties:
+        accountId:
+          type: integer
+          description: The ID of the account.
+          example: 4590
+        accountSiteId:
+          type: integer
+          description: The ID of the site for the account.
+          example: 12
+        mappedCrPartyId:
+          type: integer
+          description: The ID of the mapped CR party.
+          example: 123457
+        organizationName:
+          type: string
+          description: The name of the customer's organization.
+          example: Cisco Systems
+        streetAddress:
+          $ref: '#/components/schemas/streetAddress'
+        streetAddress2:
+          $ref: '#/components/schemas/streetAddress2'
+        city:
+          $ref: '#/components/schemas/city'
+        state:
+          $ref: '#/components/schemas/state'
+        countryCode:
+          $ref: '#/components/schemas/countryCode'
+        zipCode:
+          $ref: '#/components/schemas/zipCode'
+      example:
+        accountId: 132405632
+        accountSiteId: 104571945
+        mappedCrPartyId: 10803658
+        organizationName: cisco
+        streetAddress: 73 Rue De La Plaine
+        streetAddress2: 213 Circle Ct
+        city: San Jose
+        state: CA
+        countryCode: US
+        zipCode: '75020'
+    dealId:
+      type: string
+      description: The deal ID.
+      example: 14a
     PpovLifecycle:
       type: object
       description: The email details about lifecycle events from a customer trial.
@@ -1184,6 +1450,17 @@ components:
           noOriginDaySevenMailIdentifier: seven day mail identifer, no origin
         excludedLifecycleEmails:
         - name@acmeTech.com
+    city:
+      type: string
+      description: The name of the city where the customer's organization is located.
+      minLength: 1
+      maxLength: 255
+      example: Culver City
+    seats:
+      type: integer
+      minimum: 1
+      description: The number of users.
+      example: 50
     TrialStrength:
       type: object
       description: The number of features consumed by a customer trial.
@@ -1228,47 +1505,102 @@ components:
         identitiesCreated: 12
         hasTraffic: false
         trialStrength: '-'
-    packageIdWrite:
-      type: integer
-      enum:
-      - 171
-      - 202
-      - 246
-      - 248
-      - 250
-      - 252
-      - 312
-      description: 'The ID of the Umbrella package.
-
-        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
-
-        | Package Id | Package Name                     |
-
-        |:----------:|----------------------------------|
-
-        | `171`      | Cisco Umbrella for Wireless LAN  |
-
-        | `202`      | Cisco Umbrella for EDU           |
-
-        | `246`      | Umbrella DNS Security Essentials |
-
-        | `248`      | Umbrella DNS Security Advantage  |
-
-        | `250`      | Umbrella SIG Essentials          |
-
-        | `252`      | Umbrella SIG Advantage           |
-
-        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
-
-
-        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
-      example: 252
-    city:
+    streetAddress2:
       type: string
-      description: The name of the city where the customer's organization is located.
+      description: The second street address for the customer.
       minLength: 1
       maxLength: 255
-      example: Culver City
+      example: Two Center Way
+    organizationName:
+      type: string
+      description: The name of the customer's organization.
+      example: acmeTech
+    organizationId:
+      type: integer
+      description: The ID of the organization.
+    Package:
+      type: object
+      description: The information about an Umbrella package.
+      required:
+      - id
+      - name
+      - pkgSeatMin
+      - ppovSeatMin
+      properties:
+        id:
+          type: integer
+          description: The ID of the package.
+          example: 250
+        name:
+          type: string
+          description: The name of the package.
+          example: Umbrella DNS Security Advantage
+        pkgSeatMin:
+          type: integer
+          description: The minimum number of seats for the package.
+          example: 1
+        ppovSeatMin:
+          type: integer
+          description: The minimum number of seats for the customer trial.
+          example: 20
+      example:
+        id: 12345565
+        name: Umbrella DNS Security Advantage
+        pkgSeatMin: 1
+        ppovSeatMin: 1
+    CustomerDeal:
+      type: object
+      description: The information about a customer deal.
+      required:
+      - dealId
+      - endCustomer
+      - majorLineItems
+      - canStampDeal
+      - trialIds
+      properties:
+        dealId:
+          $ref: '#/components/schemas/dealId'
+        endCustomer:
+          type: string
+          description: The type of customer.
+          example: ''
+        majorLineItems:
+          type: array
+          description: The list of essential components of the deal.
+          items:
+            type: object
+            properties:
+              objectId:
+                type: integer
+                description: The ID of the object.
+                example: 123545
+              sourceAppRefId:
+                type: string
+                description: The source application reference ID.
+                example: abbfyue458cjd
+          example:
+          - objectId: 123455
+            sourceAppRefId: asdfkljdkjfklj
+        canStampDeal:
+          type: boolean
+          description: Specify whether to approve the deal.
+          example: false
+        trialIds:
+          type: array
+          description: The list of trial IDs.
+          items:
+            type: string
+          example:
+          - abbfyue458cjd
+      example:
+        dealId: '1233456'
+        endCustomer: ''
+        majorLineItems:
+        - objectId: 12345345
+          sourceAppRefId: abdjlkjfkj22
+        canStampDeal: true
+        trialIds:
+        - abbfyue458cjd
     Customer:
       type: object
       description: The properties of a customer.
@@ -1364,220 +1696,15 @@ components:
         state: CA
         countryCode: US
         zipCode: 01904
-    customerId:
-      type: integer
-      description: The ID for the customer.
-      example: 1233
-    zipCode:
-      type: string
-      description: The zip code of the customer's organization.
-      minLength: 1
-      example: 08105
-    dealId:
-      type: string
-      description: The deal ID.
-      example: 14a
-    customerName:
-      type: string
-      description: The name of the customer's organization.
-      minLength: 1
-      maxLength: 255
-      example: NameOfCustomer
-    CustomerDeal:
-      type: object
-      description: The information about a customer deal.
-      required:
-      - dealId
-      - endCustomer
-      - majorLineItems
-      - canStampDeal
-      - trialIds
-      properties:
-        dealId:
-          $ref: '#/components/schemas/dealId'
-        endCustomer:
-          type: string
-          description: The type of customer.
-          example: ''
-        majorLineItems:
-          type: array
-          description: The list of essential components of the deal.
-          items:
-            type: object
-            properties:
-              objectId:
-                type: integer
-                description: The ID of the object.
-                example: 123545
-              sourceAppRefId:
-                type: string
-                description: The source application reference ID.
-                example: abbfyue458cjd
-          example:
-          - objectId: 123455
-            sourceAppRefId: asdfkljdkjfklj
-        canStampDeal:
-          type: boolean
-          description: Specify whether to approve the deal.
-          example: false
-        trialIds:
-          type: array
-          description: The list of trial IDs.
-          items:
-            type: string
-          example:
-          - abbfyue458cjd
+    adminEmails:
+      type: array
+      description: The list of the administrator email addresses.
+      items:
+        type: string
+        format: email
+        example: name@bbctech.com
       example:
-        dealId: '1233456'
-        endCustomer: ''
-        majorLineItems:
-        - objectId: 12345345
-          sourceAppRefId: abdjlkjfkj22
-        canStampDeal: true
-        trialIds:
-        - abbfyue458cjd
-    packageId:
-      type: integer
-      enum:
-      - 99
-      - 101
-      - 107
-      - 171
-      - 202
-      - 246
-      - 248
-      - 250
-      - 252
-      - 312
-      description: 'The ID of the Umbrella package.
-
-        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
-
-        | Package Id | Package Name                     |
-
-        |:----------:|----------------------------------|
-
-        | `99`       | Umbrella Professional            |
-
-        | `101`      | Umbrella Platform                |
-
-        | `107`      | Umbrella Insights                |
-
-        | `171`      | Cisco Umbrella for Wireless LAN  |
-
-        | `202`      | Cisco Umbrella for EDU           |
-
-        | `246`      | Umbrella DNS Security Essentials |
-
-        | `248`      | Umbrella DNS Security Advantage  |
-
-        | `250`      | Umbrella SIG Essentials          |
-
-        | `252`      | Umbrella SIG Advantage           |
-
-        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
-
-
-        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
-      example: 252
-    countryCode:
-      type: string
-      description: The country code of the customer's organization.
-      minLength: 2
-      maxLength: 3
-      example: FR
-    CustomerAddress:
-      type: object
-      description: The customer's address information.
-      required:
-      - accountId
-      - accountSiteId
-      - mappedCrPartyId
-      properties:
-        accountId:
-          type: integer
-          description: The ID of the account.
-          example: 4590
-        accountSiteId:
-          type: integer
-          description: The ID of the site for the account.
-          example: 12
-        mappedCrPartyId:
-          type: integer
-          description: The ID of the mapped CR party.
-          example: 123457
-        organizationName:
-          type: string
-          description: The name of the customer's organization.
-          example: Cisco Systems
-        streetAddress:
-          $ref: '#/components/schemas/streetAddress'
-        streetAddress2:
-          $ref: '#/components/schemas/streetAddress2'
-        city:
-          $ref: '#/components/schemas/city'
-        state:
-          $ref: '#/components/schemas/state'
-        countryCode:
-          $ref: '#/components/schemas/countryCode'
-        zipCode:
-          $ref: '#/components/schemas/zipCode'
-      example:
-        accountId: 132405632
-        accountSiteId: 104571945
-        mappedCrPartyId: 10803658
-        organizationName: cisco
-        streetAddress: 73 Rue De La Plaine
-        streetAddress2: 213 Circle Ct
-        city: San Jose
-        state: CA
-        countryCode: US
-        zipCode: '75020'
-    AccessRequest:
-      type: object
-      description: The information about the organization's access request.
-      required:
-      - id
-      - organizationId
-      - state
-      - organizationName
-      properties:
-        id:
-          type: integer
-          description: The ID of the organization's access request.
-          example: 1234
-        organizationId:
-          type: integer
-          description: The ID of the organization that created the access request.
-        state:
-          type: string
-          description: The current state of the access request.
-          enum:
-          - approved
-          - denied
-          - pending
-          example: approved
-        displayAt:
-          type: integer
-          description: The time when the logo was created. Specify the time in milliseconds.
-          example: 1234567891
-        createdAt:
-          type: integer
-          description: The time when the logo was created. Specify the time in milliseconds.
-          example: 1234567891
-        modifiedAt:
-          type: integer
-          description: The time when the logo was last modified. Specify the time in milliseconds.
-          example: 1234567891
-        organizationName:
-          type: string
-          description: The name of the organization that created the access request.
-          example: acmeTech
-      example:
-        id: 1234
-        organizationId: 139973
-        state: approved
-        organizationName: acmeTech
+      - name@acmetech.com
     GetCustomer:
       type: object
       description: The information about the customer.
@@ -1745,110 +1872,20 @@ components:
         trialPeriod: Aug 18, 2022 - Oct 15, 2023
         trialExtensionCount: 3
         trialExtendedDays: 10
-    state:
-      type: string
-      description: The name of the customer's state.
-      minLength: 1
-      maxLength: 50
-      example: NY
-    Package:
-      type: object
-      description: The information about an Umbrella package.
-      required:
-      - id
-      - name
-      - pkgSeatMin
-      - ppovSeatMin
-      properties:
-        id:
-          type: integer
-          description: The ID of the package.
-          example: 250
-        name:
-          type: string
-          description: The name of the package.
-          example: Umbrella DNS Security Advantage
-        pkgSeatMin:
-          type: integer
-          description: The minimum number of seats for the package.
-          example: 1
-        ppovSeatMin:
-          type: integer
-          description: The minimum number of seats for the customer trial.
-          example: 20
-      example:
-        id: 12345565
-        name: Umbrella DNS Security Advantage
-        pkgSeatMin: 1
-        ppovSeatMin: 1
-    streetAddress2:
-      type: string
-      description: The second street address for the customer.
-      minLength: 1
-      maxLength: 255
-      example: Two Center Way
-    ccwDealOwnerEmails:
-      type: array
-      description: The list emails for the CCW deal owner.
-      items:
-        type: string
-        format: email
-      example:
-      - dealowner@acmetech.com
-    packageIdTrialConversions:
+    packageId:
       type: integer
       enum:
+      - 99
+      - 101
+      - 107
+      - 171
+      - 202
       - 246
       - 248
       - 250
       - 252
-      description: '| Package Id | Package Name                     |
-
-        |:----------:|----------------------------------|
-
-        | `246`      | Umbrella DNS Security Essentials |
-
-        | `248`      | Umbrella DNS Security Advantage  |
-
-        | `250`      | Umbrella SIG Essentials          |
-
-        | `252`      | Umbrella SIG Advantage           |'
-      example: 246
-    organizationName:
-      type: string
-      description: The name of the customer's organization.
-      example: acmeTech
-    seats:
-      type: integer
-      minimum: 1
-      description: The number of users.
-      example: 50
-    adminEmails:
-      type: array
-      description: The list of the administrator email addresses.
-      items:
-        type: string
-        format: email
-        example: name@bbctech.com
-      example:
-      - name@acmetech.com
-    organizationId:
-      type: integer
-      description: The ID of the organization.
-    packageName:
-      type: string
-      enum:
-      - Umbrella Professional
-      - Umbrella Platform
-      - Umbrella Insights
-      - Cisco Umbrella for Wireless LAN
-      - Cisco Umbrella for EDU
-      - Umbrella DNS Security Essentials
-      - Umbrella DNS Security Advantage
-      - Umbrella SIG Essentials
-      - Umbrella SIG Advantage
-      - Umbrella Not for Resale (NFR) MSP DNS Advantage
-      description: 'The name of the Umbrella package.
+      - 312
+      description: 'The ID of the Umbrella package.
 
         To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
 
@@ -1878,7 +1915,132 @@ components:
 
 
         Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
-      example: Umbrella SIG Advantage
+      example: 252
+    ccwDealOwnerEmails:
+      type: array
+      description: The list emails for the CCW deal owner.
+      items:
+        type: string
+        format: email
+      example:
+      - dealowner@acmetech.com
+    state:
+      type: string
+      description: The name of the customer's state.
+      minLength: 1
+      maxLength: 50
+      example: NY
+    customerId:
+      type: integer
+      description: The ID for the customer.
+      example: 1233
+    zipCode:
+      type: string
+      description: The zip code of the customer's organization.
+      minLength: 1
+      example: 08105
+    packageIdWrite:
+      type: integer
+      enum:
+      - 171
+      - 202
+      - 246
+      - 248
+      - 250
+      - 252
+      - 312
+      description: 'The ID of the Umbrella package.
+
+        To create or update a customer with either the SIG Essentials or SIG Advantage package, you must have a license for the selected package.
+
+        | Package Id | Package Name                     |
+
+        |:----------:|----------------------------------|
+
+        | `171`      | Cisco Umbrella for Wireless LAN  |
+
+        | `202`      | Cisco Umbrella for EDU           |
+
+        | `246`      | Umbrella DNS Security Essentials |
+
+        | `248`      | Umbrella DNS Security Advantage  |
+
+        | `250`      | Umbrella SIG Essentials          |
+
+        | `252`      | Umbrella SIG Advantage           |
+
+        | `312`      | Umbrella Not for Resale (NFR) MSP DNS Advantage |
+
+
+        Note: The Umbrella NFR MSP DNS Advantage package (`312`) is only available in the Umbrella Secure MSP console.'
+      example: 252
+    streetAddress:
+      type: string
+      description: The street address for the customer.
+      minLength: 1
+      maxLength: 255
+      example: One Penn Plaza
+    AccessRequest:
+      type: object
+      description: The information about the organization's access request.
+      required:
+      - id
+      - organizationId
+      - state
+      - organizationName
+      properties:
+        id:
+          type: integer
+          description: The ID of the organization's access request.
+          example: 1234
+        organizationId:
+          type: integer
+          description: The ID of the organization that created the access request.
+        state:
+          type: string
+          description: The current state of the access request.
+          enum:
+          - approved
+          - denied
+          - pending
+          example: approved
+        displayAt:
+          type: integer
+          description: The time when the logo was created. Specify the time in milliseconds.
+          example: 1234567891
+        createdAt:
+          type: integer
+          description: The time when the logo was created. Specify the time in milliseconds.
+          example: 1234567891
+        modifiedAt:
+          type: integer
+          description: The time when the logo was last modified. Specify the time in milliseconds.
+          example: 1234567891
+        organizationName:
+          type: string
+          description: The name of the organization that created the access request.
+          example: acmeTech
+      example:
+        id: 1234
+        organizationId: 139973
+        state: approved
+        organizationName: acmeTech
+    ServerError:
+      description: Error- This request could not be processed by the server
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+          description: the http error code returned
+        error:
+          type: string
+          example: Internal Server Error
+          description: a brief description of the error
+        txId:
+          type: string
+          example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+          description: a unique hex number that can be used for debugging
     UnauthorizedError:
       description: Unauthorized- The authorization header is missing or the token is unauthorized
       type: object
@@ -1894,50 +2056,107 @@ components:
         message:
           type: string
           description: Detailed error message
-    PpovLifecycle_2:
+    sigQuestionnaire:
+      type: string
+      description: The SIG questionnaire
+      example: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
+
+        Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
+
+        Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+    BadRequestError:
+      description: Validation Error
       type: object
-      description: The email details for a customer trial lifecycle events
       properties:
-        state:
+        statusCode:
+          type: integer
+          example: 400
+          description: HTTP status code
+        error:
           type: string
-          description: The current state of the customer trial
-        date:
+          example: Validation Error
+          description: A brief description of the error
+        message:
           type: string
-          format: date
-          description: ''
-          example: '2021-09-28'
-        enabled:
-          type: boolean
-          description: Specify whether lifecycle emails are enabled
-        lastSentDate:
-          type: string
-          format: date
-          description: Specify last lifecycle email sent date
-          example: '2021-10-05'
-        mailIdentifiers:
+          description: Detailed error message
+        validationErrors:
           type: object
-          description: The information about the email identifiers for the customer
           properties:
-            noLoginDayFourMailIdentifier:
+            someProperty:
               type: string
-              description: The email for the customer that did not log in for four days
-              example: name@noorgin.acmetech.com
-            noOriginDayThreeMailIdentifier:
-              type: string
-              description: The email for the customer that has not set up an origin for three days
-              example: name@noorgin.acmetech.com
-            noOriginDaySevenMailIdentifier:
-              type: string
-              description: The email for the customer that has not set up an origin for seven days
-              example: name@noorgin.acmetech.com
-        excludedLifecycleEmails:
-          type: array
-          items:
-            type: string
-          description: The emails excluded for the lifecycle of the customer
-          example:
-          - name1@acmeTech.com
-          - name2@acmetech.com
+              example: must not be empty
+              description: the name of the property failing validation.
+    SecurityReportsRequest:
+      type: object
+      required:
+      - status
+      - data
+      properties:
+        data:
+          type: object
+          description: The data for the request to access the report
+          properties:
+            id:
+              type: integer
+              description: The ID of the request to generate the report
+            header:
+              type: object
+              description: The status information about the report
+              properties:
+                date:
+                  type: integer
+                  description: The date of the generated report specified in milliseconds
+                status:
+                  type: string
+                  description: The status of the report generation
+            body:
+              type: object
+              description: The details of the report
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address used to send the report
+                end_date:
+                  type: string
+                  format: date
+                  description: The report includes data that appears before the specified date
+                  example: '2022-07-13'
+                organization_id:
+                  type: string
+                  description: The ID of the customer's organization
+                organization_name:
+                  type: string
+                  description: The name of the customer's organization
+                origin_id:
+                  type: string
+                  description: The origin ID
+                start_date:
+                  type: string
+                  format: date
+                  description: The report includes data that appears after the specified date
+                  example: '2022-06-13'
+        status:
+          type: string
+          description: The status of the report generation request
+        task:
+          type: string
+          description: The task for the report generation
+      example:
+        data:
+          body:
+            email: user@cisco.com
+            end_date: '2022-09-09'
+            organization_id: '7970851'
+            organization_name: Abc Prime Product
+            origin_id: '585256703'
+            start_date: '2022-09-01'
+          header:
+            date: 1663674125
+            status: pending
+          id: 2683
+        status: ok
+        task: enqueue-task
     DownloadReport:
       type: object
       required:
@@ -2093,22 +2312,50 @@ components:
           Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
 
           Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
-    ServerError:
-      description: Error- This request could not be processed by the server
+    PpovLifecycle_2:
       type: object
+      description: The email details for a customer trial lifecycle events
       properties:
-        statusCode:
-          type: integer
-          example: 500
-          description: the http error code returned
-        error:
+        state:
           type: string
-          example: Internal Server Error
-          description: a brief description of the error
-        txId:
+          description: The current state of the customer trial
+        date:
           type: string
-          example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
-          description: a unique hex number that can be used for debugging
+          format: date
+          description: ''
+          example: '2021-09-28'
+        enabled:
+          type: boolean
+          description: Specify whether lifecycle emails are enabled
+        lastSentDate:
+          type: string
+          format: date
+          description: Specify last lifecycle email sent date
+          example: '2021-10-05'
+        mailIdentifiers:
+          type: object
+          description: The information about the email identifiers for the customer
+          properties:
+            noLoginDayFourMailIdentifier:
+              type: string
+              description: The email for the customer that did not log in for four days
+              example: name@noorgin.acmetech.com
+            noOriginDayThreeMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for three days
+              example: name@noorgin.acmetech.com
+            noOriginDaySevenMailIdentifier:
+              type: string
+              description: The email for the customer that has not set up an origin for seven days
+              example: name@noorgin.acmetech.com
+        excludedLifecycleEmails:
+          type: array
+          items:
+            type: string
+          description: The emails excluded for the lifecycle of the customer
+          example:
+          - name1@acmeTech.com
+          - name2@acmetech.com
     NotFoundError:
       description: Not Found- A resource specified in the URL was not found
       type: object
@@ -2124,99 +2371,21 @@ components:
         message:
           type: string
           description: Detailed error message
-    SecurityReportsRequest:
-      type: object
-      required:
-      - status
-      - data
-      properties:
-        data:
-          type: object
-          description: The data for the request to access the report
-          properties:
-            id:
-              type: integer
-              description: The ID of the request to generate the report
-            header:
-              type: object
-              description: The status information about the report
-              properties:
-                date:
-                  type: integer
-                  description: The date of the generated report specified in milliseconds
-                status:
-                  type: string
-                  description: The status of the report generation
-            body:
-              type: object
-              description: The details of the report
-              properties:
-                email:
-                  type: string
-                  format: email
-                  description: The email address used to send the report
-                end_date:
-                  type: string
-                  format: date
-                  description: The report includes data that appears before the specified date
-                  example: '2022-07-13'
-                organization_id:
-                  type: string
-                  description: The ID of the customer's organization
-                organization_name:
-                  type: string
-                  description: The name of the customer's organization
-                origin_id:
-                  type: string
-                  description: The origin ID
-                start_date:
-                  type: string
-                  format: date
-                  description: The report includes data that appears after the specified date
-                  example: '2022-06-13'
-        status:
-          type: string
-          description: The status of the report generation request
-        task:
-          type: string
-          description: The task for the report generation
-      example:
-        data:
-          body:
-            email: user@cisco.com
-            end_date: '2022-09-09'
-            organization_id: '7970851'
-            organization_name: Abc Prime Product
-            origin_id: '585256703'
-            start_date: '2022-09-01'
-          header:
-            date: 1663674125
-            status: pending
-          id: 2683
-        status: ok
-        task: enqueue-task
-    BadRequestError:
-      description: Validation Error
+    ForbiddenError:
+      description: Forbidden- The token is invalid
       type: object
       properties:
         statusCode:
           type: integer
-          example: 400
+          example: 403
           description: HTTP status code
         error:
           type: string
-          example: Validation Error
+          example: Forbidden, Invalid authentication credentials
           description: A brief description of the error
         message:
           type: string
           description: Detailed error message
-        validationErrors:
-          type: object
-          properties:
-            someProperty:
-              type: string
-              example: must not be empty
-              description: the name of the property failing validation.
     ProvidersConsole:
       type: object
       properties:
@@ -2263,30 +2432,129 @@ components:
         status: enrolled
         rebillAt: '2022-06-13T16:07:07.222Z'
         expiresAt: '2022-06-13T16:07:07.222Z'
-    ForbiddenError:
-      description: Forbidden- The token is invalid
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 403
-          description: HTTP status code
-        error:
-          type: string
-          example: Forbidden, Invalid authentication credentials
-          description: A brief description of the error
-        message:
-          type: string
-          description: Detailed error message
-    sigQuestionnaire:
-      type: string
-      description: The SIG questionnaire
-      example: '''IPSec Tunnel:\n\tLocations:1\n\tLocation:\t\t\tPeak Throughput:\n\nProxy Chaining:\n\t
-
-        Proxy IPAddress:\n\tProxy Vendor: \n\tProxy Bandwidth: \n\tProxy Seats: \n\tProxy Type: \n\n
-
-        Pac Files: false\n\nAny Connect: \n\nFeature Needs:'''
+  parameters:
+    customerIdParam:
+      name: customerId
+      in: path
+      description: The ID of the customer.
+      required: true
+      schema:
+        type: integer
+        format: int32
+    limitParam:
+      name: limit
+      in: query
+      description: The number of records to return from the collection on a page.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+      example: 50
+    dealIdParam:
+      name: dealId
+      in: path
+      description: The deal ID.
+      required: true
+      schema:
+        type: string
+      example: 1235a
+    accessRequestIdParam:
+      name: accessRequestId
+      in: path
+      description: The access request ID.
+      required: true
+      schema:
+        type: integer
+    pageParam:
+      name: page
+      in: query
+      description: A number of a page in the collection.
+      schema:
+        type: integer
+        default: 1
+        format: int32
+        minimum: 1
+      required: false
+      example: 2
+    ccoIdParam:
+      name: ccoId
+      in: query
+      description: The ID of the user querying the deal ID.
+      required: true
+      schema:
+        type: integer
+        format: int32
+      example: 12329433
+    outputFormatParam:
+      name: outputFormat
+      in: query
+      description: 'The content type of the security report. Valid values are: ''cvs'' or ''json''.'
+      required: false
+      schema:
+        default: json
+        type: string
+        enum:
+        - json
+        - csv
+    customerIdParam_2:
+      name: customerId
+      description: The customer ID
+      schema:
+        type: integer
+      in: path
+      required: true
   requestBodies:
+    CustomerUpdateRequestBody:
+      description: Update the customer information.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerName:
+                $ref: '#/components/schemas/customerName'
+              seats:
+                $ref: '#/components/schemas/seats'
+              streetAddress:
+                $ref: '#/components/schemas/streetAddress'
+              streetAddress2:
+                $ref: '#/components/schemas/streetAddress2'
+              city:
+                $ref: '#/components/schemas/city'
+              state:
+                $ref: '#/components/schemas/state'
+              countryCode:
+                $ref: '#/components/schemas/countryCode'
+              zipCode:
+                $ref: '#/components/schemas/zipCode'
+              packageId:
+                $ref: '#/components/schemas/packageIdWrite'
+              dealId:
+                $ref: '#/components/schemas/dealId'
+              adminEmails:
+                $ref: '#/components/schemas/adminEmails'
+              ccwDealOwnerEmails:
+                $ref: '#/components/schemas/ccwDealOwnerEmails'
+            required:
+            - customerName
+            - seats
+            - streetAddress
+            - city
+            - countryCode
+            - packageId
+            - adminEmails
+          example:
+            customerName: Cisco Systems
+            seats: 1000
+            streetAddress: 123 Customer Way
+            city: San Jose
+            state: CA
+            countryCode: 1a
+            packageId: 250
+            adminEmails:
+            - company@cisco.com
     CustomerCreateRequestBody:
       description: Create a new customer with the provided information.
       content:
@@ -2382,274 +2650,6 @@ components:
             packageId: 250
             adminEmails:
             - company@cisco.com
-    CustomerUpdateRequestBody:
-      description: Update the customer information.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              customerName:
-                $ref: '#/components/schemas/customerName'
-              seats:
-                $ref: '#/components/schemas/seats'
-              streetAddress:
-                $ref: '#/components/schemas/streetAddress'
-              streetAddress2:
-                $ref: '#/components/schemas/streetAddress2'
-              city:
-                $ref: '#/components/schemas/city'
-              state:
-                $ref: '#/components/schemas/state'
-              countryCode:
-                $ref: '#/components/schemas/countryCode'
-              zipCode:
-                $ref: '#/components/schemas/zipCode'
-              packageId:
-                $ref: '#/components/schemas/packageIdWrite'
-              dealId:
-                $ref: '#/components/schemas/dealId'
-              adminEmails:
-                $ref: '#/components/schemas/adminEmails'
-              ccwDealOwnerEmails:
-                $ref: '#/components/schemas/ccwDealOwnerEmails'
-            required:
-            - customerName
-            - seats
-            - streetAddress
-            - city
-            - countryCode
-            - packageId
-            - adminEmails
-          example:
-            customerName: Cisco Systems
-            seats: 1000
-            streetAddress: 123 Customer Way
-            city: San Jose
-            state: CA
-            countryCode: 1a
-            packageId: 250
-            adminEmails:
-            - company@cisco.com
-  parameters:
-    accessRequestIdParam:
-      name: accessRequestId
-      in: path
-      description: The access request ID.
-      required: true
-      schema:
-        type: integer
-    pageParam:
-      name: page
-      in: query
-      description: A number of a page in the collection.
-      schema:
-        type: integer
-        default: 1
-        format: int32
-        minimum: 1
-      required: false
-      example: 2
-    limitParam:
-      name: limit
-      in: query
-      description: The number of records to return from the collection on a page.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-      example: 50
-    ccoIdParam:
-      name: ccoId
-      in: query
-      description: The ID of the user querying the deal ID.
-      required: true
-      schema:
-        type: integer
-        format: int32
-      example: 12329433
-    dealIdParam:
-      name: dealId
-      in: path
-      description: The deal ID.
-      required: true
-      schema:
-        type: string
-      example: 1235a
-    customerIdParam:
-      name: customerId
-      in: path
-      description: The ID of the customer.
-      required: true
-      schema:
-        type: integer
-        format: int32
-    customerIdParam_2:
-      name: customerId
-      description: The customer ID
-      schema:
-        type: integer
-      in: path
-      required: true
-    outputFormatParam:
-      name: outputFormat
-      in: query
-      description: 'The content type of the security report. Valid values are: ''cvs'' or ''json''.'
-      required: false
-      schema:
-        default: json
-        type: string
-        enum:
-        - json
-        - csv
-  responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: Message for Forbidden
-            properties:
-              message:
-                type: string
-                description: Message for Forbidden
-          example:
-            message: Forbidden
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: Unauthorized request
-            properties:
-              message:
-                type: string
-                description: Message for Unauthorized request
-          example:
-            message: Unauthorized request
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: Message for Server error
-            properties:
-              message:
-                type: string
-                description: Message for Server error
-          example:
-            message: server error
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: Message for Invalid request
-            properties:
-              message:
-                type: string
-                description: Message for Invalid request
-          example:
-            message: Invalid request
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: Message for Not Found
-            properties:
-              message:
-                type: string
-                description: Message for Not Found
-          example:
-            message: Not Found
-    400ErrorPutCustomerDeals:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The error that occurred for getting the list of the customer deal information.
-            properties:
-              message:
-                type: string
-          examples:
-            400NoParentOrg:
-              value:
-                message: Parent organization does not exist
-            400WrongParentOrg:
-              value:
-                message: Invalid parent organization type
-            400NoCcoId:
-              value:
-                message: No CCOID specified
-    ServerErr:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ServerError'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFoundError'
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UnauthorizedError'
-    InvalidRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BadRequestError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ForbiddenError'
   headers:
     Content-Type:
       schema:

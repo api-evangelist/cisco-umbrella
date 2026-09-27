@@ -413,68 +413,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   schemas:
-    InternalNetworkObject:
-      type: object
-      description: The properties of the internal network.
-      properties:
-        originId:
-          type: integer
-          description: The origin ID of the internal network.
-        name:
-          type: string
-          description: The name of the internal network.
-        ipAddress:
-          type: string
-          description: The IPv4 address of the internal network.
-        prefixLength:
-          type: integer
-          description: 'The prefix length of the internal network.
-
-            The prefix length is greater than 8 and no more than 32.'
-          minimum: 8
-          maximum: 32
-        siteName:
-          type: string
-          description: The name of the site associated with the internal network.
-        siteId:
-          type: integer
-          description: The ID of the site associated with the internal network.
-        networkName:
-          type: string
-          description: The name of the network associated with the internal network.
-        networkId:
-          type: integer
-          description: The ID of the network associated with the internal network.
-        tunnelName:
-          type: string
-          description: The name of the tunnel associated with the internal network.
-        tunnelId:
-          type: integer
-          description: The ID of the tunnel associated with the internal network.
-        createdAt:
-          type: string
-          format: date-time
-          description: The date and time (ISO8601 timestamp) when the internal network was created.
-          example: '2018-06-13T16:07:07.222Z'
-        modifiedAt:
-          type: string
-          format: date-time
-          description: The date and time (ISO8601 timestamp) when the internal network was modified.
-          example: '2018-06-13T16:07:07.222Z'
-      required:
-      - originId
-      - name
-      - ipAddress
-      - prefixLength
-      example:
-        originId: 1234
-        name: internal network label
-        ipAddress: An IPv4 address
-        prefixLength: 24
-        siteName: Site name
-        siteId: 2
-        createdAt: '2020-03-09T22:18:26.625Z'
-        modifiedAt: '2020-03-09T22:18:26.625Z'
     PolicyObject:
       type: object
       readOnly: true
@@ -537,30 +475,81 @@ components:
         createdAt: '2020-03-09T22:18:26.625Z'
         modifiedAt: '2020-03-09T22:18:26.625Z'
         uri: The resource URI
+    InternalNetworkObject:
+      type: object
+      description: The properties of the internal network.
+      properties:
+        originId:
+          type: integer
+          description: The origin ID of the internal network.
+        name:
+          type: string
+          description: The name of the internal network.
+        ipAddress:
+          type: string
+          description: The IPv4 address of the internal network.
+        prefixLength:
+          type: integer
+          description: 'The prefix length of the internal network.
+
+            The prefix length is greater than 8 and no more than 32.'
+          minimum: 8
+          maximum: 32
+        siteName:
+          type: string
+          description: The name of the site associated with the internal network.
+        siteId:
+          type: integer
+          description: The ID of the site associated with the internal network.
+        networkName:
+          type: string
+          description: The name of the network associated with the internal network.
+        networkId:
+          type: integer
+          description: The ID of the network associated with the internal network.
+        tunnelName:
+          type: string
+          description: The name of the tunnel associated with the internal network.
+        tunnelId:
+          type: integer
+          description: The ID of the tunnel associated with the internal network.
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time (ISO8601 timestamp) when the internal network was created.
+          example: '2018-06-13T16:07:07.222Z'
+        modifiedAt:
+          type: string
+          format: date-time
+          description: The date and time (ISO8601 timestamp) when the internal network was modified.
+          example: '2018-06-13T16:07:07.222Z'
+      required:
+      - originId
+      - name
+      - ipAddress
+      - prefixLength
+      example:
+        originId: 1234
+        name: internal network label
+        ipAddress: An IPv4 address
+        prefixLength: 24
+        siteName: Site name
+        siteId: 2
+        createdAt: '2020-03-09T22:18:26.625Z'
+        modifiedAt: '2020-03-09T22:18:26.625Z'
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   responses:
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 404
-                description: HTTP status code
-              error:
-                type: string
-                example: Not Found
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
     403Error:
       description: Forbidden
       headers:
@@ -580,52 +569,6 @@ components:
               error:
                 type: string
                 example: Forbidden
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 400
-                description: HTTP status code
-              error:
-                type: string
-                example: Validation Error
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 401
-                description: HTTP status code
-              error:
-                type: string
-                example: Validation error
                 description: A brief description of the error
               message:
                 type: string
@@ -653,7 +596,86 @@ components:
               message:
                 type: string
                 description: Detailed error message
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation Error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+                description: HTTP status code
+              error:
+                type: string
+                example: Not Found
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
   parameters:
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
     paginationLimitParam:
       name: limit
       in: query
@@ -665,28 +687,6 @@ components:
         format: int32
         minimum: 1
         maximum: 100
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
   securitySchemes:
     oauthFlow:
       type: oauth2

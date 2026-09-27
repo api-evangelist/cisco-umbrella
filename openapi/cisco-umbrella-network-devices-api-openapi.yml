@@ -286,37 +286,7 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    policyTypeParam:
-      name: type
-      in: query
-      description: The type of the policy (`dns` or `web`).
-      required: false
-      schema:
-        default: dns
-        enum:
-        - dns
-        - web
-        type: string
-      example: dns
-    networkDeviceOriginIdParam:
-      name: originId
-      in: path
-      description: The origin ID of the network device.
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-        format: int32
   schemas:
-    Name:
-      type: string
-      example: label1
-      maxLength: 50
-      minLength: 1
-      description: 'The name of the device. The name is a sequence of characters with a length from 1 through 50.
-
-        The name must be unique in your organization.'
     NetworkDeviceEntityList:
       type: array
       description: The list of networks devices.
@@ -408,21 +378,6 @@ components:
           type: string
           description: A text tag that describes the device or this origin, which is assigned to the device. Provide a tag that is unique to your organization.
           maxLength: 50
-    OriginPolicyAssociationList:
-      type: array
-      description: The list of policies, which are associated with the network device.
-      items:
-        $ref: '#/components/schemas/OriginPolicyAssociation'
-    NetworkDevicePatch:
-      type: object
-      required:
-      - name
-      description: Update the network device information.
-      properties:
-        name:
-          $ref: '#/components/schemas/Name'
-      example:
-        name: MyDeviceName
     OriginPolicyAssociation:
       type: object
       description: The policy that is associated with a network device.
@@ -462,30 +417,42 @@ components:
           format: date-time
           example: '2021-10-02T20:00:00Z'
           description: The time when the policy was created. Specify an ISO 8601-formatted timestamp.
+    OriginPolicyAssociationList:
+      type: array
+      description: The list of policies, which are associated with the network device.
+      items:
+        $ref: '#/components/schemas/OriginPolicyAssociation'
+    NetworkDevicePatch:
+      type: object
+      required:
+      - name
+      description: Update the network device information.
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+      example:
+        name: MyDeviceName
+    Name:
+      type: string
+      example: label1
+      maxLength: 50
+      minLength: 1
+      description: 'The name of the device. The name is a sequence of characters with a length from 1 through 50.
+
+        The name must be unique in your organization.'
+  headers:
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
   responses:
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 404
-                description: HTTP status code
-              error:
-                type: string
-                example: Not Found
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
     403Error:
       description: Forbidden
       headers:
@@ -505,52 +472,6 @@ components:
               error:
                 type: string
                 example: Forbidden
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 400
-                description: HTTP status code
-              error:
-                type: string
-                example: Validation Error
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 401
-                description: HTTP status code
-              error:
-                type: string
-                example: Validation error
                 description: A brief description of the error
               message:
                 type: string
@@ -578,18 +499,97 @@ components:
               message:
                 type: string
                 description: Detailed error message
-  headers:
-    Content-Type:
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation Error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+                description: HTTP status code
+              error:
+                type: string
+                example: Not Found
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+  parameters:
+    policyTypeParam:
+      name: type
+      in: query
+      description: The type of the policy (`dns` or `web`).
+      required: false
       schema:
+        default: dns
+        enum:
+        - dns
+        - web
         type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
+      example: dns
+    networkDeviceOriginIdParam:
+      name: originId
+      in: path
+      description: The origin ID of the network device.
+      required: true
       schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
+        type: integer
+        minimum: 1
+        format: int32
   securitySchemes:
     oauthFlow:
       type: oauth2

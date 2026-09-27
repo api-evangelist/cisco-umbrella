@@ -89,50 +89,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Bad Request
     401Error:
       description: Unauthorized
       content:
@@ -144,20 +100,74 @@ components:
                 type: string
             example:
               message: Unauthorized
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
   schemas:
-    IdentityType:
+    ProviderDeploymentStatus:
       type: object
-      description: The information about the identity including the type.
+      description: The information about the provider's deployment status.
       properties:
-        id:
+        identitytype:
+          $ref: '#/components/schemas/IdentityType'
+        activecount:
           type: number
-          description: The ID of the origin type for the identity.
-        label:
-          type: string
-          description: The label of the origin type for the identity.
-        type:
-          type: string
-          description: The name of the origin type for the identity.
+          description: The number of active identity types.
+        count:
+          type: number
+          description: The total number of identity type.
+      required:
+      - activecount
+      - count
+      - identitytype
+      example:
+        identitytype:
+          id: 21
+          label: Sites
+          name: site
+        activecount: 1
+        count: 1
     Meta:
       type: object
       description: The properties of the metadata.
@@ -186,29 +196,6 @@ components:
             name: site
           activecount: 1
           count: 1
-    ProviderDeploymentStatus:
-      type: object
-      description: The information about the provider's deployment status.
-      properties:
-        identitytype:
-          $ref: '#/components/schemas/IdentityType'
-        activecount:
-          type: number
-          description: The number of active identity types.
-        count:
-          type: number
-          description: The total number of identity type.
-      required:
-      - activecount
-      - count
-      - identitytype
-      example:
-        identitytype:
-          id: 21
-          label: Sites
-          name: site
-        activecount: 1
-        count: 1
     Organization:
       type: object
       description: The information about the organization.
@@ -219,7 +206,36 @@ components:
         label:
           type: string
           description: The name of the organization.
+    IdentityType:
+      type: object
+      description: The information about the identity including the type.
+      properties:
+        id:
+          type: number
+          description: The ID of the origin type for the identity.
+        label:
+          type: string
+          description: The label of the origin type for the identity.
+        type:
+          type: string
+          description: The name of the origin type for the identity.
   parameters:
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
     threatsParam:
       name: threats
       in: query
@@ -236,22 +252,6 @@ components:
       schema:
         type: string
       example: '1639146300000'
-    threatTypesParam:
-      name: threattypes
-      in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
   securitySchemes:
     oauthFlow:
       type: oauth2

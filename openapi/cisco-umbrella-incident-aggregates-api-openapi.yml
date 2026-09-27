@@ -174,8 +174,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    404Error:
-      description: Not Found
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -183,8 +183,8 @@ components:
             properties:
               message:
                 type: string
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Server error
       content:
         application/json:
           schema:
@@ -201,8 +201,8 @@ components:
             properties:
               message:
                 type: string
-    401Error:
-      description: Unauthorized request
+    404Error:
+      description: Not Found
       content:
         application/json:
           schema:
@@ -210,8 +210,8 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Server error
+    401Error:
+      description: Unauthorized request
       content:
         application/json:
           schema:

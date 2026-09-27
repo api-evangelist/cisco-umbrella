@@ -468,70 +468,6 @@ components:
             - 43
             isRuleAssociated: false
             usedByRules: []
-    attributeNameInQuery:
-      type: string
-      enum:
-      - umbrella.destination.application_ids
-      description: The name of the attribute for use in the applications usage query parameter.
-      example: umbrella.destination.application_ids
-    applicationListId:
-      type: integer
-      description: The ID of the application list.
-      example: 1235
-    applicationListName:
-      type: string
-      description: The descriptive label for the application list.
-      example: Application lists on branch_1.
-    ApplicationList:
-      type: object
-      description: The properties of the application list.
-      properties:
-        applicationListName:
-          $ref: '#/components/schemas/applicationListName'
-        isDefault:
-          $ref: '#/components/schemas/isDefault'
-        applicationIds:
-          $ref: '#/components/schemas/applicationIds'
-        applicationCategoryIds:
-          $ref: '#/components/schemas/applicationCategoryIds'
-        createdAt:
-          $ref: '#/components/schemas/createdAtApplicationList'
-        modifiedAt:
-          $ref: '#/components/schemas/modifiedAtApplicationList'
-      example:
-        applicationCategoryIds: []
-        applicationIds: []
-        applicationListName: New Application List- empty
-        isDefault: false
-        createdAt: '2024-04-04T19:23:17+00:00'
-        modifiedAt: '2023-04-10T12:17:03+00:00'
-    modifiedAtApplicationList:
-      type: string
-      description: The date and time that the system updated the application list.
-      format: date-time
-      readOnly: true
-      example: '2023-11-13T21:28:54+00:00'
-    ApplicationListRequest:
-      type: object
-      description: The properties of the application list.
-      required:
-      - applicationListName
-      - applicationIds
-      - isDefault
-      properties:
-        applicationListName:
-          $ref: '#/components/schemas/applicationListName'
-        isDefault:
-          $ref: '#/components/schemas/isDefault'
-        applicationIds:
-          $ref: '#/components/schemas/applicationIds'
-        applicationCategoryIds:
-          $ref: '#/components/schemas/applicationCategoryIds'
-      example:
-        applicationCategoryIds: []
-        applicationIds: []
-        applicationListName: New Application List- empty
-        isDefault: false
     ApplicationLists:
       type: object
       description: The application lists and number of application lists in the organization.
@@ -592,26 +528,59 @@ components:
           createdAt: '2023-03-28T20:32:05+00:00'
           applicationListId: 14148
           isDefault: false
-    createdAtApplicationList:
+    applicationListName:
       type: string
-      description: The date and time that the system created the application list.
+      description: The descriptive label for the application list.
+      example: Application lists on branch_1.
+    modifiedAtApplicationList:
+      type: string
+      description: The date and time that the system updated the application list.
       format: date-time
       readOnly: true
-      example: '2021-12-13T16:07:07.222Z'
+      example: '2023-11-13T21:28:54+00:00'
     attributeValueInQuery:
       type: string
       description: The comma-separated list of the application IDs.
       items:
         type: integer
       example: 41,51
+    applicationListId:
+      type: integer
+      description: The ID of the application list.
+      example: 1235
     applicationId:
       type: integer
       description: The ID of the application.
       example: 2453454
-    isDefault:
-      type: boolean
-      description: Specifies whether the application list is the default application list.
-      example: false
+    attributeNameInQuery:
+      type: string
+      enum:
+      - umbrella.destination.application_ids
+      description: The name of the attribute for use in the applications usage query parameter.
+      example: umbrella.destination.application_ids
+    ApplicationList:
+      type: object
+      description: The properties of the application list.
+      properties:
+        applicationListName:
+          $ref: '#/components/schemas/applicationListName'
+        isDefault:
+          $ref: '#/components/schemas/isDefault'
+        applicationIds:
+          $ref: '#/components/schemas/applicationIds'
+        applicationCategoryIds:
+          $ref: '#/components/schemas/applicationCategoryIds'
+        createdAt:
+          $ref: '#/components/schemas/createdAtApplicationList'
+        modifiedAt:
+          $ref: '#/components/schemas/modifiedAtApplicationList'
+      example:
+        applicationCategoryIds: []
+        applicationIds: []
+        applicationListName: New Application List- empty
+        isDefault: false
+        createdAt: '2024-04-04T19:23:17+00:00'
+        modifiedAt: '2023-04-10T12:17:03+00:00'
     applicationCategoryIds:
       type: array
       description: The list of IDs for the application categories.
@@ -621,6 +590,37 @@ components:
         example: 1235
       example:
       - 353546
+    isDefault:
+      type: boolean
+      description: Specifies whether the application list is the default application list.
+      example: false
+    createdAtApplicationList:
+      type: string
+      description: The date and time that the system created the application list.
+      format: date-time
+      readOnly: true
+      example: '2021-12-13T16:07:07.222Z'
+    ApplicationListRequest:
+      type: object
+      description: The properties of the application list.
+      required:
+      - applicationListName
+      - applicationIds
+      - isDefault
+      properties:
+        applicationListName:
+          $ref: '#/components/schemas/applicationListName'
+        isDefault:
+          $ref: '#/components/schemas/isDefault'
+        applicationIds:
+          $ref: '#/components/schemas/applicationIds'
+        applicationCategoryIds:
+          $ref: '#/components/schemas/applicationCategoryIds'
+      example:
+        applicationCategoryIds: []
+        applicationIds: []
+        applicationListName: New Application List- empty
+        isDefault: false
     applicationIds:
       type: array
       description: The list of IDs for the applications.
@@ -629,9 +629,31 @@ components:
       example:
       - 1345
       - 4666
+  parameters:
+    attributeName:
+      name: attributeName
+      in: query
+      description: Filter on the name of the rule attribute.
+      required: true
+      schema:
+        $ref: '#/components/schemas/attributeNameInQuery'
+    attributeValue:
+      name: attributeValue
+      in: query
+      description: Filter on the value of the rule attribute.
+      required: true
+      schema:
+        $ref: '#/components/schemas/attributeValueInQuery'
+    applicationListId:
+      name: applicationListId
+      in: path
+      description: The ID of the application list.
+      required: true
+      schema:
+        type: integer
   responses:
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Internal Server Error
       content:
         application/json:
           schema:
@@ -640,7 +662,7 @@ components:
               error:
                 type: string
                 description: Error message explaining the reason for failure.
-                example: Not Authorized
+                example: Internal Server Error
               requestId:
                 type: string
                 description: The ID of the request.
@@ -670,26 +692,6 @@ components:
           $ref: '#/components/headers/Content-Type'
         Date:
           $ref: '#/components/headers/Date'
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining the reason for failure.
-                example: The organization ID is a numeric value.
-              requestId:
-                type: string
-                description: The ID of the request.
-                example: 7d318524-d5a4-4fd8-8b29-ad295b2f035b
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
     404Error:
       description: Not Found
       content:
@@ -710,8 +712,8 @@ components:
           $ref: '#/components/headers/Content-Type'
         Date:
           $ref: '#/components/headers/Date'
-    500Error:
-      description: Internal Server Error
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -720,7 +722,27 @@ components:
               error:
                 type: string
                 description: Error message explaining the reason for failure.
-                example: Internal Server Error
+                example: Not Authorized
+              requestId:
+                type: string
+                description: The ID of the request.
+                example: 7d318524-d5a4-4fd8-8b29-ad295b2f035b
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining the reason for failure.
+                example: The organization ID is a numeric value.
               requestId:
                 type: string
                 description: The ID of the request.
@@ -742,28 +764,6 @@ components:
         pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
       description: The timestamp of the response.
       example: '2023-03-14T18:34:25Z'
-  parameters:
-    attributeValue:
-      name: attributeValue
-      in: query
-      description: Filter on the value of the rule attribute.
-      required: true
-      schema:
-        $ref: '#/components/schemas/attributeValueInQuery'
-    attributeName:
-      name: attributeName
-      in: query
-      description: Filter on the name of the rule attribute.
-      required: true
-      schema:
-        $ref: '#/components/schemas/attributeNameInQuery'
-    applicationListId:
-      name: applicationListId
-      in: path
-      description: The ID of the application list.
-      required: true
-      schema:
-        type: integer
   securitySchemes:
     oauthFlow:
       type: oauth2

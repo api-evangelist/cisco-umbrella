@@ -96,8 +96,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    404Error:
-      description: Not Found
+    401Error:
+      description: Unauthorized request
       content:
         application/json:
           schema:
@@ -114,24 +114,6 @@ components:
             properties:
               message:
                 type: string
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     500Error:
       description: Server error
       content:
@@ -141,7 +123,31 @@ components:
             properties:
               message:
                 type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the vendor. For example: google.'
     Entity:
       type: object
       description: The information about the object relating to this incident.
@@ -182,12 +188,6 @@ components:
           description: Object owner's name (i.e. John Q. User).
         vendor:
           $ref: '#/components/schemas/Vendor'
-    Vendor:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'The name of the vendor. For example: google.'
     IncidentEntity:
       type: object
       description: The information about the object relating to this incident.

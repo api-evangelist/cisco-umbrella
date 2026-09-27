@@ -90,28 +90,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
     403Error:
       description: Forbidden
       content:
@@ -123,6 +101,17 @@ components:
                 type: string
             example:
               message: Forbidden
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
     400Error:
       description: Bad Request
       content:
@@ -134,6 +123,17 @@ components:
                 type: string
             example:
               message: Bad Request
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
     401Error:
       description: Unauthorized
       content:
@@ -146,15 +146,6 @@ components:
             example:
               message: Unauthorized
   parameters:
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
     filterNoisyDomainsParam:
       name: filternoisydomains
       in: query
@@ -162,6 +153,22 @@ components:
       schema:
         type: boolean
       example: true
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
     threatsParam:
       name: threats
       in: query
@@ -178,48 +185,37 @@ components:
       schema:
         type: string
       example: '1639146300000'
-    threatTypesParam:
-      name: threattypes
+    limitParam:
+      name: limit
       in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
+      description: The maximum number of records to return from the collection.
       required: true
       schema:
-        type: string
-      example: '1640010300000'
+        type: number
+        default: 100
+      example: 100
   schemas:
     Meta:
       type: object
       description: The properties of the metadata.
       example: {}
-    RequestsbyCategory:
+    ProviderCountsByCategory:
       type: object
-      description: The information about the requests by category.
+      description: The information about the provider's categories.
       properties:
-        category:
-          $ref: '#/components/schemas/Category'
-        counts:
-          $ref: '#/components/schemas/ProviderCountsByCategory'
+        total:
+          type: number
+          description: The total number of requests.
+        totalblocked:
+          type: number
+          description: The total number of blocked requests.
+        numberoforganizationsaffected:
+          type: number
+          description: The number of organizations with traffic for that category.
       required:
-      - category
-      - counts
-      example:
-        category:
-          id: 66
-          label: Malware
-          type: security
-          integration: true
-        counts:
-          total: 1
-          totalblocked: 1
-          numberoforganizationsaffected: 1
+      - numberoforganizationsaffected
+      - total
+      - totalblocked
     Category:
       type: object
       description: The properties of the category.
@@ -241,23 +237,27 @@ components:
           type: boolean
           description: Specifies whether the category is a legacy category.
           example: true
-    ProviderCountsByCategory:
+    RequestsbyCategory:
       type: object
-      description: The information about the provider's categories.
+      description: The information about the requests by category.
       properties:
-        total:
-          type: number
-          description: The total number of requests.
-        totalblocked:
-          type: number
-          description: The total number of blocked requests.
-        numberoforganizationsaffected:
-          type: number
-          description: The number of organizations with traffic for that category.
+        category:
+          $ref: '#/components/schemas/Category'
+        counts:
+          $ref: '#/components/schemas/ProviderCountsByCategory'
       required:
-      - numberoforganizationsaffected
-      - total
-      - totalblocked
+      - category
+      - counts
+      example:
+        category:
+          id: 66
+          label: Malware
+          type: security
+          integration: true
+        counts:
+          total: 1
+          totalblocked: 1
+          numberoforganizationsaffected: 1
   securitySchemes:
     oauthFlow:
       type: oauth2

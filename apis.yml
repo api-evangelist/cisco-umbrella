@@ -3474,9 +3474,10 @@ apis:
   humanURL: https://developer.cisco.com/docs/cloud-security/umbrella-api-reference-admin-overview/
   baseURL: https://api.umbrella.com/admin/v2
   tags:
-  - Data-Center
+  - Data Center
   tags_raw:
   - Data Center
+  - Data-Center
   properties:
   - type: OpenAPI
     url: openapi/cisco-umbrella-data-center-api-openapi.yml

@@ -76,15 +76,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     403Error:
       description: Forbidden
       content:
@@ -103,8 +94,8 @@ components:
             properties:
               message:
                 type: string
-    401Error:
-      description: Unauthorized
+    500Error:
+      description: Internal Server Error
       content:
         application/json:
           schema:
@@ -112,8 +103,17 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Internal Server Error
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
       content:
         application/json:
           schema:

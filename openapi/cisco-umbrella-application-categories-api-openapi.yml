@@ -65,12 +65,6 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
-    Error:
-      type: object
-      description: The error message returned in the response.
-      properties:
-        message:
-          type: string
     ApplicationCategoryList:
       type: object
       description: The list of application categories.
@@ -92,6 +86,23 @@ components:
           example: Security
       example:
         name: Security
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
+  headers:
+    Link:
+      schema:
+        type: string
+      description: 'Links to related resources, in the format defined by
+
+        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
+
+        If there is a next page, this header includes a link with relation type
+
+        `next` to the next page.'
   parameters:
     limit:
       in: query
@@ -107,30 +118,7 @@ components:
       schema:
         type: integer
       description: The number of items to skip before starting to collect the result set.
-  headers:
-    Link:
-      schema:
-        type: string
-      description: 'Links to related resources, in the format defined by
-
-        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
-
-        If there is a next page, this header includes a link with relation type
-
-        `next` to the next page.'
   responses:
-    ServerError:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     InvalidRequest:
       description: Invalid request
       content:
@@ -139,6 +127,18 @@ components:
             $ref: '#/components/schemas/Error'
     Forbidden:
       description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
       content:
         application/json:
           schema:
