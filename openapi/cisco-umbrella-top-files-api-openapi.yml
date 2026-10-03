@@ -106,27 +106,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   parameters:
-    domainsParam:
-      name: domains
-      in: query
-      description: A domain name or comma-delimited list of domain name.
-      schema:
-        type: string
-      example: cisco.com,nasa.gov
-    sha256Param:
-      name: sha256
-      in: query
-      description: A SHA-256 hash.
-      schema:
-        type: string
-      example: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
-    ipParam:
-      name: ip
-      in: query
-      description: An IP address.
-      schema:
-        type: string
-      example: 10.10.10.10
     identityIdsParam:
       name: identityids
       in: query
@@ -134,112 +113,6 @@ components:
       schema:
         type: string
       example: 1,2,3
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    offsetParam:
-      name: offset
-      in: query
-      description: A number that represents an index in the collection.
-      schema:
-        type: number
-        default: 0
-      example: 0
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
-    fromParam:
-      name: from
-      in: query
-      description: 'A timestamp or relative time string (for example: ''-1days'').
-
-        Filter for data that appears after this time.'
-      required: true
-      schema:
-        type: string
-      example: '1639146300000'
-    policyCategoriesParam:
-      name: policycategories
-      in: query
-      description: 'A category ID or comma-delimited list of category ID.
-
-        Filter the request by the categories that trigger a policy.'
-      schema:
-        type: string
-      example: 67,69
-    applicationIdParam:
-      name: applicationid
-      in: query
-      description: The ID of the application.
-      schema:
-        type: string
-      example: '1'
-    bundleIdParam:
-      name: bundleid
-      in: query
-      description: A proxy bundle ID.
-      schema:
-        type: number
-      example: 1
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
-    identityTypesParam:
-      name: identitytypes
-      in: query
-      description: An identity type or comma-delimited list of identity types.
-      schema:
-        type: string
-      example: network,roaming
-    urlsParam:
-      name: urls
-      in: query
-      description: A URL or comma-delimited list of URL.
-      schema:
-        type: string
-      example: https://google.com,facebook.com/help
-    dataLossPreventionStateParam:
-      name: datalosspreventionstate
-      in: query
-      description: 'A string that describes the status of a destination.
-
-        Filter for requests that are blocked by the DLP layer security.'
-      schema:
-        type: string
-        enum:
-        - blocked
-      example: blocked
-    antivirusThreatsParam:
-      name: antivirusthreats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-      example: Trojan.Linux.Generic.144075
-    securityOverriddenParam:
-      name: securityoverridden
-      in: query
-      description: Specify whether to filter on requests that override security.
-      schema:
-        type: boolean
-      example: true
     categoriesParam:
       name: categories
       in: query
@@ -254,6 +127,73 @@ components:
       schema:
         type: string
       example: allowed,blocked,proxied
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    dataLossPreventionStateParam:
+      name: datalosspreventionstate
+      in: query
+      description: 'A string that describes the status of a destination.
+
+        Filter for requests that are blocked by the DLP layer security.'
+      schema:
+        type: string
+        enum:
+        - blocked
+      example: blocked
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    bundleIdParam:
+      name: bundleid
+      in: query
+      description: A proxy bundle ID.
+      schema:
+        type: number
+      example: 1
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
     timezoneParam:
       name: timezone
       in: query
@@ -263,6 +203,23 @@ components:
       schema:
         type: string
       example: ASIA%2fCALCUTTA
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    sha256Param:
+      name: sha256
+      in: query
+      description: A SHA-256 hash.
+      schema:
+        type: string
+      example: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
     ampDispositionParam:
       name: ampdisposition
       in: query
@@ -270,7 +227,61 @@ components:
       schema:
         type: string
       example: clean,malicious,unknown
+    urlsParam:
+      name: urls
+      in: query
+      description: A URL or comma-delimited list of URL.
+      schema:
+        type: string
+      example: https://google.com,facebook.com/help
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
+    securityOverriddenParam:
+      name: securityoverridden
+      in: query
+      description: Specify whether to filter on requests that override security.
+      schema:
+        type: boolean
+      example: true
+    antivirusThreatsParam:
+      name: antivirusthreats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+      example: Trojan.Linux.Generic.144075
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
   responses:
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
     500Error:
       description: Internal Server Error
       content:
@@ -282,6 +293,17 @@ components:
                 type: string
             example:
               message: Internal Server Error
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
     401Error:
       description: Unauthorized
       content:
@@ -304,37 +326,36 @@ components:
                 type: string
             example:
               message: Not Found
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Bad Request
   schemas:
+    Category:
+      type: object
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
+    sha256:
+      type: string
+      description: The SHA256 hash for the entry.
     categories:
       type: array
       description: The list of categories.
       items:
         $ref: '#/components/schemas/Category'
-    sha256:
-      type: string
-      description: The SHA256 hash for the entry.
     TopFile:
       type: object
       description: The information about the top file requests.
@@ -381,27 +402,6 @@ components:
       type: object
       description: The properties of the metadata.
       example: {}
-    Category:
-      type: object
-      description: The properties of the category.
-      properties:
-        id:
-          type: number
-          description: The ID of the category.
-        label:
-          type: string
-          description: The descriptive label for the category.
-        type:
-          type: string
-          description: The type of the category.
-        integration:
-          type: boolean
-          description: Specifies whether the category is an integration.
-          example: true
-        deprecated:
-          type: boolean
-          description: Specifies whether the category is a legacy category.
-          example: true
   securitySchemes:
     oauthFlow:
       type: oauth2

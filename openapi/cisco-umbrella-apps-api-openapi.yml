@@ -325,6 +325,15 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     401Error:
       description: Unauthorized request
       content:
@@ -343,24 +352,6 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     404Error:
       description: Not Found
       content:
@@ -370,6 +361,30 @@ components:
             properties:
               message:
                 type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
   schemas:
     Vendor:
       type: object
@@ -409,22 +424,6 @@ components:
         url:
           type: string
           description: 'The url to the access scope. For example: ''https://www.googleapis.com/auth/userinfo.email''.'
-    Classification:
-      type: object
-      properties:
-        method:
-          type: string
-          description: 'The method where the classification was changed. Possible values are: manual, policy.'
-        reason:
-          type: string
-          description: The reason for the classification.
-        type:
-          type: string
-          description: 'Application''s classification type. Possible values are: unclassified, trusted, restricted, banned.'
-        updated_at:
-          type: string
-          description: The classification's last update time, specified as a timestamp in UTC.
-      description: The application's classification resource.
     AppsCollection:
       type: object
       properties:
@@ -449,6 +448,22 @@ components:
         admins_count:
           type: integer
           description: The number of administrators that have the application installed.
+    Classification:
+      type: object
+      properties:
+        method:
+          type: string
+          description: 'The method where the classification was changed. Possible values are: manual, policy.'
+        reason:
+          type: string
+          description: The reason for the classification.
+        type:
+          type: string
+          description: 'Application''s classification type. Possible values are: unclassified, trusted, restricted, banned.'
+        updated_at:
+          type: string
+          description: The classification's last update time, specified as a timestamp in UTC.
+      description: The application's classification resource.
     App:
       type: object
       description: The information about the application.
@@ -476,21 +491,6 @@ components:
           description: The community trust rating score.
         vendor:
           $ref: '#/components/schemas/Vendor'
-  parameters:
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return in the collection.
-      required: false
-      schema:
-        type: string
 x-provenance:
   method: harvested
   first_party: true

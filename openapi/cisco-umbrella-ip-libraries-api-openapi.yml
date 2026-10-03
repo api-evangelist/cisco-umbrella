@@ -316,35 +316,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     400Error:
       description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    404Error:
-      description: Not Found
       content:
         application/json:
           schema:
@@ -361,14 +334,34 @@ components:
             properties:
               message:
                 type: string
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   parameters:
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
     limitParam:
       name: limit
       in: query
@@ -376,6 +369,13 @@ components:
       required: false
       schema:
         type: string
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
   schemas:
     IPCollection:
       type: object

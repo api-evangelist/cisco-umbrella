@@ -113,6 +113,12 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
     ProtocolObjectInList:
       type: object
       description: The app's protocol information.
@@ -178,12 +184,6 @@ components:
           blockedEvents: 50
           firstDetected: '2022-01-01T00:00:00.000Z'
           lastDetected: '2022-01-01T00:00:00.000Z'
-    Error:
-      type: object
-      description: The error message returned in the response.
-      properties:
-        message:
-          type: string
     ProtocolObject:
       type: object
       description: The app's protocol information.
@@ -231,6 +231,37 @@ components:
         blockedEvents: 40
         firstDetected: '2022-01-01T00:00:00.000Z'
         lastDetected: '2022-01-01T00:00:00.000Z'
+  responses:
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   headers:
     Link:
       schema:
@@ -243,21 +274,12 @@ components:
 
         `next` to the next page.'
   parameters:
-    limit:
+    offset:
       in: query
-      name: limit
+      name: offset
       schema:
         type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
-    identity:
-      in: query
-      name: identity
-      schema:
-        type: integer
-      description: Specify the entity ID to filter the collection.
-      example: 12355
+      description: The number of items to skip before starting to collect the result set.
     protocolId:
       in: path
       name: protocolId
@@ -265,6 +287,23 @@ components:
       required: true
       schema:
         type: string
+    protocolsSort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        enum:
+        - firstDetected
+        - lastDetected
+      description: Specify the name of a field to sort the application protocols.
+      example: firstDetected
+    identity:
+      in: query
+      name: identity
+      schema:
+        type: integer
+      description: Specify the entity ID to filter the collection.
+      example: 12355
     date:
       in: query
       name: date
@@ -287,53 +326,14 @@ components:
 
         or `desc` (descending).'
       example: asc
-    offset:
+    limit:
       in: query
-      name: offset
+      name: limit
       schema:
         type: integer
-      description: The number of items to skip before starting to collect the result set.
-    protocolsSort:
-      in: query
-      name: sort
-      schema:
-        type: string
-        enum:
-        - firstDetected
-        - lastDetected
-      description: Specify the name of a field to sort the application protocols.
-      example: firstDetected
-  responses:
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ServerError:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
   securitySchemes:
     oauthFlow:
       type: oauth2

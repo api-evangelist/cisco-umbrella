@@ -291,14 +291,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   parameters:
-    minFirstSeenParam:
-      name: minFirstSeen
-      in: query
-      required: false
-      description: Only returns records with the value of `firstSeen` >= the value of `minFirstSeen`.
-      schema:
-        type: integer
-        format: int64
     sortCategoriesParam:
       name: sortCategories
       in: query
@@ -322,6 +314,14 @@ components:
       schema:
         type: string
       example: All
+    maxLastSeenParam:
+      name: maxLastSeen
+      in: query
+      required: false
+      description: Only returns records with the value of `lastSeen` <= the value of `maxLastSeen`.
+      schema:
+        type: integer
+        format: int64
     domainParam:
       name: domain
       in: path
@@ -330,14 +330,26 @@ components:
       schema:
         type: string
       example: cisco.com
-    minLastSeenParam:
-      name: minLastSeen
+    maxFirstSeenParam:
+      name: maxFirstSeen
       in: query
       required: false
-      description: Only returns records with the value of `lastSeen` >= the value of `minLastSeen`.
+      description: Only returns records with the value of `firstSeen` <= the value of `maxFirstSeen`.
       schema:
         type: integer
         format: int64
+    sortorderParam:
+      name: sortorder
+      in: query
+      required: false
+      description: Sort records by ascending (`asc`) or descending (`desc`) order. By default, the records are returned in descending order.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+      example: asc
     requiredCategoriesParam:
       name: requiredCategories
       in: query
@@ -354,14 +366,16 @@ components:
       schema:
         type: string
       example: Mobile Threats, Phishing
-    maxFirstSeenParam:
-      name: maxFirstSeen
+    recordTypeParam:
+      name: recordType
       in: query
       required: false
-      description: Only returns records with the value of `firstSeen` <= the value of `maxFirstSeen`.
+      description: 'The type of records. For example: ''A'', ''CNAME'', ''NS'', ''MX''.
+
+        Use commas to separate multiple types of record.'
       schema:
-        type: integer
-        format: int64
+        type: string
+      example: A, CNAME
     offsetParam:
       name: offset
       in: query
@@ -371,26 +385,27 @@ components:
         type: integer
         default: 0
       example: 2
-    maxLastSeenParam:
-      name: maxLastSeen
+    minLastSeenParam:
+      name: minLastSeen
       in: query
       required: false
-      description: Only returns records with the value of `lastSeen` <= the value of `maxLastSeen`.
+      description: Only returns records with the value of `lastSeen` >= the value of `minLastSeen`.
       schema:
         type: integer
         format: int64
-    sortorderParam:
-      name: sortorder
+    sortbyParam:
+      name: sortby
       in: query
       required: false
-      description: Sort records by ascending (`asc`) or descending (`desc`) order. By default, the records are returned in descending order.
+      description: 'Sort records by one of the following fields: `minTtl`, `maxTtl`, `firstSeen`, or `lastSeen`.'
       schema:
         type: string
         enum:
-        - asc
-        - desc
-        default: desc
-      example: asc
+        - minTtl
+        - maxTtl
+        - firstSeen
+        - lastSeen
+      example: minTtl
     limitRecordsParam:
       name: limit
       in: query
@@ -415,98 +430,45 @@ components:
       schema:
         type: boolean
       example: true
-    recordTypeParam:
-      name: recordType
+    minFirstSeenParam:
+      name: minFirstSeen
       in: query
       required: false
-      description: 'The type of records. For example: ''A'', ''CNAME'', ''NS'', ''MX''.
-
-        Use commas to separate multiple types of record.'
+      description: Only returns records with the value of `firstSeen` >= the value of `minFirstSeen`.
       schema:
-        type: string
-      example: A, CNAME
-    sortbyParam:
-      name: sortby
-      in: query
-      required: false
-      description: 'Sort records by one of the following fields: `minTtl`, `maxTtl`, `firstSeen`, or `lastSeen`.'
-      schema:
-        type: string
-        enum:
-        - minTtl
-        - maxTtl
-        - firstSeen
-        - lastSeen
-      example: minTtl
-  schemas:
-    firstSeenISO:
-      type: string
-      format: date-time
-      description: 'The first time Umbrella related the domain for the resource record,
-
-        specified in ISO date and time format.'
-      example: '2015-05-22T21:42:07.421Z'
-    Records:
-      type: array
-      description: The list of records.
-      items:
-        $ref: '#/components/schemas/Record'
-    firstSeen:
-      type: integer
-      format: int64
-      description: 'The first time Umbrella related the domain for the resource record, specified
-
-        in Unix Epoch time.'
-      example: 1615427410
-    lastSeenISO:
-      type: string
-      description: 'The last time Umbrella related the domain for the resource record,
-
-        specified in ISO date and time format.'
-      example: '2015-05-22T21:42:07.421Z'
-    Record:
-      type: object
-      description: The information about the record.
-      properties:
-        minTtl:
-          type: integer
-          format: int64
-          description: The minimum TTL for the record in seconds.
-        maxTtl:
-          type: integer
-          format: int64
-          description: The maximum TTL for the record in seconds.
-        firstSeen:
-          $ref: '#/components/schemas/firstSeen'
-        lastSeen:
-          type: integer
-          format: int64
-          description: 'The last time Umbrella related the domain for the resource record, specified
-
-            in Unix Epoch time.'
-        name:
-          type: string
-          description: The name of the query.
-        type:
-          type: string
-          description: 'The DNS record type. For example: A, CNAME, NS, MX.'
-        securityCategories:
-          type: array
-          items:
-            type: string
-          description: The Umbrella security categories, if any, that match the domain.
-        contentCategories:
-          type: array
-          items:
-            type: string
-          description: The Umbrella content categories, if any, that match the domain.
-        firstSeenISO:
-          $ref: '#/components/schemas/firstSeenISO'
-        lastSeenISO:
-          $ref: '#/components/schemas/lastSeenISO'
+        type: integer
+        format: int64
   responses:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     500Error:
       description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -547,46 +509,84 @@ components:
             properties:
               message:
                 type: string
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+  schemas:
+    Records:
+      type: array
+      description: The list of records.
+      items:
+        $ref: '#/components/schemas/Record'
+    firstSeen:
+      type: integer
+      format: int64
+      description: 'The first time Umbrella related the domain for the resource record, specified
+
+        in Unix Epoch time.'
+      example: 1615427410
+    Record:
+      type: object
+      description: The information about the record.
+      properties:
+        minTtl:
+          type: integer
+          format: int64
+          description: The minimum TTL for the record in seconds.
+        maxTtl:
+          type: integer
+          format: int64
+          description: The maximum TTL for the record in seconds.
+        firstSeen:
+          $ref: '#/components/schemas/firstSeen'
+        lastSeen:
+          type: integer
+          format: int64
+          description: 'The last time Umbrella related the domain for the resource record, specified
+
+            in Unix Epoch time.'
+        name:
+          type: string
+          description: The name of the query.
+        type:
+          type: string
+          description: 'The DNS record type. For example: A, CNAME, NS, MX.'
+        securityCategories:
+          type: array
+          items:
+            type: string
+          description: The Umbrella security categories, if any, that match the domain.
+        contentCategories:
+          type: array
+          items:
+            type: string
+          description: The Umbrella content categories, if any, that match the domain.
+        firstSeenISO:
+          $ref: '#/components/schemas/firstSeenISO'
+        lastSeenISO:
+          $ref: '#/components/schemas/lastSeenISO'
+    lastSeenISO:
+      type: string
+      description: 'The last time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+    firstSeenISO:
+      type: string
+      format: date-time
+      description: 'The first time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
   headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
     Date:
       schema:
         type: string
         pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
       description: The timestamp of the response.
       example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

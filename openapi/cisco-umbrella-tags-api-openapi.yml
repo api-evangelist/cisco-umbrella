@@ -117,28 +117,10 @@ components:
       type: integer
       description: The unique ID of the tag.
       example: 12345678
-    originsModifiedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella modified the roaming computers.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    name:
-      type: string
-      description: The name of the tag.
-      example: tag-one
     modifiedAt:
       type: string
       format: date-time
       description: 'The date and time (timestamp) that Umbrella updated the tag on the roaming computer.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    createdAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella added the tag to the roaming computer.
 
         The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
       example: '2022-04-12T23:20:50.52Z'
@@ -176,47 +158,44 @@ components:
         originsModifiedAt: '2022-04-12T23:20:50.52Z'
         createdAt: '2022-04-12T23:20:50.52Z'
         modifiedAt: '2022-04-12T23:20:50.52Z'
-  headers:
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
+    originsModifiedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella modified the roaming computers.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    name:
+      type: string
+      description: The name of the tag.
+      example: tag-one
+    createdAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella added the tag to the roaming computer.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+  requestBodies:
+    name:
+      description: Add the tag to the devices in the organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The name of the tag.
+            required:
+            - name
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 16
+                description: The name of the tag.
+                example: test-tag-name
+          example:
+            name: test-tag-name
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
     400Error:
       description: Bad Request
       headers:
@@ -231,8 +210,8 @@ components:
             properties:
               Error:
                 type: string
-    404Error:
-      description: Not Found
+    403Error:
+      description: Forbidden
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -259,25 +238,46 @@ components:
             properties:
               Error:
                 type: string
-  requestBodies:
-    name:
-      description: Add the tag to the devices in the organization.
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
       content:
         application/json:
           schema:
             type: object
-            description: The name of the tag.
-            required:
-            - name
             properties:
-              name:
+              Error:
                 type: string
-                minLength: 1
-                maxLength: 16
-                description: The name of the tag.
-                example: test-tag-name
-          example:
-            name: test-tag-name
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

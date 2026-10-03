@@ -242,50 +242,6 @@ paths:
           $ref: '#/components/responses/500ErrorSingle'
 components:
   schemas:
-    ListSWGDeviceSettings:
-      type: array
-      description: The list of Secure Web Gateway (SWG) settings for the devices in the organization.
-      items:
-        type: object
-        description: The properties of the secure web gateway settings for the device.
-        required:
-        - originId
-        - name
-        - value
-        - modifiedAt
-        properties:
-          originId:
-            $ref: '#/components/schemas/originId'
-          name:
-            type: string
-            description: The name of the device setting.
-            example: SWG enabled device
-          value:
-            $ref: '#/components/schemas/value'
-          modifiedAt:
-            type: string
-            description: The date and time when the settings on the device were modified. The timestamp is in the ISO 8601 date format.
-            format: iso-date-time
-            example: '2021-04-26 13:12:11'
-      example:
-      - originId: 124131441
-        name: SWGEnabled
-        value: '1'
-        modifiedAt: '2021-04-26 13:12:11'
-      - originId: 124131442
-        name: SWG-not-enabled
-        value: '0'
-        modifiedAt: '2023-04-26 13:12:11'
-    error:
-      type: object
-      description: The information about the error condition.
-      properties:
-        message:
-          type: string
-          description: The message associated with the error condition.
-        error:
-          type: string
-          description: The status code for the error condition.
     RegisteredSWGDeviceSettings:
       type: object
       description: The information about the Secure Web Gateway (SWG) setting for the devices in the organization.
@@ -343,6 +299,40 @@ components:
       type: integer
       format: int64
       example: 12321231
+    ListSWGDeviceSettings:
+      type: array
+      description: The list of Secure Web Gateway (SWG) settings for the devices in the organization.
+      items:
+        type: object
+        description: The properties of the secure web gateway settings for the device.
+        required:
+        - originId
+        - name
+        - value
+        - modifiedAt
+        properties:
+          originId:
+            $ref: '#/components/schemas/originId'
+          name:
+            type: string
+            description: The name of the device setting.
+            example: SWG enabled device
+          value:
+            $ref: '#/components/schemas/value'
+          modifiedAt:
+            type: string
+            description: The date and time when the settings on the device were modified. The timestamp is in the ISO 8601 date format.
+            format: iso-date-time
+            example: '2021-04-26 13:12:11'
+      example:
+      - originId: 124131441
+        name: SWGEnabled
+        value: '1'
+        modifiedAt: '2021-04-26 13:12:11'
+      - originId: 124131442
+        name: SWG-not-enabled
+        value: '0'
+        modifiedAt: '2023-04-26 13:12:11'
     value:
       type: string
       enum:
@@ -352,23 +342,75 @@ components:
 
         Valid values are: `0` or `1` where `1` indicates enable.'
       example: '1'
+    error:
+      type: object
+      description: The information about the error condition.
+      properties:
+        message:
+          type: string
+          description: The message associated with the error condition.
+        error:
+          type: string
+          description: The status code for the error condition.
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   responses:
-    413ErrorSingle:
-      description: Content Too Large
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            message: Unauthorized request
+    500ErrorSingle:
+      description: Internal Server Error
       content:
         application/json:
           schema:
             type: object
-            description: The list of `originIds` contains more than 100 origin IDs.
+            description: The information about the error condition.
             required:
             - Error
             properties:
               Error:
                 type: string
-                description: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
-                example: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
+                description: The message associated with the error condition.
           example:
-            Error: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
+            Error: Internal server error
+    404ErrorSingle:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The information about the error condition.
+            required:
+            - Error
+            properties:
+              Error:
+                type: string
+                description: The message associated with the error condition.
+          example:
+            Error: Not Found
+    429Error:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            message: Too many requests. Retry request.
     403Error:
       description: Forbidden
       content:
@@ -392,64 +434,22 @@ components:
                 description: The message associated with the error condition.
           example:
             Error: Invalid request
-    500ErrorSingle:
-      description: Internal Server Error
+    413ErrorSingle:
+      description: Content Too Large
       content:
         application/json:
           schema:
             type: object
-            description: The information about the error condition.
+            description: The list of `originIds` contains more than 100 origin IDs.
             required:
             - Error
             properties:
               Error:
                 type: string
-                description: The message associated with the error condition.
+                description: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
+                example: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
           example:
-            Error: Internal server error
-    429Error:
-      description: Too Many Requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/error'
-          example:
-            message: Too many requests. Retry request.
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/error'
-          example:
-            message: Unauthorized request
-    404ErrorSingle:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The information about the error condition.
-            required:
-            - Error
-            properties:
-              Error:
-                type: string
-                description: The message associated with the error condition.
-          example:
-            Error: Not Found
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
+            Error: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
   securitySchemes:
     oauthFlow:
       type: oauth2

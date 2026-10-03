@@ -65,6 +65,12 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
     ApplicationCategoryList:
       type: object
       description: The list of application categories.
@@ -86,51 +92,7 @@ components:
           example: Security
       example:
         name: Security
-    Error:
-      type: object
-      description: The error message returned in the response.
-      properties:
-        message:
-          type: string
-  headers:
-    Link:
-      schema:
-        type: string
-      description: 'Links to related resources, in the format defined by
-
-        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
-
-        If there is a next page, this header includes a link with relation type
-
-        `next` to the next page.'
-  parameters:
-    limit:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
-    offset:
-      in: query
-      name: offset
-      schema:
-        type: integer
-      description: The number of items to skip before starting to collect the result set.
   responses:
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     ServerError:
       description: Server error
       content:
@@ -143,6 +105,44 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  headers:
+    Link:
+      schema:
+        type: string
+      description: 'Links to related resources, in the format defined by
+
+        [RFC 5988](https://tools.ietf.org/html/rfc5988#section-5).
+
+        If there is a next page, this header includes a link with relation type
+
+        `next` to the next page.'
+  parameters:
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
   securitySchemes:
     oauthFlow:
       type: oauth2

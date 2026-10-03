@@ -91,28 +91,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
     400Error:
       description: Bad Request
       content:
@@ -124,17 +102,6 @@ components:
                 type: string
             example:
               message: Bad Request
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
     401Error:
       description: Unauthorized
       content:
@@ -146,7 +113,44 @@ components:
                 type: string
             example:
               message: Unauthorized
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
   schemas:
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
     ProviderCountsByDestination:
       type: object
       description: The information about the provider's destinations.
@@ -164,10 +168,6 @@ components:
       - numberoforganizationsaffected
       - total
       - totalblocked
-    Meta:
-      type: object
-      description: The properties of the metadata.
-      example: {}
     Category:
       type: object
       description: The properties of the category.
@@ -217,13 +217,15 @@ components:
           totalblocked: 1
           numberoforganizationsaffected: 1
   parameters:
-    filterNoisyDomainsParam:
-      name: filternoisydomains
+    limitParam:
+      name: limit
       in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      description: The maximum number of records to return from the collection.
+      required: true
       schema:
-        type: boolean
-      example: true
+        type: number
+        default: 100
+      example: 100
     toParam:
       name: to
       in: query
@@ -234,16 +236,16 @@ components:
       schema:
         type: string
       example: '1640010300000'
-    threatTypesParam:
-      name: threattypes
-      in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
     threatsParam:
       name: threats
       in: query
       description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
       schema:
         type: string
     fromParam:
@@ -256,15 +258,13 @@ components:
       schema:
         type: string
       example: '1639146300000'
-    limitParam:
-      name: limit
+    filterNoisyDomainsParam:
+      name: filternoisydomains
       in: query
-      description: The maximum number of records to return from the collection.
-      required: true
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
       schema:
-        type: number
-        default: 100
-      example: 100
+        type: boolean
+      example: true
   securitySchemes:
     oauthFlow:
       type: oauth2
