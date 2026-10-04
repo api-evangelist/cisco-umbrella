@@ -325,26 +325,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Server error
       content:
         application/json:
           schema:
@@ -361,8 +343,26 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Server error
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -386,27 +386,39 @@ components:
       description: A number that represents the index into the collection.
       required: false
   schemas:
+    App:
+      type: object
+      description: The information about the application.
+      properties:
+        category:
+          type: string
+          description: The app's category.
+        id:
+          type: string
+          description: The internal Cloudlock id for the application.
+        install_type:
+          type: string
+          description: 'A string that describes the installation type (across the domain or by a user). Possible values are: domain_wide, user.'
+        is_revokable:
+          type: boolean
+          description: Indicates whether the app can be revoked.
+        name:
+          type: string
+          description: 'The name of the application, for example: Google Drive.'
+        origin_id:
+          type: string
+          description: The location where the app was installed.
+        trust_rating:
+          type: string
+          description: The community trust rating score.
+        vendor:
+          $ref: '#/components/schemas/Vendor'
     Vendor:
       type: object
       properties:
         name:
           type: string
           description: 'The name of the vendor. For example: google.'
-    ScopeCategory:
-      type: object
-      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
-
-        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
-
-        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
-      properties:
-        title:
-          type: string
-          description: 'The categories title, for example: `Basic Information`.'
-        category_id:
-          type: string
-          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
-          example: FDATA
     AccessScope:
       type: object
       properties:
@@ -424,6 +436,21 @@ components:
         url:
           type: string
           description: 'The url to the access scope. For example: ''https://www.googleapis.com/auth/userinfo.email''.'
+    ScopeCategory:
+      type: object
+      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
+
+        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
+
+        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
+      properties:
+        title:
+          type: string
+          description: 'The categories title, for example: `Basic Information`.'
+        category_id:
+          type: string
+          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
+          example: FDATA
     AppsCollection:
       type: object
       properties:
@@ -464,33 +491,6 @@ components:
           type: string
           description: The classification's last update time, specified as a timestamp in UTC.
       description: The application's classification resource.
-    App:
-      type: object
-      description: The information about the application.
-      properties:
-        category:
-          type: string
-          description: The app's category.
-        id:
-          type: string
-          description: The internal Cloudlock id for the application.
-        install_type:
-          type: string
-          description: 'A string that describes the installation type (across the domain or by a user). Possible values are: domain_wide, user.'
-        is_revokable:
-          type: boolean
-          description: Indicates whether the app can be revoked.
-        name:
-          type: string
-          description: 'The name of the application, for example: Google Drive.'
-        origin_id:
-          type: string
-          description: The location where the app was installed.
-        trust_rating:
-          type: string
-          description: The community trust rating score.
-        vendor:
-          $ref: '#/components/schemas/Vendor'
 x-provenance:
   method: harvested
   first_party: true

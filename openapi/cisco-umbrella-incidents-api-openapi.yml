@@ -335,26 +335,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Server error
       content:
         application/json:
           schema:
@@ -371,8 +353,26 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Server error
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
       content:
         application/json:
           schema:
@@ -388,6 +388,13 @@ components:
       required: false
       schema:
         type: string
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
     createdBeforeParam:
       name: created_before
       in: query
@@ -402,41 +409,7 @@ components:
       in: query
       description: Filter the collection by the creation date.
       example: '2021-01-01'
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
   schemas:
-    Match:
-      type: object
-      description: 'A Match represents an occurrence of a content pattern in an object (such as a file).
-
-        The content pattern is defined in a policy.'
-      properties:
-        created_at:
-          type: string
-          description: The time when this match was detected. Time expressed as a timestamp in UTC.
-        ctx_after:
-          type: string
-          description: The characters after the match.
-        ctx_before:
-          type: string
-          description: The characters before the match.
-        field_name:
-          type: string
-          description: The field or object for this match.
-        text:
-          type: string
-          description: Provide string to identify object. Relevant for content detection criteria='Custom regex criteria' only.
-        policy_criteria:
-          type: object
-          description: A description of the policy criteria.
-          properties:
-            id:
-              type: string
     Entity:
       type: object
       description: The information about the object relating to this incident.
@@ -483,16 +456,33 @@ components:
         name:
           type: string
           description: 'The name of the vendor. For example: google.'
-    Policy:
+    Match:
       type: object
-      description: The policy that triggered the incident.
+      description: 'A Match represents an occurrence of a content pattern in an object (such as a file).
+
+        The content pattern is defined in a policy.'
       properties:
-        id:
+        created_at:
           type: string
-          description: The Cloudlock Internal Identifier for a policy.
-        name:
+          description: The time when this match was detected. Time expressed as a timestamp in UTC.
+        ctx_after:
           type: string
-          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
+          description: The characters after the match.
+        ctx_before:
+          type: string
+          description: The characters before the match.
+        field_name:
+          type: string
+          description: The field or object for this match.
+        text:
+          type: string
+          description: Provide string to identify object. Relevant for content detection criteria='Custom regex criteria' only.
+        policy_criteria:
+          type: object
+          description: A description of the policy criteria.
+          properties:
+            id:
+              type: string
     IncidentsCollection:
       type: object
       properties:
@@ -528,6 +518,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Match'
+    Policy:
+      type: object
+      description: The policy that triggered the incident.
+      properties:
+        id:
+          type: string
+          description: The Cloudlock Internal Identifier for a policy.
+        name:
+          type: string
+          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
 x-provenance:
   method: harvested
   first_party: true

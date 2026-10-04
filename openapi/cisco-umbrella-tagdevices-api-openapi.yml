@@ -172,136 +172,9 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  schemas:
-    deviceCreatedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella added the roaming computer to the organization.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    type:
-      type: string
-      description: The device type.
-      example: macOS
-    addOrigins:
-      type: array
-      description: The list of roaming computers (origin IDs) that have the tag.
-      items:
-        type: integer
-        description: An origin ID.
-        example: 12345678
-      example:
-      - 12345678
-      - 87654321
-    deviceModifiedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella updated the roaming computer in the organization.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    deviceInformation:
-      type: object
-      description: The information about the device.
-      required:
-      - originId
-      - organizationId
-      - label
-      - type
-      - createdAt
-      - modifiedAt
-      properties:
-        originId:
-          $ref: '#/components/schemas/originId'
-        organizationId:
-          $ref: '#/components/schemas/organizationId'
-        label:
-          $ref: '#/components/schemas/label'
-        type:
-          $ref: '#/components/schemas/type'
-        createdAt:
-          $ref: '#/components/schemas/deviceCreatedAt'
-        modifiedAt:
-          $ref: '#/components/schemas/deviceModifiedAt'
-      example:
-        originId: 12345
-        organizationId: 567893
-        label: device-one
-        type: linux
-        createdAt: '2022-04-12T23:20:50.52Z'
-        modifiedAt: '2022-04-12T23:20:50.52Z'
-    label:
-      type: string
-      description: The display name of the device.
-      example: device-one
-    originId:
-      type: integer
-      description: The unique identifier of the device.
-      example: 2456
-    removeOrigins:
-      type: array
-      description: The list of roaming computers (origin IDs) that have the tag removed.
-      items:
-        type: integer
-        description: An origin Id.
-        example: 12345678
-      example:
-      - 12345678
-      - 87654321
-    tagId:
-      type: integer
-      description: The unique ID of the tag.
-      example: 12345678
-    taggedDeviceInformation:
-      type: object
-      description: "The information about the tagged devices:\ntag ID, origin IDs in the organization that have the tag on the roaming computers, and \norigin IDs in the organization that have the tag removed from the roaming computers."
-      required:
-      - tagId
-      - addOrigins
-      - removeOrigins
-      properties:
-        tagId:
-          $ref: '#/components/schemas/tagId'
-        addOrigins:
-          $ref: '#/components/schemas/addOrigins'
-        removeOrigins:
-          $ref: '#/components/schemas/removeOrigins'
-    organizationId:
-      type: integer
-      description: The organization ID.
-      example: 2456789
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
     500Error:
       description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
-    400Error:
-      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -363,49 +236,133 @@ components:
             properties:
               Error:
                 type: string
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
-  requestBodies:
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+  schemas:
+    deviceModifiedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella updated the roaming computer in the organization.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    taggedDeviceInformation:
+      type: object
+      description: "The information about the tagged devices:\ntag ID, origin IDs in the organization that have the tag on the roaming computers, and \norigin IDs in the organization that have the tag removed from the roaming computers."
+      required:
+      - tagId
+      - addOrigins
+      - removeOrigins
+      properties:
+        tagId:
+          $ref: '#/components/schemas/tagId'
+        addOrigins:
+          $ref: '#/components/schemas/addOrigins'
+        removeOrigins:
+          $ref: '#/components/schemas/removeOrigins'
+    tagId:
+      type: integer
+      description: The unique ID of the tag.
+      example: 12345678
     removeOrigins:
-      description: 'Remove the tag on the roaming computers. Provide a list of roaming computer origin IDs.
-
-        The request body can include at most 500 origin IDs.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              removeOrigins:
-                $ref: '#/components/schemas/removeOrigins'
-          example:
-            removeOrigins:
-            - 12321231
-            - 123134314
+      type: array
+      description: The list of roaming computers (origin IDs) that have the tag removed.
+      items:
+        type: integer
+        description: An origin Id.
+        example: 12345678
+      example:
+      - 12345678
+      - 87654321
     addOrigins:
-      description: 'Add the tag to the roaming computers. Provide a list of roaming computer origin IDs.
+      type: array
+      description: The list of roaming computers (origin IDs) that have the tag.
+      items:
+        type: integer
+        description: An origin ID.
+        example: 12345678
+      example:
+      - 12345678
+      - 87654321
+    deviceInformation:
+      type: object
+      description: The information about the device.
+      required:
+      - originId
+      - organizationId
+      - label
+      - type
+      - createdAt
+      - modifiedAt
+      properties:
+        originId:
+          $ref: '#/components/schemas/originId'
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+        label:
+          $ref: '#/components/schemas/label'
+        type:
+          $ref: '#/components/schemas/type'
+        createdAt:
+          $ref: '#/components/schemas/deviceCreatedAt'
+        modifiedAt:
+          $ref: '#/components/schemas/deviceModifiedAt'
+      example:
+        originId: 12345
+        organizationId: 567893
+        label: device-one
+        type: linux
+        createdAt: '2022-04-12T23:20:50.52Z'
+        modifiedAt: '2022-04-12T23:20:50.52Z'
+    label:
+      type: string
+      description: The display name of the device.
+      example: device-one
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 2456789
+    originId:
+      type: integer
+      description: The unique identifier of the device.
+      example: 2456
+    deviceCreatedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella added the roaming computer to the organization.
 
-        The request body can include at most 500 origin IDs.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              addOrigins:
-                $ref: '#/components/schemas/addOrigins'
-          example:
-            addOrigins:
-            - 12321231
-            - 123134314
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    type:
+      type: string
+      description: The device type.
+      example: macOS
   parameters:
     limitTagDevices:
       name: limit
@@ -434,6 +391,49 @@ components:
       schema:
         type: integer
       example: 2
+  requestBodies:
+    addOrigins:
+      description: 'Add the tag to the roaming computers. Provide a list of roaming computer origin IDs.
+
+        The request body can include at most 500 origin IDs.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              addOrigins:
+                $ref: '#/components/schemas/addOrigins'
+          example:
+            addOrigins:
+            - 12321231
+            - 123134314
+    removeOrigins:
+      description: 'Remove the tag on the roaming computers. Provide a list of roaming computer origin IDs.
+
+        The request body can include at most 500 origin IDs.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              removeOrigins:
+                $ref: '#/components/schemas/removeOrigins'
+          example:
+            removeOrigins:
+            - 12321231
+            - 123134314
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

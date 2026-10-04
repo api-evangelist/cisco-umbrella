@@ -157,63 +157,16 @@ paths:
         '500':
           $ref: '#/components/responses/ServerErr'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFoundError'
-    Forbidden:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ForbiddenError'
-    Unauthorized:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UnauthorizedError'
-    ServerErr:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ServerError'
-    InvalidRequest:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BadRequestError'
   parameters:
+    networkDeviceOriginIdParam:
+      name: originId
+      in: path
+      description: The origin ID of the identity.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
     paginationLimitParam:
       name: limit
       in: query
@@ -225,6 +178,16 @@ components:
         format: int32
         minimum: 1
         maximum: 100
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
     policyTypeParam:
       name: type
       in: query
@@ -246,41 +209,7 @@ components:
         type: integer
         minimum: 1
         format: int32
-    networkDeviceOriginIdParam:
-      name: originId
-      in: path
-      description: The origin ID of the identity.
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-        format: int32
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
   schemas:
-    ServerError:
-      description: Internal Server Error
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          example: 500
-          description: HTTP status code
-        error:
-          type: string
-          example: Internal Server Error
-          description: The server has an internal error and could not process the request.
-        message:
-          type: string
-          description: Detailed error message
     PolicyStub:
       type: object
       minProperties: 6
@@ -318,10 +247,12 @@ components:
           type: boolean
           example: true
           description: Specified whether the policy is the default.
-    PolicyList:
-      type: array
-      items:
-        $ref: '#/components/schemas/PolicyStub'
+    OriginId:
+      description: The origin ID of the identity.
+      type: integer
+      minimum: 1
+      format: int32
+      example: 358739
     UnauthorizedError:
       description: Unauthorized
       type: object
@@ -337,12 +268,25 @@ components:
         message:
           type: string
           description: Detailed error message
-    OriginId:
-      description: The origin ID of the identity.
-      type: integer
-      minimum: 1
-      format: int32
-      example: 358739
+    ServerError:
+      description: Internal Server Error
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+          description: HTTP status code
+        error:
+          type: string
+          example: Internal Server Error
+          description: The server has an internal error and could not process the request.
+        message:
+          type: string
+          description: Detailed error message
+    PolicyList:
+      type: array
+      items:
+        $ref: '#/components/schemas/PolicyStub'
     BadRequestError:
       description: Bad Request
       type: object
@@ -395,6 +339,62 @@ components:
         message:
           type: string
           description: Detailed error message
+  responses:
+    ServerErr:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    NotFound:
+      description: Not found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+    InvalidRequest:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Forbidden:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
   headers:
     Date:
       schema:

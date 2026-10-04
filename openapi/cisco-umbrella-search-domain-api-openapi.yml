@@ -132,25 +132,140 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of items to return in the response from the collection. The default limit is 10.
+
+        Increase the limit to request a larger set of data.'
+      schema:
+        type: integer
+        default: 10
+      example: 25
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
+    stop:
+      name: stop
+      in: query
+      required: false
+      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
+
+        Filter for data that appears before this time.
+
+        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
+      schema:
+        type: string
+      example: now
+    start:
+      name: start
+      in: query
+      required: true
+      description: 'Specifies a relative or absolute start time. If specifying an absolute time,
+
+        use an epoch time (Unix time) millisecond timestamp within the last 30 days.
+
+        Filter for data that appears after this time.
+
+        If specifying a relative time, use either seconds, minutes, hours, days
+
+        or weeks with a minus sign in front.
+
+        As an example, -1days, -1000minutes, or -2weeks are all valid.
+
+        You cannot combine timestamps. Only use one of the relative time enumerators per query.'
+      schema:
+        type: string
+      example: -1days
   schemas:
-    firstSeen:
-      type: integer
-      format: int64
-      description: 'The first time Umbrella related the domain for the resource record, specified
-
-        in Unix Epoch time.'
-      example: 1615427410
-    firstSeenISO:
-      type: string
-      format: date-time
-      description: 'The first time Umbrella related the domain for the resource record,
-
-        specified in ISO date and time format.'
-      example: '2015-05-22T21:42:07.421Z'
     moreDataAvailable:
       type: boolean
       description: Specifies whether more samples are available for the destination.
       example: true
+    totalresults:
+      type: integer
+      description: The total number of samples.
+      format: int64
+      example: 1000
     MatchRecord:
       type: object
       description: The properties of the matching domain.
@@ -184,140 +299,25 @@ components:
           securityCategories:
           - Phishing Attacks
           - Malware
+    firstSeenISO:
+      type: string
+      format: date-time
+      description: 'The first time Umbrella related the domain for the resource record,
+
+        specified in ISO date and time format.'
+      example: '2015-05-22T21:42:07.421Z'
+    firstSeen:
+      type: integer
+      format: int64
+      description: 'The first time Umbrella related the domain for the resource record, specified
+
+        in Unix Epoch time.'
+      example: 1615427410
     limit:
       type: integer
       description: The maximum number of records to include in the response.
       format: int64
       example: 100
-    totalresults:
-      type: integer
-      description: The total number of samples.
-      format: int64
-      example: 1000
-  responses:
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    limitParam:
-      name: limit
-      in: query
-      required: false
-      description: 'The number of items to return in the response from the collection. The default limit is 10.
-
-        Increase the limit to request a larger set of data.'
-      schema:
-        type: integer
-        default: 10
-      example: 25
-    stop:
-      name: stop
-      in: query
-      required: false
-      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
-
-        Filter for data that appears before this time.
-
-        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
-      schema:
-        type: string
-      example: now
-    start:
-      name: start
-      in: query
-      required: true
-      description: 'Specifies a relative or absolute start time. If specifying an absolute time,
-
-        use an epoch time (Unix time) millisecond timestamp within the last 30 days.
-
-        Filter for data that appears after this time.
-
-        If specifying a relative time, use either seconds, minutes, hours, days
-
-        or weeks with a minus sign in front.
-
-        As an example, -1days, -1000minutes, or -2weeks are all valid.
-
-        You cannot combine timestamps. Only use one of the relative time enumerators per query.'
-      schema:
-        type: string
-      example: -1days
-    offsetParam:
-      name: offset
-      in: query
-      required: false
-      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
-      schema:
-        type: integer
-        default: 0
-      example: 2
   headers:
     Date:
       schema:

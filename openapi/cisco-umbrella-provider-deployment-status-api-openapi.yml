@@ -89,17 +89,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Bad Request
     500Error:
       description: Internal Server Error
       content:
@@ -111,28 +100,6 @@ components:
                 type: string
             example:
               message: Internal Server Error
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
     404Error:
       description: Not Found
       content:
@@ -144,24 +111,40 @@ components:
                 type: string
             example:
               message: Not Found
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
   schemas:
-    Meta:
-      type: object
-      description: The properties of the metadata.
-      example: {}
-    IdentityType:
-      type: object
-      description: The information about the identity including the type.
-      properties:
-        id:
-          type: number
-          description: The ID of the origin type for the identity.
-        label:
-          type: string
-          description: The label of the origin type for the identity.
-        type:
-          type: string
-          description: The name of the origin type for the identity.
     ProviderDeploymentStatus:
       type: object
       description: The information about the provider's deployment status.
@@ -185,6 +168,23 @@ components:
           name: site
         activecount: 1
         count: 1
+    IdentityType:
+      type: object
+      description: The information about the identity including the type.
+      properties:
+        id:
+          type: number
+          description: The ID of the origin type for the identity.
+        label:
+          type: string
+          description: The label of the origin type for the identity.
+        type:
+          type: string
+          description: The name of the origin type for the identity.
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
     OrganizationDeploymentStatus:
       type: object
       description: The deployment status for the organization.
@@ -220,10 +220,10 @@ components:
           type: string
           description: The name of the organization.
   parameters:
-    threatsParam:
-      name: threats
+    threatTypesParam:
+      name: threattypes
       in: query
-      description: A threat name or comma-delimited list of threat names.
+      description: A threat type or comma-delimited list of threat types.
       schema:
         type: string
     toParam:
@@ -236,10 +236,10 @@ components:
       schema:
         type: string
       example: '1640010300000'
-    threatTypesParam:
-      name: threattypes
+    threatsParam:
+      name: threats
       in: query
-      description: A threat type or comma-delimited list of threat types.
+      description: A threat name or comma-delimited list of threat names.
       schema:
         type: string
     fromParam:

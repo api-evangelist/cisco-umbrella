@@ -242,6 +242,30 @@ paths:
           $ref: '#/components/responses/500ErrorSingle'
 components:
   schemas:
+    originId:
+      description: The origin ID of the device.
+      type: integer
+      format: int64
+      example: 12321231
+    value:
+      type: string
+      enum:
+      - '0'
+      - '1'
+      description: 'Specifies whether to enable the Secure Web Gateway (SWG) device settings.
+
+        Valid values are: `0` or `1` where `1` indicates enable.'
+      example: '1'
+    error:
+      type: object
+      description: The information about the error condition.
+      properties:
+        message:
+          type: string
+          description: The message associated with the error condition.
+        error:
+          type: string
+          description: The status code for the error condition.
     RegisteredSWGDeviceSettings:
       type: object
       description: The information about the Secure Web Gateway (SWG) setting for the devices in the organization.
@@ -294,11 +318,6 @@ components:
           code: 404
           message: The origin ID does not exist.
         value: '1'
-    originId:
-      description: The origin ID of the device.
-      type: integer
-      format: int64
-      example: 12321231
     ListSWGDeviceSettings:
       type: array
       description: The list of Secure Web Gateway (SWG) settings for the devices in the organization.
@@ -333,61 +352,7 @@ components:
         name: SWG-not-enabled
         value: '0'
         modifiedAt: '2023-04-26 13:12:11'
-    value:
-      type: string
-      enum:
-      - '0'
-      - '1'
-      description: 'Specifies whether to enable the Secure Web Gateway (SWG) device settings.
-
-        Valid values are: `0` or `1` where `1` indicates enable.'
-      example: '1'
-    error:
-      type: object
-      description: The information about the error condition.
-      properties:
-        message:
-          type: string
-          description: The message associated with the error condition.
-        error:
-          type: string
-          description: The status code for the error condition.
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   responses:
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/error'
-          example:
-            message: Unauthorized request
-    500ErrorSingle:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The information about the error condition.
-            required:
-            - Error
-            properties:
-              Error:
-                type: string
-                description: The message associated with the error condition.
-          example:
-            Error: Internal server error
     404ErrorSingle:
       description: Not Found
       content:
@@ -403,22 +368,6 @@ components:
                 description: The message associated with the error condition.
           example:
             Error: Not Found
-    429Error:
-      description: Too Many Requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/error'
-          example:
-            message: Too many requests. Retry request.
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/error'
-          example:
-            message: Forbidden
     400ErrorSingle:
       description: Bad Request
       content:
@@ -450,6 +399,57 @@ components:
                 example: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
           example:
             Error: 'Invalid Request: orginIds in the request exceeded max limit - 100.'
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            message: Unauthorized request
+    500ErrorSingle:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The information about the error condition.
+            required:
+            - Error
+            properties:
+              Error:
+                type: string
+                description: The message associated with the error condition.
+          example:
+            Error: Internal server error
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            message: Forbidden
+    429Error:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            message: Too many requests. Retry request.
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

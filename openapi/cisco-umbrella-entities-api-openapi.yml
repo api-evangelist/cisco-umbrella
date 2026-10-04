@@ -118,26 +118,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Server error
       content:
         application/json:
           schema:
@@ -154,8 +136,26 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Server error
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
       content:
         application/json:
           schema:
@@ -170,22 +170,6 @@ components:
         name:
           type: string
           description: 'The name of the vendor. For example: google.'
-    PermissionResource:
-      type: object
-      description: The permissions corresponding to the owners of the asset.
-      properties:
-        type:
-          type: string
-          description: The type of permission.
-          example: (current values are Google specific)
-        role:
-          type: string
-          description: The role associated with the permission (current values are Google specific).
-          example: reader, writer, owner
-        value:
-          type: string
-          description: The email address or domain address for the permission.
-          example: admin@domain.com
     EntitiesCollection:
       type: object
       properties:
@@ -237,6 +221,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PermissionResource'
+    PermissionResource:
+      type: object
+      description: The permissions corresponding to the owners of the asset.
+      properties:
+        type:
+          type: string
+          description: The type of permission.
+          example: (current values are Google specific)
+        role:
+          type: string
+          description: The role associated with the permission (current values are Google specific).
+          example: reader, writer, owner
+        value:
+          type: string
+          description: The email address or domain address for the permission.
+          example: admin@domain.com
 x-provenance:
   method: harvested
   first_party: true

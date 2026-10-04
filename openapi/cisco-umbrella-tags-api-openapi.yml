@@ -112,90 +112,35 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  schemas:
-    id:
-      type: integer
-      description: The unique ID of the tag.
-      example: 12345678
-    modifiedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella updated the tag on the roaming computer.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    organizationId:
-      type: integer
-      description: The organization ID.
-      example: 2456789
-    tagInformation:
-      type: object
-      description: The tag information for the device.
-      required:
-      - id
-      - organizationId
-      - name
-      - originsModifiedAt
-      - createdAt
-      - modifiedAt
-      properties:
-        id:
-          $ref: '#/components/schemas/id'
-        organizationId:
-          $ref: '#/components/schemas/organizationId'
-        name:
-          $ref: '#/components/schemas/name'
-        originsModifiedAt:
-          $ref: '#/components/schemas/originsModifiedAt'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        modifiedAt:
-          $ref: '#/components/schemas/modifiedAt'
-      example:
-        id: 12345
-        organizationId: 567893
-        name: tag-one
-        originsModifiedAt: '2022-04-12T23:20:50.52Z'
-        createdAt: '2022-04-12T23:20:50.52Z'
-        modifiedAt: '2022-04-12T23:20:50.52Z'
-    originsModifiedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella modified the roaming computers.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    name:
-      type: string
-      description: The name of the tag.
-      example: tag-one
-    createdAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella added the tag to the roaming computer.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-  requestBodies:
-    name:
-      description: Add the tag to the devices in the organization.
+  responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
       content:
         application/json:
           schema:
             type: object
-            description: The name of the tag.
-            required:
-            - name
             properties:
-              name:
+              Error:
                 type: string
-                minLength: 1
-                maxLength: 16
-                description: The name of the tag.
-                example: test-tag-name
-          example:
-            name: test-tag-name
-  responses:
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
     400Error:
       description: Bad Request
       headers:
@@ -238,34 +183,89 @@ components:
             properties:
               Error:
                 type: string
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
+  requestBodies:
+    name:
+      description: Add the tag to the devices in the organization.
       content:
         application/json:
           schema:
             type: object
+            description: The name of the tag.
+            required:
+            - name
             properties:
-              Error:
+              name:
                 type: string
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
+                minLength: 1
+                maxLength: 16
+                description: The name of the tag.
+                example: test-tag-name
+          example:
+            name: test-tag-name
+  schemas:
+    organizationId:
+      type: integer
+      description: The organization ID.
+      example: 2456789
+    id:
+      type: integer
+      description: The unique ID of the tag.
+      example: 12345678
+    modifiedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella updated the tag on the roaming computer.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    createdAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella added the tag to the roaming computer.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    originsModifiedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella modified the roaming computers.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    name:
+      type: string
+      description: The name of the tag.
+      example: tag-one
+    tagInformation:
+      type: object
+      description: The tag information for the device.
+      required:
+      - id
+      - organizationId
+      - name
+      - originsModifiedAt
+      - createdAt
+      - modifiedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        organizationId:
+          $ref: '#/components/schemas/organizationId'
+        name:
+          $ref: '#/components/schemas/name'
+        originsModifiedAt:
+          $ref: '#/components/schemas/originsModifiedAt'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        modifiedAt:
+          $ref: '#/components/schemas/modifiedAt'
+      example:
+        id: 12345
+        organizationId: 567893
+        name: tag-one
+        originsModifiedAt: '2022-04-12T23:20:50.52Z'
+        createdAt: '2022-04-12T23:20:50.52Z'
+        modifiedAt: '2022-04-12T23:20:50.52Z'
   headers:
     Date:
       schema:

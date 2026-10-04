@@ -893,36 +893,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     500Error:
       description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    400Error:
-      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -963,29 +935,39 @@ components:
             properties:
               message:
                 type: string
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
-    limit:
-      type: integer
-      description: The maximum number of records to include in the response.
-      format: int64
-      example: 100
-    WhoisEmailsAndNameservers:
-      type: object
-      description: The information about the WHOIS email and nameserver.
-      properties:
-        domain:
-          type: string
-          description: The domain name.
-          example: zayget2.com
-        current:
-          type: boolean
-          description: Specifies whether the domain name is current.
-          example: true
-    totalresults:
-      type: integer
-      description: The total number of samples.
-      format: int64
-      example: 1000
+    moreDataAvailable:
+      type: boolean
+      description: Specifies whether more samples are available for the destination.
+      example: true
     WhoisDomain:
       type: object
       description: A standard WHOIS response record for a single domain.
@@ -1246,10 +1228,28 @@ components:
         administrativeContactPostalCode: '94043'
         zoneContactCountry: ''
         billingContactState: ''
-    moreDataAvailable:
-      type: boolean
-      description: Specifies whether more samples are available for the destination.
-      example: true
+    limit:
+      type: integer
+      description: The maximum number of records to include in the response.
+      format: int64
+      example: 100
+    totalresults:
+      type: integer
+      description: The total number of samples.
+      format: int64
+      example: 1000
+    WhoisEmailsAndNameservers:
+      type: object
+      description: The information about the WHOIS email and nameserver.
+      properties:
+        domain:
+          type: string
+          description: The domain name.
+          example: zayget2.com
+        current:
+          type: boolean
+          description: Specifies whether the domain name is current.
+          example: true
     offset:
       type: integer
       description: The place to start reading in the collection.
@@ -1257,30 +1257,6 @@ components:
       default: 0
       example: 5
   parameters:
-    sortFieldParam:
-      name: sortField
-      in: query
-      required: false
-      description: 'Valid values are: `created`, `updated`, `expires`, or `domainname`.'
-      schema:
-        type: string
-        enum:
-        - created
-        - updated
-        - expires
-        - domainname
-      example: created
-    limitParam:
-      name: limit
-      in: query
-      required: false
-      description: 'The number of items to return in the response from the collection. The default limit is 10.
-
-        Increase the limit to request a larger set of data.'
-      schema:
-        type: integer
-        default: 10
-      example: 25
     start:
       name: start
       in: query
@@ -1301,23 +1277,6 @@ components:
       schema:
         type: string
       example: -1days
-    domain:
-      name: domain
-      in: path
-      required: true
-      description: The domain name without wildcards and including the top-level domain (TLD).
-      schema:
-        type: string
-      example: store.cisco.com
-    offsetParam:
-      name: offset
-      in: query
-      required: false
-      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
-      schema:
-        type: integer
-        default: 0
-      example: 2
     stop:
       name: stop
       in: query
@@ -1330,6 +1289,47 @@ components:
       schema:
         type: string
       example: now
+    sortFieldParam:
+      name: sortField
+      in: query
+      required: false
+      description: 'Valid values are: `created`, `updated`, `expires`, or `domainname`.'
+      schema:
+        type: string
+        enum:
+        - created
+        - updated
+        - expires
+        - domainname
+      example: created
+    domain:
+      name: domain
+      in: path
+      required: true
+      description: The domain name without wildcards and including the top-level domain (TLD).
+      schema:
+        type: string
+      example: store.cisco.com
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of items to return in the response from the collection. The default limit is 10.
+
+        Increase the limit to request a larger set of data.'
+      schema:
+        type: integer
+        default: 10
+      example: 25
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
   headers:
     Date:
       schema:

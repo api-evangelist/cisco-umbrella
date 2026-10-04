@@ -705,74 +705,63 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
   parameters:
-    httpErrorsParam:
-      name: httperrors
-      in: query
-      description: Filter data for requests that resulted in a TLS error or a certificate error.
-      schema:
-        type: string
-        enum:
-        - certificateerror
-        - tlserror
-      example: certificateerror
-    identityIdsParam:
-      name: identityids
-      in: query
-      description: An identity ID or comma-delimited list of identity IDs.
-      schema:
-        type: string
-      example: 1,2,3
-    orderParam:
-      name: order
-      in: query
-      description: 'A string that describes how to order the results: ascending (`asc`) or descending (`desc`).'
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-      example: desc
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    domainsParam:
-      name: domains
-      in: query
-      description: A domain name or comma-delimited list of domain name.
-      schema:
-        type: string
-      example: cisco.com,nasa.gov
-    signatureListIdsParam:
-      name: signaturelistids
-      in: query
-      description: The signature ID or comma-separated list of signature list IDs.
-      schema:
-        type: string
-      example: 1,2
-    fromParam:
-      name: from
-      in: query
-      description: 'A timestamp or relative time string (for example: ''-1days'').
-
-        Filter for data that appears after this time.'
-      required: true
-      schema:
-        type: string
-      example: '1639146300000'
-    securityOverriddenParam:
-      name: securityoverridden
-      in: query
-      description: Specify whether to filter on requests that override security.
-      schema:
-        type: boolean
-      example: true
     isolatedFileActionParam:
       name: isolatedFileAction
       in: query
@@ -784,45 +773,12 @@ components:
         - downloaded-original-file
         - downloaded-safe-pdf
       example: downloaded-safe-pdf
-    categoriesParam:
-      name: categories
+    threatTypesParam:
+      name: threattypes
       in: query
-      description: A category ID or comma-delimited list of category ID.
+      description: A threat type or comma-delimited list of threat types.
       schema:
         type: string
-      example: 148,151,66
-    threatsParam:
-      name: threats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
-    bundleIdParam:
-      name: bundleid
-      in: query
-      description: A proxy bundle ID.
-      schema:
-        type: number
-      example: 1
-    timezoneParam:
-      name: timezone
-      in: query
-      description: 'Display the timestamp of the traffic events in the specified timezone.
-
-        For the timezone, provide a continent and city separated by an url-encoded forward slash (''/''), for example: timezone=''ASIA%2fCALCUTTA''.'
-      schema:
-        type: string
-      example: ASIA%2fCALCUTTA
     xTrafficTypeParam:
       name: x-traffic-type
       in: header
@@ -832,6 +788,28 @@ components:
       schema:
         type: string
       example: dns,proxy,firewall,ip
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    securityOverriddenParam:
+      name: securityoverridden
+      in: query
+      description: Specify whether to filter on requests that override security.
+      schema:
+        type: boolean
+      example: true
+    timezoneParam:
+      name: timezone
+      in: query
+      description: 'Display the timestamp of the traffic events in the specified timezone.
+
+        For the timezone, provide a continent and city separated by an url-encoded forward slash (''/''), for example: timezone=''ASIA%2fCALCUTTA''.'
+      schema:
+        type: string
+      example: ASIA%2fCALCUTTA
     intrusionActionParam:
       name: intrusionaction
       in: query
@@ -839,6 +817,36 @@ components:
       schema:
         type: string
       example: detected,would_block
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    antivirusThreatsParam:
+      name: antivirusthreats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+      example: Trojan.Linux.Generic.144075
     ampDispositionParam:
       name: ampdisposition
       in: query
@@ -846,17 +854,53 @@ components:
       schema:
         type: string
       example: clean,malicious,unknown
-    filenameParam:
-      name: filename
+    identityIdsParam:
+      name: identityids
       in: query
-      description: 'A string that identifies a filename. Filter the request by the filename.
-
-        Supports globbing or use of the wildcard character (''*''). The asterisk (*) matches
-
-        zero or more occurrences of any character.'
+      description: An identity ID or comma-delimited list of identity IDs.
       schema:
         type: string
-      example: myfilename_*
+      example: 1,2,3
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    ruleIdParam:
+      name: ruleid
+      in: query
+      description: The firewall policy rule ID.
+      schema:
+        type: number
+      example: 1
+    portsParam:
+      name: ports
+      in: query
+      description: A port number or comma-delimited list of port numbers.
+      schema:
+        type: string
+      example: 7351,80
     existsParam:
       name: exists
       in: query
@@ -870,34 +914,21 @@ components:
       schema:
         type: string
       example: destinationlistids,threattypes
-    antivirusThreatsParam:
-      name: antivirusthreats
+    offsetParam:
+      name: offset
       in: query
-      description: A threat name or comma-delimited list of threat names.
+      description: A number that represents an index in the collection.
       schema:
-        type: string
-      example: Trojan.Linux.Generic.144075
-    filterNoisyDomainsParam:
-      name: filternoisydomains
+        type: number
+        default: 0
+      example: 0
+    bundleIdParam:
+      name: bundleid
       in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      description: A proxy bundle ID.
       schema:
-        type: boolean
-      example: true
-    tenantControlsParam:
-      name: tenantcontrols
-      in: query
-      description: If set to `true`, filter data for requests that are part of a tenant control policy.
-      schema:
-        type: boolean
-      example: true
-    ipParam:
-      name: ip
-      in: query
-      description: An IP address.
-      schema:
-        type: string
-      example: 10.10.10.10
+        type: number
+      example: 1
     signaturesParam:
       name: signatures
       in: query
@@ -905,67 +936,16 @@ components:
       schema:
         type: string
       example: 1-2,1-4
-    portsParam:
-      name: ports
+    toParam:
+      name: to
       in: query
-      description: A port number or comma-delimited list of port numbers.
-      schema:
-        type: string
-      example: 7351,80
-    identityTypesParam:
-      name: identitytypes
-      in: query
-      description: An identity type or comma-delimited list of identity types.
-      schema:
-        type: string
-      example: network,roaming
-    threatTypesParam:
-      name: threattypes
-      in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
-    verdictParam:
-      name: verdict
-      in: query
-      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
-      schema:
-        type: string
-      example: allowed,blocked,proxied
-    applicationIdParam:
-      name: applicationid
-      in: query
-      description: The ID of the application.
-      schema:
-        type: string
-      example: '1'
-    dataLossPreventionStateParam:
-      name: datalosspreventionstate
-      in: query
-      description: 'A string that describes the status of a destination.
+      description: 'A timestamp or relative time string (for example: ''now'').
 
-        Filter for requests that are blocked by the DLP layer security.'
+        Filter for data that appears before this time.'
+      required: true
       schema:
         type: string
-        enum:
-        - blocked
-      example: blocked
-    policyCategoriesParam:
-      name: policycategories
-      in: query
-      description: 'A category ID or comma-delimited list of category ID.
-
-        Filter the request by the categories that trigger a policy.'
-      schema:
-        type: string
-      example: 67,69
-    ruleIdParam:
-      name: ruleid
-      in: query
-      description: The firewall policy rule ID.
-      schema:
-        type: number
-      example: 1
+      example: '1640010300000'
     sha256Param:
       name: sha256
       in: query
@@ -983,6 +963,24 @@ components:
         - isolated
         - not-isolated
       example: isolated
+    dataLossPreventionStateParam:
+      name: datalosspreventionstate
+      in: query
+      description: 'A string that describes the status of a destination.
+
+        Filter for requests that are blocked by the DLP layer security.'
+      schema:
+        type: string
+        enum:
+        - blocked
+      example: blocked
+    signatureListIdsParam:
+      name: signaturelistids
+      in: query
+      description: The signature ID or comma-separated list of signature list IDs.
+      schema:
+        type: string
+      example: 1,2
     urlsParam:
       name: urls
       in: query
@@ -990,225 +988,127 @@ components:
       schema:
         type: string
       example: https://google.com,facebook.com/help
-    offsetParam:
-      name: offset
+    verdictParam:
+      name: verdict
       in: query
-      description: A number that represents an index in the collection.
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
       schema:
-        type: number
-        default: 0
-      example: 0
+        type: string
+      example: allowed,blocked,proxied
+    categoriesParam:
+      name: categories
+      in: query
+      description: A category ID or comma-delimited list of category ID.
+      schema:
+        type: string
+      example: 148,151,66
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    httpErrorsParam:
+      name: httperrors
+      in: query
+      description: Filter data for requests that resulted in a TLS error or a certificate error.
+      schema:
+        type: string
+        enum:
+        - certificateerror
+        - tlserror
+      example: certificateerror
+    tenantControlsParam:
+      name: tenantcontrols
+      in: query
+      description: If set to `true`, filter data for requests that are part of a tenant control policy.
+      schema:
+        type: boolean
+      example: true
+    orderParam:
+      name: order
+      in: query
+      description: 'A string that describes how to order the results: ascending (`asc`) or descending (`desc`).'
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      example: desc
+    filenameParam:
+      name: filename
+      in: query
+      description: 'A string that identifies a filename. Filter the request by the filename.
+
+        Supports globbing or use of the wildcard character (''*''). The asterisk (*) matches
+
+        zero or more occurrences of any character.'
+      schema:
+        type: string
+      example: myfilename_*
   schemas:
-    Severity:
+    Date:
       type: string
-      description: The severity level of the rule.
-      enum:
-      - HIGH
-      - MEDIUM
-      - LOW
-      - VERY LOW
-      example: HIGH
-    verdictDetected:
-      type: string
-      description: The verdict for the entry.
-      enum:
-      - detected
-      example: detected
-    DataCenter:
+      description: The date from the timestamp based on the timezone parameter.
+      example: '2020-07-12'
+    CiscoAMP:
       type: object
-      description: The information about the data center.
+      description: The properties of the AMP disposition and score for the malware.
+      properties:
+        score:
+          type: number
+          description: The AMP score.
+        disposition:
+          type: string
+          description: The AMP disposition.
+        malware:
+          type: string
+          description: The AMP malware.
+      required:
+      - disposition
+      - malware
+      - score
+    Classification:
+      type: string
+      description: The category of attack detected by a rule that is part of a more general type of attack class, such as trojan-activity, attempted-user, and unknown.
+      example: trojan-activity
+    Identity:
+      type: object
+      description: The information about the identity.
       properties:
         id:
-          type: string
-          description: The unique ID for the data center.
+          type: number
+          description: The ID of the identity.
         label:
           type: string
-          description: The name of the data center.
+          description: The descriptive label for the identity.
+        type:
+          $ref: '#/components/schemas/IdentityType'
+        deleted:
+          type: boolean
+          description: Indicates whether the identity was deleted.
+          example: true
       required:
       - id
       - label
-      example:
-        id: LAX
-        label: Los Angeles, US
-    SignatureList:
-      type: object
-      description: The properties of the signature list.
-      properties:
-        id:
-          type: number
-          description: The unique ID assigned to a default or custom signature list.
-      required:
-      - id
-      example:
-        id: 1112
-    Threat:
-      type: object
-      description: The information about the threat.
-      properties:
-        label:
-          type: string
-          description: The descriptive label for the threat name.
-        type:
-          type: string
-          description: The type of the threat.
-    Application:
-      type: object
-      description: The information about the application.
-      properties:
-        id:
-          type: number
-          description: The ID of the application.
-        label:
-          type: string
-          description: The descriptive label for the application.
-        type:
-          type: string
-          description: 'The type of the application: NBAR or AVC.'
-          enum:
-          - NBAR
-          - AVC
-          example: AVC
-        category:
-          type: object
-          description: The category of the application.
-          properties:
-            id:
-              type: number
-              description: The ID of the application category.
-            label:
-              type: string
-              description: The label of the application category.
+      - type
+      - deleted
       example:
         id: 1
-        label: malware
-        type: AVC
-        category:
-          id: 2
-          label: Education
-    DestinationIp:
-      type: string
-      description: The destination IP for the entry.
-      example: 12.10.10.10
-    TimestampInSeconds:
-      type: number
-      description: The timestamp represented in seconds.
-      example: 1594557263
-    HttpError:
-      type: object
-      description: The properties of the HTTP error.
-      properties:
+        label: Catch Rate Testing System
         type:
-          type: string
-          description: The type of the error, either `CertificateError` or `TLSError`.
-          enum:
-          - CertificateError
-          - TLSError
-        code:
-          type: number
-          description: The HTTP error code.
-        reason:
-          type: string
-          description: The name of the error.
-        attributes:
-          type: object
-          description: The properties of the additional information for the error.
-    DataLossPreventionState:
-      type: object
-      description: The information about the Data Loss Prevention state.
-      properties:
-        state:
-          type: string
-          description: Indicates the status of the DLP. The state is either `blocked` or the empty string (` `).
-          enum:
-          - blocked
-          - ''
-      required:
-      - state
-      example:
-        state: blocked
-    Timestamp:
-      type: number
-      description: The timestamp represented in milliseconds.
-      example: 1594557263000
-    PrivateApplicationGroup:
-      type: object
-      description: The private application group.
-      properties:
-        id:
-          type:
-          - number
-          - 'null'
-          description: The ID of application group.
-        label:
-          type:
-          - string
-          - 'null'
-          description: The name of the application group.
-    Category:
-      type: object
-      description: The properties of the category.
-      properties:
-        id:
-          type: number
-          description: The ID of the category.
-        label:
-          type: string
-          description: The descriptive label for the category.
-        type:
-          type: string
-          description: The type of the category.
-        integration:
-          type: boolean
-          description: Specifies whether the category is an integration.
-          example: true
-        deprecated:
-          type: boolean
-          description: Specifies whether the category is a legacy category.
-          example: true
-    Isolated:
-      type: object
-      description: The properties of the isolated file.
-      properties:
-        state:
-          type: string
-          description: The state of the isolated file.
-        fileaction:
-          type: string
-          description: The action taken for the file.
-      required:
-      - state
-      - fileaction
-      example:
-        state: not-isolated
-        fileaction: ''
-    IdentityType:
-      type: object
-      description: The information about the identity including the type.
-      properties:
-        id:
-          type: number
-          description: The ID of the origin type for the identity.
-        label:
-          type: string
-          description: The label of the origin type for the identity.
-        type:
-          type: string
-          description: The name of the origin type for the identity.
-    Rule:
-      type: object
-      description: The properties of the firewall rule.
-      properties:
-        id:
-          type: number
-          description: The ID of the rule.
-        label:
-          type: string
-          description: The name of the rule.
-        privateapplicationgroup:
-          $ref: '#/components/schemas/PrivateApplicationGroup'
-      required:
-      - id
-      - label
+          id: 21
+          label: Sites
+          type: site
+        deleted: false
     ActivityFirewall:
       type: object
       description: The information about the firewall activity.
@@ -1313,62 +1213,321 @@ components:
         - id: 72
           label: dns IT Service Management
           app: ''
-    allapplications:
-      type: array
-      description: The list of applications for the entry.
-      items:
-        $ref: '#/components/schemas/Application'
-    SourcePort:
-      type: number
-      description: The source port for the entry.
-      example: 3000
-    CiscoAMP:
+    verdictDetected:
+      type: string
+      description: The verdict for the entry.
+      enum:
+      - detected
+      example: detected
+    Isolated:
       type: object
-      description: The properties of the AMP disposition and score for the malware.
+      description: The properties of the isolated file.
       properties:
-        score:
-          type: number
-          description: The AMP score.
-        disposition:
+        state:
           type: string
-          description: The AMP disposition.
-        malware:
+          description: The state of the isolated file.
+        fileaction:
           type: string
-          description: The AMP malware.
+          description: The action taken for the file.
       required:
-      - disposition
-      - malware
-      - score
-    DestinationPort:
-      type: number
-      description: The destination port for entry.
-      example: 89
+      - state
+      - fileaction
+      example:
+        state: not-isolated
+        fileaction: ''
     SessionId:
       type: number
       description: The unique identifier of a session, which is used to group the correlated events between various services.
       example: 7878797
-    categories:
-      type: array
-      description: The list of categories.
-      items:
-        $ref: '#/components/schemas/Category'
-    Egress:
+    AntivirusThreats:
       type: object
-      description: The information about the egress IP.
+      description: The information about the antivirus threats.
       properties:
-        ip:
+        puas:
+          type: array
+          description: The list of potentially unwanted applications.
+          items:
+            type: object
+        viruses:
+          type: array
+          description: The list of viruses.
+          items:
+            type: string
+        others:
+          type: array
+          description: The list of other antivirus threats.
+          items:
+            type: object
+      required:
+      - others
+      - puas
+      - viruses
+    Rule:
+      type: object
+      description: The properties of the firewall rule.
+      properties:
+        id:
+          type: number
+          description: The ID of the rule.
+        label:
           type: string
-          description: The egress IP.
+          description: The name of the rule.
+        privateapplicationgroup:
+          $ref: '#/components/schemas/PrivateApplicationGroup'
+      required:
+      - id
+      - label
+    ActivityDns:
+      type: object
+      description: The information about the DNS activity.
+      properties:
+        externalip:
+          type: string
+          description: The external IP for the entry.
+        internalip:
+          type: string
+          description: The internal IP for the entry.
+        policycategories:
+          type: array
+          description: The list of the policy categories.
+          items:
+            $ref: '#/components/schemas/Category'
+        categories:
+          $ref: '#/components/schemas/categories'
+        verdict:
+          $ref: '#/components/schemas/verdict'
+        domain:
+          type: string
+          description: The domain name for the entry.
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        identities:
+          $ref: '#/components/schemas/identities'
+        allapplications:
+          type: array
+          description: The list of all applications for the entry.
+          items:
+            $ref: '#/components/schemas/Application'
+        threats:
+          type: array
+          description: The list of threats for the entry.
+          items:
+            $ref: '#/components/schemas/Threat'
         type:
           type: string
-          description: The type of the egress IP.
-          example: shared
+          description: The type of the request. A DNS request always has the type dns.
+          enum:
+          - dns
+          example: dns
+        querytype:
+          type: string
+          description: 'The type of DNS request that was made. For more information,
+
+            see Common DNS Request Types.'
+        date:
+          $ref: '#/components/schemas/Date'
+        time:
+          $ref: '#/components/schemas/Time'
+        returncode:
+          type: number
+          description: 'The DNS return code for this request.
+
+            For more information, see Common DNS return codes for any
+
+            DNS service (and Umbrella).'
+        allowedapplications:
+          type: array
+          description: The list of allowed applications.
+          items:
+            $ref: '#/components/schemas/Application'
+        blockedapplications:
+          type: array
+          description: The list of blocked applications.
+          items:
+            $ref: '#/components/schemas/Application'
       required:
-      - ip
+      - allapplications
+      - allowedapplications
+      - blockedapplications
+      - categories
+      - date
+      - domain
+      - externalip
+      - identities
+      - internalip
+      - policycategories
+      - querytype
+      - returncode
+      - threats
+      - time
+      - timestamp
       - type
+      - verdict
       example:
-        ip: 155.190.3.8
-        type: shared
+        externalip: 52.8.160.247
+        internalip: 52.8.160.247
+        policycategories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        categories:
+        - id: 66
+          label: Malware
+          type: security
+          integration: true
+        verdict: allowed
+        domain: google.com
+        timestamp: 1548311506000
+        time: 06:31:46
+        date: '2019-01-24'
+        identities:
+        - id: 1
+          label: Catch Rate Testing System
+          type:
+            id: 21
+            label: Sites
+            type: site
+          deleted: true
+        threats:
+        - label: Wannacry
+          type: Ransomware
+        allapplications:
+        - id: 1
+          label: label
+          type: NBAR
+          category:
+            id: 1
+            label: category
+        allowedapplications:
+        - id: 1
+          label: label
+          type: NBAR
+          category:
+            id: 1
+            label: category
+        querytype: MX
+        returncode: 2
+        blockedapplications: []
+        type: dns
+    SignatureList:
+      type: object
+      description: The properties of the signature list.
+      properties:
+        id:
+          type: number
+          description: The unique ID assigned to a default or custom signature list.
+      required:
+      - id
+      example:
+        id: 1112
+    ActivityAMPRetro:
+      type: object
+      description: The information about the AMP activity.
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/TimestampInSeconds'
+        firstseenat:
+          type: number
+          description: The date and time (a timestamp expressed in seconds) when the malware event was first recorded.
+          example: 1548311506
+        disposition:
+          type: string
+          description: The disposition for the entry.
+        score:
+          type: number
+          description: The score for the entry.
+        hostname:
+          type: string
+          description: The hostname for the entry.
+        malwarename:
+          type: string
+          description: The name of the malware for the entry.
+        sha256:
+          $ref: '#/components/schemas/sha256'
+      required:
+      - disposition
+      - firstseenat
+      - hostname
+      - malwarename
+      - score
+      - sha256
+      - timestamp
+      example:
+        timestamp: 1548311506
+        firstseenat: 1548311506
+        disposition: clean
+        score: 10
+        hostname: google.com
+        malwarename: malware
+        sha256: 9495b6c155044053953efe30ebaf804780c114e7b721b14f6a5b0a782769696e
+    identities:
+      type: array
+      description: The list of identities for the entry.
+      items:
+        $ref: '#/components/schemas/Identity'
+    Timestamp:
+      type: number
+      description: The timestamp represented in milliseconds.
+      example: 1594557263000
+    SourcePort:
+      type: number
+      description: The source port for the entry.
+      example: 3000
+    Application:
+      type: object
+      description: The information about the application.
+      properties:
+        id:
+          type: number
+          description: The ID of the application.
+        label:
+          type: string
+          description: The descriptive label for the application.
+        type:
+          type: string
+          description: 'The type of the application: NBAR or AVC.'
+          enum:
+          - NBAR
+          - AVC
+          example: AVC
+        category:
+          type: object
+          description: The category of the application.
+          properties:
+            id:
+              type: number
+              description: The ID of the application category.
+            label:
+              type: string
+              description: The label of the application category.
+      example:
+        id: 1
+        label: malware
+        type: AVC
+        category:
+          id: 2
+          label: Education
+    Severity:
+      type: string
+      description: The severity level of the rule.
+      enum:
+      - HIGH
+      - MEDIUM
+      - LOW
+      - VERY LOW
+      example: HIGH
+    DestinationIp:
+      type: string
+      description: The destination IP for the entry.
+      example: 12.10.10.10
+    verdict:
+      type: string
+      description: The verdict for the entry.
+      enum:
+      - allowed
+      - blocked
+      example: allowed
     ActivityIntrusion:
       type: object
       description: The information about the intrusion activity.
@@ -1457,6 +1616,53 @@ components:
           cves:
           - cve-2015-0279
           - cve-2018-12532
+    DestinationPort:
+      type: number
+      description: The destination port for entry.
+      example: 89
+    CVE:
+      type: string
+      description: An identifier for a known security vulnerability/exposure.
+      example: cve-2015-0279
+    Category:
+      type: object
+      description: The properties of the category.
+      properties:
+        id:
+          type: number
+          description: The ID of the category.
+        label:
+          type: string
+          description: The descriptive label for the category.
+        type:
+          type: string
+          description: The type of the category.
+        integration:
+          type: boolean
+          description: Specifies whether the category is an integration.
+          example: true
+        deprecated:
+          type: boolean
+          description: Specifies whether the category is a legacy category.
+          example: true
+    DataLossPreventionState:
+      type: object
+      description: The information about the Data Loss Prevention state.
+      properties:
+        state:
+          type: string
+          description: Indicates the status of the DLP. The state is either `blocked` or the empty string (` `).
+          enum:
+          - blocked
+          - ''
+      required:
+      - state
+      example:
+        state: blocked
+    SourceIp:
+      type: string
+      description: The source IP for the entry.
+      example: 10.11.10.10
     FirewallApplication:
       type: object
       description: The information about the applications managed by the firewall.
@@ -1471,39 +1677,156 @@ components:
           type: string
           description: The information about the app type.
           example: IT Service Management (string) - application/protocol type
-    Signature:
+    Time:
+      type: string
+      description: The time in 24-hour format based on the timezone parameter.
+      example: '12:34'
+    DataCenter:
       type: object
-      description: The properties of the signature.
+      description: The information about the data center.
       properties:
-        generatorid:
-          type: number
-          description: The unique ID that is assigned to the part of the IPS, which generated the event.
         id:
-          type: number
-          description: The ID that is used to uniquely identify signatures.
+          type: string
+          description: The unique ID for the data center.
         label:
           type: string
-          description: A descriptive label for the the signature.
-        cves:
-          type: array
-          description: The list of common vulnerabilites and exposures (CVEs).
-          items:
-            $ref: '#/components/schemas/CVE'
+          description: The name of the data center.
       required:
-      - generatorid
       - id
       - label
-      - cves
       example:
-        generatorid: 148
-        id: 2
-        label: (cip) CIP data is non-conforming to ODVA standard
-        cves:
-        - cve-2015-0279
+        id: LAX
+        label: Los Angeles, US
+    IdentityType:
+      type: object
+      description: The information about the identity including the type.
+      properties:
+        id:
+          type: number
+          description: The ID of the origin type for the identity.
+        label:
+          type: string
+          description: The label of the origin type for the identity.
+        type:
+          type: string
+          description: The name of the origin type for the identity.
+    sha256:
+      type: string
+      description: The SHA256 hash for the entry.
+    Threat:
+      type: object
+      description: The information about the threat.
+      properties:
+        label:
+          type: string
+          description: The descriptive label for the threat name.
+        type:
+          type: string
+          description: The type of the threat.
+    Protocol:
+      type: object
+      description: The properties of the protocol.
+      properties:
+        id:
+          type: number
+          description: The ID of protocol.
+        label:
+          type: string
+          description: The name of the protocol.
+      required:
+      - id
+      - label
+    Egress:
+      type: object
+      description: The information about the egress IP.
+      properties:
+        ip:
+          type: string
+          description: The egress IP.
+        type:
+          type: string
+          description: The type of the egress IP.
+          example: shared
+      required:
+      - ip
+      - type
+      example:
+        ip: 155.190.3.8
+        type: shared
+    Policy:
+      type: object
+      description: The properties of the rules in the policy.
+      required:
+      - destinationlistids
+      - ruleid
+      - rulesetid
+      - timebasedrule
+      properties:
+        timebasedrule:
+          type: boolean
+          description: Specify whether the policy triggered a time-of-day rule.
+        destinationlistids:
+          type: array
+          description: The list of destination lists that the rules triggered.
+          items:
+            type: number
+        ruleid:
+          type:
+          - number
+          - 'null'
+          description: The ID of the rule in the policy.
+        rulesetid:
+          type:
+          - number
+          - 'null'
+          description: The ID of the ruleset in the policy.
+    HttpError:
+      type: object
+      description: The properties of the HTTP error.
+      properties:
+        type:
+          type: string
+          description: The type of the error, either `CertificateError` or `TLSError`.
+          enum:
+          - CertificateError
+          - TLSError
+        code:
+          type: number
+          description: The HTTP error code.
+        reason:
+          type: string
+          description: The name of the error.
+        attributes:
+          type: object
+          description: The properties of the additional information for the error.
     Meta:
       type: object
       description: The properties of the metadata.
       example: {}
+    policycategories:
+      type: array
+      description: The list of policy categories.
+      items:
+        $ref: '#/components/schemas/Category'
+    PrivateApplicationGroup:
+      type: object
+      description: The private application group.
+      properties:
+        id:
+          type:
+          - number
+          - 'null'
+          description: The ID of application group.
+        label:
+          type:
+          - string
+          - 'null'
+          description: The name of the application group.
+    categories:
+      type: array
+      description: The list of categories.
+      items:
+        $ref: '#/components/schemas/Category'
     ActivityProxy:
       type: object
       description: The activity of the proxy.
@@ -1742,367 +2065,44 @@ components:
         threats: []
         httperrors: []
         bundleid: 3
-    Date:
-      type: string
-      description: The date from the timestamp based on the timezone parameter.
-      example: '2020-07-12'
-    ActivityDns:
+    Signature:
       type: object
-      description: The information about the DNS activity.
+      description: The properties of the signature.
       properties:
-        externalip:
-          type: string
-          description: The external IP for the entry.
-        internalip:
-          type: string
-          description: The internal IP for the entry.
-        policycategories:
-          type: array
-          description: The list of the policy categories.
-          items:
-            $ref: '#/components/schemas/Category'
-        categories:
-          $ref: '#/components/schemas/categories'
-        verdict:
-          $ref: '#/components/schemas/verdict'
-        domain:
-          type: string
-          description: The domain name for the entry.
-        timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        identities:
-          $ref: '#/components/schemas/identities'
-        allapplications:
-          type: array
-          description: The list of all applications for the entry.
-          items:
-            $ref: '#/components/schemas/Application'
-        threats:
-          type: array
-          description: The list of threats for the entry.
-          items:
-            $ref: '#/components/schemas/Threat'
-        type:
-          type: string
-          description: The type of the request. A DNS request always has the type dns.
-          enum:
-          - dns
-          example: dns
-        querytype:
-          type: string
-          description: 'The type of DNS request that was made. For more information,
-
-            see Common DNS Request Types.'
-        date:
-          $ref: '#/components/schemas/Date'
-        time:
-          $ref: '#/components/schemas/Time'
-        returncode:
+        generatorid:
           type: number
-          description: 'The DNS return code for this request.
-
-            For more information, see Common DNS return codes for any
-
-            DNS service (and Umbrella).'
-        allowedapplications:
-          type: array
-          description: The list of allowed applications.
-          items:
-            $ref: '#/components/schemas/Application'
-        blockedapplications:
-          type: array
-          description: The list of blocked applications.
-          items:
-            $ref: '#/components/schemas/Application'
-      required:
-      - allapplications
-      - allowedapplications
-      - blockedapplications
-      - categories
-      - date
-      - domain
-      - externalip
-      - identities
-      - internalip
-      - policycategories
-      - querytype
-      - returncode
-      - threats
-      - time
-      - timestamp
-      - type
-      - verdict
-      example:
-        externalip: 52.8.160.247
-        internalip: 52.8.160.247
-        policycategories:
-        - id: 66
-          label: Malware
-          type: security
-          integration: true
-        categories:
-        - id: 66
-          label: Malware
-          type: security
-          integration: true
-        verdict: allowed
-        domain: google.com
-        timestamp: 1548311506000
-        time: 06:31:46
-        date: '2019-01-24'
-        identities:
-        - id: 1
-          label: Catch Rate Testing System
-          type:
-            id: 21
-            label: Sites
-            type: site
-          deleted: true
-        threats:
-        - label: Wannacry
-          type: Ransomware
-        allapplications:
-        - id: 1
-          label: label
-          type: NBAR
-          category:
-            id: 1
-            label: category
-        allowedapplications:
-        - id: 1
-          label: label
-          type: NBAR
-          category:
-            id: 1
-            label: category
-        querytype: MX
-        returncode: 2
-        blockedapplications: []
-        type: dns
-    SourceIp:
-      type: string
-      description: The source IP for the entry.
-      example: 10.11.10.10
-    Classification:
-      type: string
-      description: The category of attack detected by a rule that is part of a more general type of attack class, such as trojan-activity, attempted-user, and unknown.
-      example: trojan-activity
-    sha256:
-      type: string
-      description: The SHA256 hash for the entry.
-    Policy:
-      type: object
-      description: The properties of the rules in the policy.
-      required:
-      - destinationlistids
-      - ruleid
-      - rulesetid
-      - timebasedrule
-      properties:
-        timebasedrule:
-          type: boolean
-          description: Specify whether the policy triggered a time-of-day rule.
-        destinationlistids:
-          type: array
-          description: The list of destination lists that the rules triggered.
-          items:
-            type: number
-        ruleid:
-          type:
-          - number
-          - 'null'
-          description: The ID of the rule in the policy.
-        rulesetid:
-          type:
-          - number
-          - 'null'
-          description: The ID of the ruleset in the policy.
-    Protocol:
-      type: object
-      description: The properties of the protocol.
-      properties:
+          description: The unique ID that is assigned to the part of the IPS, which generated the event.
         id:
           type: number
-          description: The ID of protocol.
+          description: The ID that is used to uniquely identify signatures.
         label:
           type: string
-          description: The name of the protocol.
+          description: A descriptive label for the the signature.
+        cves:
+          type: array
+          description: The list of common vulnerabilites and exposures (CVEs).
+          items:
+            $ref: '#/components/schemas/CVE'
       required:
+      - generatorid
       - id
       - label
-    Identity:
-      type: object
-      description: The information about the identity.
-      properties:
-        id:
-          type: number
-          description: The ID of the identity.
-        label:
-          type: string
-          description: The descriptive label for the identity.
-        type:
-          $ref: '#/components/schemas/IdentityType'
-        deleted:
-          type: boolean
-          description: Indicates whether the identity was deleted.
-          example: true
-      required:
-      - id
-      - label
-      - type
-      - deleted
+      - cves
       example:
-        id: 1
-        label: Catch Rate Testing System
-        type:
-          id: 21
-          label: Sites
-          type: site
-        deleted: false
-    policycategories:
+        generatorid: 148
+        id: 2
+        label: (cip) CIP data is non-conforming to ODVA standard
+        cves:
+        - cve-2015-0279
+    allapplications:
       type: array
-      description: The list of policy categories.
+      description: The list of applications for the entry.
       items:
-        $ref: '#/components/schemas/Category'
-    ActivityAMPRetro:
-      type: object
-      description: The information about the AMP activity.
-      properties:
-        timestamp:
-          $ref: '#/components/schemas/TimestampInSeconds'
-        firstseenat:
-          type: number
-          description: The date and time (a timestamp expressed in seconds) when the malware event was first recorded.
-          example: 1548311506
-        disposition:
-          type: string
-          description: The disposition for the entry.
-        score:
-          type: number
-          description: The score for the entry.
-        hostname:
-          type: string
-          description: The hostname for the entry.
-        malwarename:
-          type: string
-          description: The name of the malware for the entry.
-        sha256:
-          $ref: '#/components/schemas/sha256'
-      required:
-      - disposition
-      - firstseenat
-      - hostname
-      - malwarename
-      - score
-      - sha256
-      - timestamp
-      example:
-        timestamp: 1548311506
-        firstseenat: 1548311506
-        disposition: clean
-        score: 10
-        hostname: google.com
-        malwarename: malware
-        sha256: 9495b6c155044053953efe30ebaf804780c114e7b721b14f6a5b0a782769696e
-    AntivirusThreats:
-      type: object
-      description: The information about the antivirus threats.
-      properties:
-        puas:
-          type: array
-          description: The list of potentially unwanted applications.
-          items:
-            type: object
-        viruses:
-          type: array
-          description: The list of viruses.
-          items:
-            type: string
-        others:
-          type: array
-          description: The list of other antivirus threats.
-          items:
-            type: object
-      required:
-      - others
-      - puas
-      - viruses
-    Time:
-      type: string
-      description: The time in 24-hour format based on the timezone parameter.
-      example: '12:34'
-    verdict:
-      type: string
-      description: The verdict for the entry.
-      enum:
-      - allowed
-      - blocked
-      example: allowed
-    CVE:
-      type: string
-      description: An identifier for a known security vulnerability/exposure.
-      example: cve-2015-0279
-    identities:
-      type: array
-      description: The list of identities for the entry.
-      items:
-        $ref: '#/components/schemas/Identity'
-  responses:
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Bad Request
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
+        $ref: '#/components/schemas/Application'
+    TimestampInSeconds:
+      type: number
+      description: The timestamp represented in seconds.
+      example: 1594557263
   securitySchemes:
     oauthFlow:
       type: oauth2

@@ -68,6 +68,63 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining the reason for failure.
+                example: Internal Server Error
+              status:
+                type: integer
+                description: The HTTP status code returned in the response.
+                example: 500
+              path:
+                type: string
+                description: The path of the API request.
+                example: /iam/rotate-key
+              timestamp:
+                type: string
+                format: date-time
+                example: '2025-03-28T10:54:00'
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining the reason for failure.
+                example: Not Found
+              status:
+                type: integer
+                description: The HTTP status code returned in the response.
+                example: 404
+              path:
+                type: string
+                description: The path of the API request.
+                example: /iam/rotate-key
+              timestamp:
+                type: string
+                description: The date and time (ISO 8601-formatted timestamp) when the system returned the response.
+                format: date-time
+                example: '2025-03-28T10:54:00'
     400Error:
       description: Bad Request
       headers:
@@ -88,35 +145,6 @@ components:
                 type: integer
                 description: The HTTP status code returned in the response.
                 example: 400
-              path:
-                type: string
-                description: The path of the API request.
-                example: /iam/rotate-key
-              timestamp:
-                type: string
-                description: The date and time (ISO 8601-formatted timestamp) when the system returned the response.
-                format: date-time
-                example: '2025-03-28T10:54:00'
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Unauthorized
-                example: Authorization token is invalid.
-              status:
-                type: integer
-                description: The HTTP status code returned in the response.
-                example: 401
               path:
                 type: string
                 description: The path of the API request.
@@ -155,8 +183,8 @@ components:
                 format: date-time
                 description: The date and time (ISO 8601-formatted timestamp) when the system returned the response.
                 example: '2025-03-28T10:54:00'
-    404Error:
-      description: Not Found
+    401Error:
+      description: Unauthorized
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -169,12 +197,12 @@ components:
             properties:
               error:
                 type: string
-                description: Error message explaining the reason for failure.
-                example: Not Found
+                description: Unauthorized
+                example: Authorization token is invalid.
               status:
                 type: integer
                 description: The HTTP status code returned in the response.
-                example: 404
+                example: 401
               path:
                 type: string
                 description: The path of the API request.
@@ -182,34 +210,6 @@ components:
               timestamp:
                 type: string
                 description: The date and time (ISO 8601-formatted timestamp) when the system returned the response.
-                format: date-time
-                example: '2025-03-28T10:54:00'
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining the reason for failure.
-                example: Internal Server Error
-              status:
-                type: integer
-                description: The HTTP status code returned in the response.
-                example: 500
-              path:
-                type: string
-                description: The path of the API request.
-                example: /iam/rotate-key
-              timestamp:
-                type: string
                 format: date-time
                 example: '2025-03-28T10:54:00'
   schemas:

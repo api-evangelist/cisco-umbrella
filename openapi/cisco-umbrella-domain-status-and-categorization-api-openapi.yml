@@ -148,10 +148,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   schemas:
-    ContentCategory:
-      type: string
-      description: An Umbrella content category.
-      example: Astrology
     SecurityCategory:
       type: string
       description: An Umbrella security category.
@@ -199,37 +195,13 @@ components:
         content_categories:
         - Auctions
         - Chat and Instant Messaging
+    ContentCategory:
+      type: string
+      description: An Umbrella content category.
+      example: Astrology
   responses:
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
+    500Error:
+      description: Internal Server Error
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -256,8 +228,36 @@ components:
             properties:
               message:
                 type: string
-    500Error:
-      description: Internal Server Error
+    400Error:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -283,14 +283,6 @@ components:
       description: The MIME content type of the response body.
       example: application/json
   parameters:
-    domainParam:
-      name: domain
-      in: path
-      required: true
-      description: A domain name.
-      schema:
-        type: string
-      example: cisco.com
     showLabels:
       name: showLabels
       in: query
@@ -301,6 +293,14 @@ components:
       schema:
         type: string
       example: https://api.umbrella.com/investigate/v2/domains/categorization/umbrella.com?showLabels
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
   securitySchemes:
     oauthFlow:
       type: oauth2

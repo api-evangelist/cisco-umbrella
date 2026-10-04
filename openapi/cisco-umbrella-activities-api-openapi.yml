@@ -111,6 +111,52 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  responses:
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
     ActivitiesCollection:
       type: object
@@ -206,13 +252,6 @@ components:
           type: object
           description: The raw information for the activity.
   parameters:
-    eventTypeParam:
-      name: event_type
-      schema:
-        type: string
-      in: query
-      description: 'Filter based on the event type. For example: login, user_settings, or other.'
-      example: user_settings
     createdAfterParam:
       name: created_after
       schema:
@@ -220,52 +259,13 @@ components:
       in: query
       description: Filter the collection by the creation date.
       example: '2021-01-01'
-  responses:
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+    eventTypeParam:
+      name: event_type
+      schema:
+        type: string
+      in: query
+      description: 'Filter based on the event type. For example: login, user_settings, or other.'
+      example: user_settings
 x-provenance:
   method: harvested
   first_party: true

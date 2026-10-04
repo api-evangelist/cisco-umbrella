@@ -64,6 +64,29 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+                description: HTTP status code
+              error:
+                type: string
+                example: Internal Server Error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
     400Error:
       description: Bad Request
       headers:
@@ -87,8 +110,8 @@ components:
               message:
                 type: string
                 description: Detailed error message
-    401Error:
-      description: Unauthorized
+    404Error:
+      description: Not Found
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -101,11 +124,11 @@ components:
             properties:
               statusCode:
                 type: integer
-                example: 401
+                example: 404
                 description: HTTP status code
               error:
                 type: string
-                example: Unauthorized
+                example: Not Found
                 description: A brief description of the error
               message:
                 type: string
@@ -133,8 +156,8 @@ components:
               message:
                 type: string
                 description: Detailed error message
-    404Error:
-      description: Not Found
+    401Error:
+      description: Unauthorized
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -147,34 +170,11 @@ components:
             properties:
               statusCode:
                 type: integer
-                example: 404
+                example: 401
                 description: HTTP status code
               error:
                 type: string
-                example: Not Found
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 500
-                description: HTTP status code
-              error:
-                type: string
-                example: Internal Server Error
+                example: Unauthorized
                 description: A brief description of the error
               message:
                 type: string

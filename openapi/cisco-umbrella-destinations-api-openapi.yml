@@ -228,148 +228,38 @@ paths:
         '500':
           $ref: '#/components/responses/ServerErr'
 components:
-  parameters:
-    destinationListId:
-      name: destinationListId
-      in: path
-      schema:
-        type: integer
-      description: The unique ID of the destination list.
-      required: true
-      example: 245
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-      example: 4
-    paginationLimitParam:
-      name: limit
-      in: query
-      description: The number of records in the collection to return on the page.
-      required: false
-      schema:
-        default: 100
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-      example: 50
   responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFoundError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ForbiddenError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UnauthorizedError'
     ServerErr:
       description: Internal Server Error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
     InvalidRequest:
       description: Bad Request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BadRequestError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
   schemas:
-    isGlobal:
-      type: boolean
-      example: false
-      description: 'Specifies whether the destination list is a global destination list.
-
-        There is only one default `allow` destination list and one default `block` destination list for an organization.'
-    ServerError:
-      type: object
-      description: Internal Server Error
-      properties:
-        statusCode:
-          type: integer
-          example: 500
-          description: HTTP status code
-        error:
-          type: string
-          example: Internal Server Error
-          description: The server can not process the request.
-        message:
-          type: string
-          example: An internal server error occurred
-        txId:
-          type: string
-          example: l477k9i2b893
-    name:
-      type: string
-      example: Global Allow list
-      description: The name of the destination list.
-    NotFoundError:
-      type: object
-      description: Not Found
-      properties:
-        statusCode:
-          type: integer
-          example: 404
-          description: HTTP status code
-        error:
-          type: string
-          example: Not Found
-          description: A resource specified in the URL was not found.
-        txId:
-          type: string
-          example: a478k9i2b723
-    meta:
-      type: object
-      description: The pagination information for the response.
-      properties:
-        page:
-          type: integer
-          description: The number of the page in the collection.
-          example: 50
-        limit:
-          type: integer
-          description: The maximum number of items that are returned on the page.
-          example: 10
-        total:
-          type: integer
-          description: The total number of items in the collection.
-          example: 20
-    DestinationListResponse:
-      type: object
-      description: The status and properties of the destination lists.
-      required:
-      - status
-      - data
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        data:
-          $ref: '#/components/schemas/DestinationListObject'
-    id:
-      type: integer
-      example: 1234567
-      description: The unique ID of the destination list.
-    comment:
-      type: string
-      description: The comment about the destination.
-      example: Add new destination list
     destination:
       type: string
       example: cisco.com
@@ -389,14 +279,52 @@ components:
         txId:
           type: string
           example: a478k9i2b723
-    type:
+    comment:
       type: string
+      description: The comment about the destination.
+      example: Add new destination list
+    PaginatedDestinationObjectResponse:
+      type: object
+      description: The status, metadata, and list of destinations for the destination list.
+      required:
+      - status
+      - meta
+      - data
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        meta:
+          $ref: '#/components/schemas/meta'
+        data:
+          type: array
+          description: The list of destinations in the destination list.
+          items:
+            $ref: '#/components/schemas/DestinationObjectWithStringId'
+    name:
+      type: string
+      example: Global Allow list
+      description: The name of the destination list.
+    bundleTypeId:
+      type: integer
+      default: 1
       enum:
-      - domain
-      - url
-      - ipv4
-      example: domain
-      description: The type of the destination.
+      - 1
+      - 2
+      - 4
+      example: 4
+      description: 'The type of the destination list in the policy.
+
+        Set `1` for DNS, `2` for web, and `4` for SAML Bypass.
+
+        If the field is not specified, the default value is `1`.'
+    id:
+      type: integer
+      example: 1234567
+      description: The unique ID of the destination list.
+    idDestinationString:
+      type: string
+      example: '1234567'
+      description: The unique ID of the destination.
     status:
       type: object
       required:
@@ -425,56 +353,22 @@ components:
       example:
       - 1234
       - 187575
-    DestinationCreateObject:
+    meta:
       type: object
-      required:
-      - destination
-      description: The properties of the destination.
+      description: The pagination information for the response.
       properties:
-        destination:
-          $ref: '#/components/schemas/destination'
-        comment:
-          type: string
-          example: A comment about the destination
-          description: A comment about the destination.
-      example:
-        destination: mydestination.com
-        comment: A comment about the destination
-    bundleTypeId:
-      type: integer
-      default: 1
-      enum:
-      - 1
-      - 2
-      - 4
-      example: 4
-      description: 'The type of the destination list in the policy.
-
-        Set `1` for DNS, `2` for web, and `4` for SAML Bypass.
-
-        If the field is not specified, the default value is `1`.'
-    BadRequestError:
-      type: object
-      description: Bad Request
-      properties:
-        statusCode:
+        page:
           type: integer
-          example: 400
-          description: HTTP status code
-        error:
-          type: string
-          example: Bad Request
-          description: A brief description of the error
-        message:
-          type: string
-          example: Validation Error
-        txId:
-          type: string
-          example: d479k9i2b723
-    idDestinationString:
-      type: string
-      example: '1234567'
-      description: The unique ID of the destination.
+          description: The number of the page in the collection.
+          example: 50
+        limit:
+          type: integer
+          description: The maximum number of items that are returned on the page.
+          example: 10
+        total:
+          type: integer
+          description: The total number of items in the collection.
+          example: 20
     DestinationListObject:
       type: object
       required:
@@ -577,49 +471,60 @@ components:
           urlCount: 0
           ipv4Count: 0
           applicationCount: 0
-    organizationId:
-      type: integer
-      example: 2345678
-      description: The organization ID.
-    ForbiddenError:
+    DestinationListResponse:
       type: object
-      description: Forbidden
-      properties:
-        statusCode:
-          type: integer
-          example: 403
-          description: HTTP status code
-        error:
-          type: string
-          example: Forbidden
-          description: The token is invalid.
-        txId:
-          type: string
-          example: a478k9i2b723
-    PaginatedDestinationObjectResponse:
-      type: object
-      description: The status, metadata, and list of destinations for the destination list.
+      description: The status and properties of the destination lists.
       required:
       - status
-      - meta
       - data
       properties:
         status:
           $ref: '#/components/schemas/status'
-        meta:
-          $ref: '#/components/schemas/meta'
         data:
-          type: array
-          description: The list of destinations in the destination list.
-          items:
-            $ref: '#/components/schemas/DestinationObjectWithStringId'
-    access:
-      type: string
-      enum:
-      - allow
-      - block
-      example: allow
-      description: The type of access for the destination list.
+          $ref: '#/components/schemas/DestinationListObject'
+    ServerError:
+      type: object
+      description: Internal Server Error
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+          description: HTTP status code
+        error:
+          type: string
+          example: Internal Server Error
+          description: The server can not process the request.
+        message:
+          type: string
+          example: An internal server error occurred
+        txId:
+          type: string
+          example: l477k9i2b893
+    DestinationCreateObject:
+      type: object
+      required:
+      - destination
+      description: The properties of the destination.
+      properties:
+        destination:
+          $ref: '#/components/schemas/destination'
+        comment:
+          type: string
+          example: A comment about the destination
+          description: A comment about the destination.
+      example:
+        destination: mydestination.com
+        comment: A comment about the destination
+    organizationId:
+      type: integer
+      example: 2345678
+      description: The organization ID.
+    isGlobal:
+      type: boolean
+      example: false
+      description: 'Specifies whether the destination list is a global destination list.
+
+        There is only one default `allow` destination list and one default `block` destination list for an organization.'
     DestinationObjectWithStringId:
       type: object
       required:
@@ -646,6 +551,101 @@ components:
         type: domain
         comment: A comment about test destination
         createdAt: '2021-07-23 19:36:45'
+    BadRequestError:
+      type: object
+      description: Bad Request
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+          description: HTTP status code
+        error:
+          type: string
+          example: Bad Request
+          description: A brief description of the error
+        message:
+          type: string
+          example: Validation Error
+        txId:
+          type: string
+          example: d479k9i2b723
+    type:
+      type: string
+      enum:
+      - domain
+      - url
+      - ipv4
+      example: domain
+      description: The type of the destination.
+    access:
+      type: string
+      enum:
+      - allow
+      - block
+      example: allow
+      description: The type of access for the destination list.
+    ForbiddenError:
+      type: object
+      description: Forbidden
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+          description: HTTP status code
+        error:
+          type: string
+          example: Forbidden
+          description: The token is invalid.
+        txId:
+          type: string
+          example: a478k9i2b723
+    NotFoundError:
+      type: object
+      description: Not Found
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+          description: HTTP status code
+        error:
+          type: string
+          example: Not Found
+          description: A resource specified in the URL was not found.
+        txId:
+          type: string
+          example: a478k9i2b723
+  parameters:
+    destinationListId:
+      name: destinationListId
+      in: path
+      schema:
+        type: integer
+      description: The unique ID of the destination list.
+      required: true
+      example: 245
+    paginationLimitParam:
+      name: limit
+      in: query
+      description: The number of records in the collection to return on the page.
+      required: false
+      schema:
+        default: 100
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+      example: 50
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
+      example: 4
   headers:
     Date:
       schema:

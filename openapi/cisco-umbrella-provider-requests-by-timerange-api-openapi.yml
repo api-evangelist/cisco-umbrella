@@ -101,14 +101,83 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
   parameters:
-    identityIdsParam:
-      name: identityids
-      in: query
-      description: An identity ID or comma-delimited list of identity IDs.
+    timerangeParam:
+      name: timerange
+      in: header
+      description: 'A string that represents a range of time.
+
+        If the header is not set, the header value defaults to `hour`.'
       schema:
         type: string
-      example: 1,2,3
+        enum:
+        - minute
+        - hour
+        - day
+      example: minute
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
     categoriesParam:
       name: categories
       in: query
@@ -116,13 +185,12 @@ components:
       schema:
         type: string
       example: 148,151,66
-    verdictParam:
-      name: verdict
+    threatTypesParam:
+      name: threattypes
       in: query
-      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      description: A threat type or comma-delimited list of threat types.
       schema:
         type: string
-      example: allowed,blocked,proxied
     applicationIdParam:
       name: applicationid
       in: query
@@ -136,15 +204,20 @@ components:
       description: A threat name or comma-delimited list of threat names.
       schema:
         type: string
-    limitParam:
-      name: limit
+    ipParam:
+      name: ip
       in: query
-      description: The maximum number of records to return from the collection.
-      required: true
+      description: An IP address.
       schema:
-        type: number
-        default: 100
-      example: 100
+        type: string
+      example: 10.10.10.10
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
     toParam:
       name: to
       in: query
@@ -155,6 +228,25 @@ components:
       schema:
         type: string
       example: '1640010300000'
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    policyCategoriesParam:
+      name: policycategories
+      in: query
+      description: 'A category ID or comma-delimited list of category ID.
+
+        Filter the request by the categories that trigger a policy.'
+      schema:
+        type: string
+      example: 67,69
     dataLossPreventionStateParam:
       name: datalosspreventionstate
       in: query
@@ -173,39 +265,15 @@ components:
       schema:
         type: string
       example: cisco.com,nasa.gov
-    ipParam:
-      name: ip
+    limitParam:
+      name: limit
       in: query
-      description: An IP address.
-      schema:
-        type: string
-      example: 10.10.10.10
-    policyCategoriesParam:
-      name: policycategories
-      in: query
-      description: 'A category ID or comma-delimited list of category ID.
-
-        Filter the request by the categories that trigger a policy.'
-      schema:
-        type: string
-      example: 67,69
-    fromParam:
-      name: from
-      in: query
-      description: 'A timestamp or relative time string (for example: ''-1days'').
-
-        Filter for data that appears after this time.'
+      description: The maximum number of records to return from the collection.
       required: true
       schema:
-        type: string
-      example: '1639146300000'
-    urlsParam:
-      name: urls
-      in: query
-      description: A URL or comma-delimited list of URL.
-      schema:
-        type: string
-      example: https://google.com,facebook.com/help
+        type: number
+        default: 100
+      example: 100
     identityTypesParam:
       name: identitytypes
       in: query
@@ -221,50 +289,25 @@ components:
         type: number
         default: 0
       example: 0
-    timerangeParam:
-      name: timerange
-      in: header
-      description: 'A string that represents a range of time.
-
-        If the header is not set, the header value defaults to `hour`.'
+    urlsParam:
+      name: urls
+      in: query
+      description: A URL or comma-delimited list of URL.
       schema:
         type: string
-        enum:
-        - minute
-        - hour
-        - day
-      example: minute
-    threatTypesParam:
-      name: threattypes
+      example: https://google.com,facebook.com/help
+    verdictParam:
+      name: verdict
       in: query
-      description: A threat type or comma-delimited list of threat types.
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
       schema:
         type: string
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
+      example: allowed,blocked,proxied
   schemas:
     Date:
       type: string
       description: The date from the timestamp based on the timezone parameter.
       example: '2020-07-12'
-    RequestCounts:
-      type: object
-      description: The information about the requests.
-      properties:
-        requests:
-          type: number
-          description: The total number of requests.
-        allowedrequests:
-          type: number
-          description: The number of requests that were allowed.
-        blockedrequests:
-          type: number
-          description: The number of requests that were blocked.
     RequestsbyHour:
       type: object
       description: The information about the requests by hour.
@@ -296,6 +339,23 @@ components:
         timestamp: 1559836800000
         date: '2019'
         time: '16:00:00'
+    RequestCounts:
+      type: object
+      description: The information about the requests.
+      properties:
+        requests:
+          type: number
+          description: The total number of requests.
+        allowedrequests:
+          type: number
+          description: The number of requests that were allowed.
+        blockedrequests:
+          type: number
+          description: The number of requests that were blocked.
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
     TimestampForBucket:
       type: number
       description: The timestamp represented in milliseconds for the bucket.
@@ -304,66 +364,6 @@ components:
       type: string
       description: The time in 24-hour format based on the timezone parameter.
       example: '12:34'
-    Meta:
-      type: object
-      description: The properties of the metadata.
-      example: {}
-  responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Bad Request
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
   securitySchemes:
     oauthFlow:
       type: oauth2

@@ -98,100 +98,62 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  parameters:
-    identityIdsParam:
-      name: identityids
-      in: query
-      description: An identity ID or comma-delimited list of identity IDs.
-      schema:
-        type: string
-      example: 1,2,3
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    ipParam:
-      name: ip
-      in: query
-      description: An IP address.
-      schema:
-        type: string
-      example: 10.10.10.10
-    signatureListIdsParam:
-      name: signaturelistids
-      in: query
-      description: The signature ID or comma-separated list of signature list IDs.
-      schema:
-        type: string
-      example: 1,2
-    fromParam:
-      name: from
-      in: query
-      description: 'A timestamp or relative time string (for example: ''-1days'').
-
-        Filter for data that appears after this time.'
-      required: true
-      schema:
-        type: string
-      example: '1639146300000'
-    signaturesParam:
-      name: signatures
-      in: query
-      description: The signature or comma-separated list of <signatureid>-<generatorid> signatures.
-      schema:
-        type: string
-      example: 1-2,1-4
-    intrusionActionParam:
-      name: intrusionaction
-      in: query
-      description: 'An action or list of comma-separated intrusion actions. Valid values are: `would_block`, `blocked`, and `detected`.'
-      schema:
-        type: string
-      example: detected,would_block
-    portsParam:
-      name: ports
-      in: query
-      description: A port number or comma-delimited list of port numbers.
-      schema:
-        type: string
-      example: 7351,80
-    identityTypesParam:
-      name: identitytypes
-      in: query
-      description: An identity type or comma-delimited list of identity types.
-      schema:
-        type: string
-      example: network,roaming
-    offsetParam:
-      name: offset
-      in: query
-      description: A number that represents an index in the collection.
-      schema:
-        type: number
-        default: 0
-      example: 0
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
+  responses:
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Forbidden
+    400Error:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Bad Request
   schemas:
     RuleParam:
       type: object
@@ -201,17 +163,10 @@ components:
           type: number
           description: The ID of the ruleset for the signature.
           example: 47
-    SignatureList:
+    Meta:
       type: object
-      description: The properties of the signature list.
-      properties:
-        id:
-          type: number
-          description: The unique ID assigned to a default or custom signature list.
-      required:
-      - id
-      example:
-        id: 1112
+      description: The properties of the metadata.
+      example: {}
     SignatureListSummary:
       type: object
       description: The summary information about the signature lists.
@@ -264,66 +219,111 @@ components:
           id: 47829
         rule:
           id: 47
-    Meta:
+    SignatureList:
       type: object
-      description: The properties of the metadata.
-      example: {}
-  responses:
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Forbidden
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    400Error:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Bad Request
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
+      description: The properties of the signature list.
+      properties:
+        id:
+          type: number
+          description: The unique ID assigned to a default or custom signature list.
+      required:
+      - id
+      example:
+        id: 1112
+  parameters:
+    filterNoisyDomainsParam:
+      name: filternoisydomains
+      in: query
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    ipParam:
+      name: ip
+      in: query
+      description: An IP address.
+      schema:
+        type: string
+      example: 10.10.10.10
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    signaturesParam:
+      name: signatures
+      in: query
+      description: The signature or comma-separated list of <signatureid>-<generatorid> signatures.
+      schema:
+        type: string
+      example: 1-2,1-4
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
+    fromParam:
+      name: from
+      in: query
+      description: 'A timestamp or relative time string (for example: ''-1days'').
+
+        Filter for data that appears after this time.'
+      required: true
+      schema:
+        type: string
+      example: '1639146300000'
+    intrusionActionParam:
+      name: intrusionaction
+      in: query
+      description: 'An action or list of comma-separated intrusion actions. Valid values are: `would_block`, `blocked`, and `detected`.'
+      schema:
+        type: string
+      example: detected,would_block
+    signatureListIdsParam:
+      name: signaturelistids
+      in: query
+      description: The signature ID or comma-separated list of signature list IDs.
+      schema:
+        type: string
+      example: 1,2
+    portsParam:
+      name: ports
+      in: query
+      description: A port number or comma-delimited list of port numbers.
+      schema:
+        type: string
+      example: 7351,80
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
+      schema:
+        type: string
+      example: network,roaming
+    offsetParam:
+      name: offset
+      in: query
+      description: A number that represents an index in the collection.
+      schema:
+        type: number
+        default: 0
+      example: 0
   securitySchemes:
     oauthFlow:
       type: oauth2

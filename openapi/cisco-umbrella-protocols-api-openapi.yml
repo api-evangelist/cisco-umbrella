@@ -112,13 +112,116 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 components:
+  parameters:
+    order:
+      in: query
+      name: order
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      description: 'Specify the order to sort the collection. Valid values are: `asc` (ascending)
+
+        or `desc` (descending).'
+      example: asc
+    date:
+      in: query
+      name: date
+      schema:
+        type: string
+        format: date
+      description: 'Specify a date to search for data within a twenty-four hour time period.
+
+        If you do not provide a date, the last 90 days period is used to query the collection.'
+      example: '2022-01-01'
+    identity:
+      in: query
+      name: identity
+      schema:
+        type: integer
+      description: Specify the entity ID to filter the collection.
+      example: 12355
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
+    protocolId:
+      in: path
+      name: protocolId
+      description: The ID of the protocol.
+      required: true
+      schema:
+        type: string
+    protocolsSort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        enum:
+        - firstDetected
+        - lastDetected
+      description: Specify the name of a field to sort the application protocols.
+      example: firstDetected
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
+  responses:
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
+    ProtocolList:
       type: object
-      description: The error message returned in the response.
+      description: The list of the app's protocol information.
       properties:
-        message:
-          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtocolObjectInList'
+      example:
+        items:
+        - id: 0j1b5Em
+          name: ftp
+          description: File Transfer Protocol
+          events: 100
+          blockedEvents: 50
+          firstDetected: '2022-01-01T00:00:00.000Z'
+          lastDetected: '2022-01-01T00:00:00.000Z'
     ProtocolObjectInList:
       type: object
       description: The app's protocol information.
@@ -167,23 +270,12 @@ components:
         blockedEvents: 50
         firstDetected: '2022-01-01T00:00:00.000Z'
         lastDetected: '2022-01-01T00:00:00.000Z'
-    ProtocolList:
+    Error:
       type: object
-      description: The list of the app's protocol information.
+      description: The error message returned in the response.
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProtocolObjectInList'
-      example:
-        items:
-        - id: 0j1b5Em
-          name: ftp
-          description: File Transfer Protocol
-          events: 100
-          blockedEvents: 50
-          firstDetected: '2022-01-01T00:00:00.000Z'
-          lastDetected: '2022-01-01T00:00:00.000Z'
+        message:
+          type: string
     ProtocolObject:
       type: object
       description: The app's protocol information.
@@ -231,37 +323,6 @@ components:
         blockedEvents: 40
         firstDetected: '2022-01-01T00:00:00.000Z'
         lastDetected: '2022-01-01T00:00:00.000Z'
-  responses:
-    ServerError:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   headers:
     Link:
       schema:
@@ -273,67 +334,6 @@ components:
         If there is a next page, this header includes a link with relation type
 
         `next` to the next page.'
-  parameters:
-    offset:
-      in: query
-      name: offset
-      schema:
-        type: integer
-      description: The number of items to skip before starting to collect the result set.
-    protocolId:
-      in: path
-      name: protocolId
-      description: The ID of the protocol.
-      required: true
-      schema:
-        type: string
-    protocolsSort:
-      in: query
-      name: sort
-      schema:
-        type: string
-        enum:
-        - firstDetected
-        - lastDetected
-      description: Specify the name of a field to sort the application protocols.
-      example: firstDetected
-    identity:
-      in: query
-      name: identity
-      schema:
-        type: integer
-      description: Specify the entity ID to filter the collection.
-      example: 12355
-    date:
-      in: query
-      name: date
-      schema:
-        type: string
-        format: date
-      description: 'Specify a date to search for data within a twenty-four hour time period.
-
-        If you do not provide a date, the last 90 days period is used to query the collection.'
-      example: '2022-01-01'
-    order:
-      in: query
-      name: order
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-      description: 'Specify the order to sort the collection. Valid values are: `asc` (ascending)
-
-        or `desc` (descending).'
-      example: asc
-    limit:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
   securitySchemes:
     oauthFlow:
       type: oauth2

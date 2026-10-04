@@ -266,8 +266,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    400Error:
-      description: Bad Request
+    500Error:
+      description: Internal Server Error
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -280,57 +280,11 @@ components:
             properties:
               statusCode:
                 type: integer
-                example: 400
+                example: 500
                 description: HTTP status code
               error:
                 type: string
-                example: Bad Request
-                description: A malformed client request.
-              message:
-                type: string
-                description: Detailed error message
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 401
-                description: HTTP status code
-              error:
-                type: string
-                example: Unauthorized
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 403
-                description: HTTP status code
-              error:
-                type: string
-                example: Forbidden
+                example: Internal Server Error
                 description: A brief description of the error
               message:
                 type: string
@@ -358,8 +312,8 @@ components:
               message:
                 type: string
                 description: Detailed error message
-    500Error:
-      description: Internal Server Error
+    400Error:
+      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -372,36 +326,62 @@ components:
             properties:
               statusCode:
                 type: integer
-                example: 500
+                example: 400
                 description: HTTP status code
               error:
                 type: string
-                example: Internal Server Error
+                example: Bad Request
+                description: A malformed client request.
+              message:
+                type: string
+                description: Detailed error message
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 403
+                description: HTTP status code
+              error:
+                type: string
+                example: Forbidden
                 description: A brief description of the error
               message:
                 type: string
                 description: Detailed error message
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Unauthorized
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
   parameters:
-    deviceId:
-      name: deviceId
-      in: path
-      description: The device ID (deviceId) of the roaming computer.
-      schema:
-        type: string
-      required: true
-      example: AB00C7DCEC99D211
     paginationPageParam:
       name: page
       in: query
@@ -413,6 +393,14 @@ components:
         format: int32
         minimum: 1
       example: 3
+    deviceId:
+      name: deviceId
+      in: path
+      description: The device ID (deviceId) of the roaming computer.
+      schema:
+        type: string
+      required: true
+      example: AB00C7DCEC99D211
     paginationLimitParam:
       name: limit
       in: query
@@ -425,6 +413,18 @@ components:
         minimum: 1
         maximum: 100
       example: 40
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   schemas:
     RoamingComputerObject:
       type: object

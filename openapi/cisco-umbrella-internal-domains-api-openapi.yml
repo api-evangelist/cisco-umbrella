@@ -248,8 +248,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    400Error:
-      description: Bad Request
+    500Error:
+      description: Internal Server Error
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -262,57 +262,11 @@ components:
             properties:
               statusCode:
                 type: integer
-                example: 400
+                example: 500
                 description: HTTP status code
               error:
                 type: string
-                example: Validation Error
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 401
-                description: HTTP status code
-              error:
-                type: string
-                example: Validation error
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 403
-                description: HTTP status code
-              error:
-                type: string
-                example: Forbidden
+                example: Internal Server Error
                 description: A brief description of the error
               message:
                 type: string
@@ -340,8 +294,8 @@ components:
               message:
                 type: string
                 description: Detailed error message
-    500Error:
-      description: Internal Server Error
+    400Error:
+      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -354,15 +308,93 @@ components:
             properties:
               statusCode:
                 type: integer
-                example: 500
+                example: 400
                 description: HTTP status code
               error:
                 type: string
-                example: Internal Server Error
+                example: Validation Error
                 description: A brief description of the error
               message:
                 type: string
                 description: Detailed error message
+    403Error:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 403
+                description: HTTP status code
+              error:
+                type: string
+                example: Forbidden
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 401
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+  parameters:
+    paginationPageParam:
+      name: page
+      in: query
+      description: The number of a page in the collection.
+      required: false
+      schema:
+        default: 1
+        type: integer
+        format: int32
+        minimum: 1
+      example: 2
+    internalDomainId:
+      name: internalDomainId
+      in: path
+      schema:
+        type: integer
+      description: The ID of the internal domain.
+      required: true
+      example: 12456
+    paginationLimitParam:
+      name: limit
+      in: query
+      description: The number of records in the collection to return on the page.
+      required: false
+      schema:
+        default: 100
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+      example: 50
   headers:
     Date:
       schema:
@@ -375,6 +407,53 @@ components:
         type: string
       description: The MIME content type of the response body.
       example: application/json
+  requestBodies:
+    internalDomain:
+      description: Create the internal domain.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              domain:
+                type: string
+                description: The internal domain.
+                example: cisco-internal.com
+              description:
+                type: string
+                description: The description of the internal domain. The description is a sequence of characters with a length from 1 through 50.
+                minLength: 1
+                maxLength: 50
+                example: A description of a domain.
+              includeAllVAs:
+                type: boolean
+                description: Specifies whether to apply the internal domain to all virtual appliances.
+                example: false
+              includeAllMobileDevices:
+                type: boolean
+                description: Specifies whether to apply the internal domain to all mobile devices.
+                example: false
+              siteIds:
+                type: array
+                items:
+                  type: integer
+                  description: A site ID.
+                  example: 923250
+                description: The list of site IDs associated with the domain.
+                example:
+                - 928250
+                - 6244410
+            type: object
+            required:
+            - domain
+          example:
+            domain: The internal domain
+            description: Description of the internal domain
+            includeAllVAs: false
+            includeAllMobileDevices: false
+            siteIds:
+            - 928250
+            - 6244410
   schemas:
     InternalDomainObject:
       type: object
@@ -439,85 +518,6 @@ components:
         createdAt: '2020-03-09T22:18:26.625Z'
         modifiedAt: '2020-03-09T22:18:26.625Z'
         siteIds: []
-  requestBodies:
-    internalDomain:
-      description: Create the internal domain.
-      required: true
-      content:
-        application/json:
-          schema:
-            properties:
-              domain:
-                type: string
-                description: The internal domain.
-                example: cisco-internal.com
-              description:
-                type: string
-                description: The description of the internal domain. The description is a sequence of characters with a length from 1 through 50.
-                minLength: 1
-                maxLength: 50
-                example: A description of a domain.
-              includeAllVAs:
-                type: boolean
-                description: Specifies whether to apply the internal domain to all virtual appliances.
-                example: false
-              includeAllMobileDevices:
-                type: boolean
-                description: Specifies whether to apply the internal domain to all mobile devices.
-                example: false
-              siteIds:
-                type: array
-                items:
-                  type: integer
-                  description: A site ID.
-                  example: 923250
-                description: The list of site IDs associated with the domain.
-                example:
-                - 928250
-                - 6244410
-            type: object
-            required:
-            - domain
-          example:
-            domain: The internal domain
-            description: Description of the internal domain
-            includeAllVAs: false
-            includeAllMobileDevices: false
-            siteIds:
-            - 928250
-            - 6244410
-  parameters:
-    internalDomainId:
-      name: internalDomainId
-      in: path
-      schema:
-        type: integer
-      description: The ID of the internal domain.
-      required: true
-      example: 12456
-    paginationPageParam:
-      name: page
-      in: query
-      description: The number of a page in the collection.
-      required: false
-      schema:
-        default: 1
-        type: integer
-        format: int32
-        minimum: 1
-      example: 2
-    paginationLimitParam:
-      name: limit
-      in: query
-      description: The number of records in the collection to return on the page.
-      required: false
-      schema:
-        default: 100
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 100
-      example: 50
   securitySchemes:
     oauthFlow:
       type: oauth2
