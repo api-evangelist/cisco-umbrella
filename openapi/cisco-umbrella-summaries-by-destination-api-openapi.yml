@@ -198,39 +198,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Internal Server Error
-    401Error:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Unauthorized
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            example:
-              message: Not Found
     403Error:
       description: Forbidden
       content:
@@ -242,6 +209,17 @@ components:
                 type: string
             example:
               message: Forbidden
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Not Found
     400Error:
       description: Bad Request
       content:
@@ -253,61 +231,29 @@ components:
                 type: string
             example:
               message: Bad Request
+    401Error:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Unauthorized
+    500Error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: Internal Server Error
   parameters:
-    filterNoisyDomainsParam:
-      name: filternoisydomains
-      in: query
-      description: Filter out domains that generate a lot of insignificant traffic (noise).
-      schema:
-        type: boolean
-      example: true
-    categoriesParam:
-      name: categories
-      in: query
-      description: A category ID or comma-delimited list of category ID.
-      schema:
-        type: string
-      example: 148,151,66
-    threatTypesParam:
-      name: threattypes
-      in: query
-      description: A threat type or comma-delimited list of threat types.
-      schema:
-        type: string
-    applicationIdParam:
-      name: applicationid
-      in: query
-      description: The ID of the application.
-      schema:
-        type: string
-      example: '1'
-    threatsParam:
-      name: threats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-    antivirusThreatsParam:
-      name: antivirusthreats
-      in: query
-      description: A threat name or comma-delimited list of threat names.
-      schema:
-        type: string
-      example: Trojan.Linux.Generic.144075
-    securityOverriddenParam:
-      name: securityoverridden
-      in: query
-      description: Specify whether to filter on requests that override security.
-      schema:
-        type: boolean
-      example: true
-    bundleIdParam:
-      name: bundleid
-      in: query
-      description: A proxy bundle ID.
-      schema:
-        type: number
-      example: 1
     ipParam:
       name: ip
       in: query
@@ -315,30 +261,6 @@ components:
       schema:
         type: string
       example: 10.10.10.10
-    identityIdsParam:
-      name: identityids
-      in: query
-      description: An identity ID or comma-delimited list of identity IDs.
-      schema:
-        type: string
-      example: 1,2,3
-    ampDispositionParam:
-      name: ampdisposition
-      in: query
-      description: An AMP disposition string or a comma-delimited list of AMP disposition strings.
-      schema:
-        type: string
-      example: clean,malicious,unknown
-    toParam:
-      name: to
-      in: query
-      description: 'A timestamp or relative time string (for example: ''now'').
-
-        Filter for data that appears before this time.'
-      required: true
-      schema:
-        type: string
-      example: '1640010300000'
     fromParam:
       name: from
       in: query
@@ -349,15 +271,29 @@ components:
       schema:
         type: string
       example: '1639146300000'
-    policyCategoriesParam:
-      name: policycategories
+    urlsParam:
+      name: urls
       in: query
-      description: 'A category ID or comma-delimited list of category ID.
-
-        Filter the request by the categories that trigger a policy.'
+      description: A URL or comma-delimited list of URL.
       schema:
         type: string
-      example: 67,69
+      example: https://google.com,facebook.com/help
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return from the collection.
+      required: true
+      schema:
+        type: number
+        default: 100
+      example: 100
+    verdictParam:
+      name: verdict
+      in: query
+      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      schema:
+        type: string
+      example: allowed,blocked,proxied
     filenameParam:
       name: filename
       in: query
@@ -369,47 +305,15 @@ components:
       schema:
         type: string
       example: myfilename_*
-    dataLossPreventionStateParam:
-      name: datalosspreventionstate
+    policyCategoriesParam:
+      name: policycategories
       in: query
-      description: 'A string that describes the status of a destination.
+      description: 'A category ID or comma-delimited list of category ID.
 
-        Filter for requests that are blocked by the DLP layer security.'
+        Filter the request by the categories that trigger a policy.'
       schema:
         type: string
-        enum:
-        - blocked
-      example: blocked
-    domainsParam:
-      name: domains
-      in: query
-      description: A domain name or comma-delimited list of domain name.
-      schema:
-        type: string
-      example: cisco.com,nasa.gov
-    ruleIdParam:
-      name: ruleid
-      in: query
-      description: The firewall policy rule ID.
-      schema:
-        type: number
-      example: 1
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return from the collection.
-      required: true
-      schema:
-        type: number
-        default: 100
-      example: 100
-    identityTypesParam:
-      name: identitytypes
-      in: query
-      description: An identity type or comma-delimited list of identity types.
-      schema:
-        type: string
-      example: network,roaming
+      example: 67,69
     offsetParam:
       name: offset
       in: query
@@ -418,20 +322,41 @@ components:
         type: number
         default: 0
       example: 0
-    urlsParam:
-      name: urls
+    filterNoisyDomainsParam:
+      name: filternoisydomains
       in: query
-      description: A URL or comma-delimited list of URL.
+      description: Filter out domains that generate a lot of insignificant traffic (noise).
+      schema:
+        type: boolean
+      example: true
+    bundleIdParam:
+      name: bundleid
+      in: query
+      description: A proxy bundle ID.
+      schema:
+        type: number
+      example: 1
+    identityTypesParam:
+      name: identitytypes
+      in: query
+      description: An identity type or comma-delimited list of identity types.
       schema:
         type: string
-      example: https://google.com,facebook.com/help
-    verdictParam:
-      name: verdict
+      example: network,roaming
+    securityOverriddenParam:
+      name: securityoverridden
       in: query
-      description: A string or comma-delimited string that describes whether the traffic can reach the destination.
+      description: Specify whether to filter on requests that override security.
       schema:
-        type: string
-      example: allowed,blocked,proxied
+        type: boolean
+      example: true
+    ruleIdParam:
+      name: ruleid
+      in: query
+      description: The firewall policy rule ID.
+      schema:
+        type: number
+      example: 1
     typeDnsWebParam:
       name: type
       in: path
@@ -443,11 +368,82 @@ components:
         - dns
         - proxy
       example: dns
+    categoriesParam:
+      name: categories
+      in: query
+      description: A category ID or comma-delimited list of category ID.
+      schema:
+        type: string
+      example: 148,151,66
+    ampDispositionParam:
+      name: ampdisposition
+      in: query
+      description: An AMP disposition string or a comma-delimited list of AMP disposition strings.
+      schema:
+        type: string
+      example: clean,malicious,unknown
+    dataLossPreventionStateParam:
+      name: datalosspreventionstate
+      in: query
+      description: 'A string that describes the status of a destination.
+
+        Filter for requests that are blocked by the DLP layer security.'
+      schema:
+        type: string
+        enum:
+        - blocked
+      example: blocked
+    threatsParam:
+      name: threats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+    threatTypesParam:
+      name: threattypes
+      in: query
+      description: A threat type or comma-delimited list of threat types.
+      schema:
+        type: string
+    antivirusThreatsParam:
+      name: antivirusthreats
+      in: query
+      description: A threat name or comma-delimited list of threat names.
+      schema:
+        type: string
+      example: Trojan.Linux.Generic.144075
+    identityIdsParam:
+      name: identityids
+      in: query
+      description: An identity ID or comma-delimited list of identity IDs.
+      schema:
+        type: string
+      example: 1,2,3
+    applicationIdParam:
+      name: applicationid
+      in: query
+      description: The ID of the application.
+      schema:
+        type: string
+      example: '1'
+    domainsParam:
+      name: domains
+      in: query
+      description: A domain name or comma-delimited list of domain name.
+      schema:
+        type: string
+      example: cisco.com,nasa.gov
+    toParam:
+      name: to
+      in: query
+      description: 'A timestamp or relative time string (for example: ''now'').
+
+        Filter for data that appears before this time.'
+      required: true
+      schema:
+        type: string
+      example: '1640010300000'
   schemas:
-    Meta:
-      type: object
-      description: The properties of the metadata.
-      example: {}
     Summary:
       type: object
       description: The summary information about the requests.
@@ -553,6 +549,10 @@ components:
           files: 5
           identities: 1
           applicationsallowed: 2
+    Meta:
+      type: object
+      description: The properties of the metadata.
+      example: {}
   securitySchemes:
     oauthFlow:
       type: oauth2

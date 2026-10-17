@@ -402,52 +402,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 500
-                description: HTTP status code
-              error:
-                type: string
-                example: Internal error
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
-    404Error:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                example: 404
-                description: HTTP status code
-              error:
-                type: string
-                example: Not Found
-                description: A brief description of the error
-              message:
-                type: string
-                description: Detailed error message
     400Error:
       description: Bad Request
       headers:
@@ -517,6 +471,52 @@ components:
               message:
                 type: string
                 description: Detailed error message
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+                description: HTTP status code
+              error:
+                type: string
+                example: Not Found
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+                description: HTTP status code
+              error:
+                type: string
+                example: Internal error
+                description: A brief description of the error
+              message:
+                type: string
+                description: Detailed error message
   parameters:
     paginationPageParam:
       name: page
@@ -547,7 +547,72 @@ components:
         format: int32
         minimum: 1
         maximum: 100
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   schemas:
+    NetworkObject:
+      type: object
+      properties:
+        originId:
+          type: integer
+          description: The origin ID.
+        name:
+          type: string
+          description: The name of the network.
+        ipAddress:
+          type: string
+          description: The IP address of the network.
+        prefixLength:
+          $ref: '#/components/schemas/prefixLength'
+        isDynamic:
+          type: boolean
+          description: Specifies whether the network has a dynamic IP.
+        isVerified:
+          type: boolean
+          description: Specifies whether the network is verified.
+        status:
+          type: string
+          description: The status of the network.
+          pattern: ^(OPEN|CLOSED)$
+        createdAt:
+          type: string
+          description: The date and time (timestamp) when the network was created.
+          format: date-time
+          example: '2018-06-13T16:07:07.222Z'
+      required:
+      - originId
+      - name
+      - ipAddress
+      - prefixLength
+      - isDynamic
+      - isVerified
+      - status
+      - createdAt
+      example:
+        originId: 1234
+        name: name of the network
+        ipAddress: The network IP address
+        prefixLength: 32
+        isDynamic: true
+        isVerified: true
+        status: OPEN
+        createdAt: '2020-03-09T22:18:26.625Z'
+    prefixLength:
+      type: integer
+      description: The length of the prefix. Set a prefix length that is greater than 28 and less than 33.
+      minimum: 29
+      maximum: 32
+      example: 30
     PolicyObject:
       type: object
       readOnly: true
@@ -617,71 +682,6 @@ components:
         createdAt: '2020-03-09T22:18:26.625Z'
         modifiedAt: '2020-03-09T22:18:26.625Z'
         uri: The resource URI
-    prefixLength:
-      type: integer
-      description: The length of the prefix. Set a prefix length that is greater than 28 and less than 33.
-      minimum: 29
-      maximum: 32
-      example: 30
-    NetworkObject:
-      type: object
-      properties:
-        originId:
-          type: integer
-          description: The origin ID.
-        name:
-          type: string
-          description: The name of the network.
-        ipAddress:
-          type: string
-          description: The IP address of the network.
-        prefixLength:
-          $ref: '#/components/schemas/prefixLength'
-        isDynamic:
-          type: boolean
-          description: Specifies whether the network has a dynamic IP.
-        isVerified:
-          type: boolean
-          description: Specifies whether the network is verified.
-        status:
-          type: string
-          description: The status of the network.
-          pattern: ^(OPEN|CLOSED)$
-        createdAt:
-          type: string
-          description: The date and time (timestamp) when the network was created.
-          format: date-time
-          example: '2018-06-13T16:07:07.222Z'
-      required:
-      - originId
-      - name
-      - ipAddress
-      - prefixLength
-      - isDynamic
-      - isVerified
-      - status
-      - createdAt
-      example:
-        originId: 1234
-        name: name of the network
-        ipAddress: The network IP address
-        prefixLength: 32
-        isDynamic: true
-        isVerified: true
-        status: OPEN
-        createdAt: '2020-03-09T22:18:26.625Z'
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

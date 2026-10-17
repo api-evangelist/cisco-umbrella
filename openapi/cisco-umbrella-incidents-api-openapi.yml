@@ -335,24 +335,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     400Error:
       description: Invalid request
       content:
@@ -380,82 +362,35 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return in the collection.
-      required: false
-      schema:
-        type: string
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
-    createdBeforeParam:
-      name: created_before
-      in: query
-      schema:
-        type: string
-      description: Filter based on incidents created before a given date.
-      example: 2021-01-18T16:55
-    createdAfterParam:
-      name: created_after
-      schema:
-        type: string
-      in: query
-      description: Filter the collection by the creation date.
-      example: '2021-01-01'
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
-    Entity:
+    Policy:
       type: object
-      description: The information about the object relating to this incident.
+      description: The policy that triggered the incident.
       properties:
-        direct_url:
-          type: string
-          description: The URL to the object.
-        extra:
-          type: object
-          description: The additional information related to the incident.
-          properties:
-            origin_type_label:
-              type: string
-              description: This field gives additional info regarding the scanned object that triggered the policy violation.
-            origin_type_label_plural:
-              type: string
-              description: Similar to the origin_type_label but for a plural label
         id:
           type: string
-          description: This is Cloudlock Internal Identifier for an entity.
-        mime_type:
-          type: string
-          description: The mime type of the object/document (if any)
+          description: The Cloudlock Internal Identifier for a policy.
         name:
           type: string
-          description: The name of the underlying object represented by this entity.
-        origin_id:
-          type: string
-          description: This is the identifier of the object in the vendor system.
-        origin_type:
-          type: string
-          description: The object type (i.e. document, post, app, event).
-        owner_email:
-          type: string
-          description: Object owner's email address (e.g. user@cloudlock.com).
-        owner_name:
-          type: string
-          description: Object owner's name (i.e. John Q. User).
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-    Vendor:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'The name of the vendor. For example: google.'
+          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
     Match:
       type: object
       description: 'A Match represents an occurrence of a content pattern in an object (such as a file).
@@ -518,16 +453,81 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Match'
-    Policy:
+    Vendor:
       type: object
-      description: The policy that triggered the incident.
       properties:
-        id:
-          type: string
-          description: The Cloudlock Internal Identifier for a policy.
         name:
           type: string
-          description: 'The name of the policy. Possible values: SSN, PCI or any policy name.'
+          description: 'The name of the vendor. For example: google.'
+    Entity:
+      type: object
+      description: The information about the object relating to this incident.
+      properties:
+        direct_url:
+          type: string
+          description: The URL to the object.
+        extra:
+          type: object
+          description: The additional information related to the incident.
+          properties:
+            origin_type_label:
+              type: string
+              description: This field gives additional info regarding the scanned object that triggered the policy violation.
+            origin_type_label_plural:
+              type: string
+              description: Similar to the origin_type_label but for a plural label
+        id:
+          type: string
+          description: This is Cloudlock Internal Identifier for an entity.
+        mime_type:
+          type: string
+          description: The mime type of the object/document (if any)
+        name:
+          type: string
+          description: The name of the underlying object represented by this entity.
+        origin_id:
+          type: string
+          description: This is the identifier of the object in the vendor system.
+        origin_type:
+          type: string
+          description: The object type (i.e. document, post, app, event).
+        owner_email:
+          type: string
+          description: Object owner's email address (e.g. user@cloudlock.com).
+        owner_name:
+          type: string
+          description: Object owner's name (i.e. John Q. User).
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+  parameters:
+    createdAfterParam:
+      name: created_after
+      schema:
+        type: string
+      in: query
+      description: Filter the collection by the creation date.
+      example: '2021-01-01'
+    createdBeforeParam:
+      name: created_before
+      in: query
+      schema:
+        type: string
+      description: Filter based on incidents created before a given date.
+      example: 2021-01-18T16:55
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
 x-provenance:
   method: harvested
   first_party: true

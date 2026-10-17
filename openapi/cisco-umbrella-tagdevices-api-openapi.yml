@@ -173,34 +173,6 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
-    401Error:
-      description: Unauthorized
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              Error:
-                type: string
     404TagNotFound:
       description: Tag Not found
       headers:
@@ -222,8 +194,8 @@ components:
               message: Tag not found
               code: 404
               code_text: Not Found
-    404Error:
-      description: Not Found
+    403Error:
+      description: Forbidden
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -236,8 +208,8 @@ components:
             properties:
               Error:
                 type: string
-    403Error:
-      description: Forbidden
+    404Error:
+      description: Not Found
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -264,14 +236,35 @@ components:
             properties:
               Error:
                 type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              Error:
+                type: string
   schemas:
-    deviceModifiedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella updated the roaming computer in the organization.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
     taggedDeviceInformation:
       type: object
       description: "The information about the tagged devices:\ntag ID, origin IDs in the organization that have the tag on the roaming computers, and \norigin IDs in the organization that have the tag removed from the roaming computers."
@@ -286,30 +279,28 @@ components:
           $ref: '#/components/schemas/addOrigins'
         removeOrigins:
           $ref: '#/components/schemas/removeOrigins'
-    tagId:
+    deviceModifiedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella updated the roaming computer in the organization.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    type:
+      type: string
+      description: The device type.
+      example: macOS
+    deviceCreatedAt:
+      type: string
+      format: date-time
+      description: 'The date and time (timestamp) that Umbrella added the roaming computer to the organization.
+
+        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
+      example: '2022-04-12T23:20:50.52Z'
+    organizationId:
       type: integer
-      description: The unique ID of the tag.
-      example: 12345678
-    removeOrigins:
-      type: array
-      description: The list of roaming computers (origin IDs) that have the tag removed.
-      items:
-        type: integer
-        description: An origin Id.
-        example: 12345678
-      example:
-      - 12345678
-      - 87654321
-    addOrigins:
-      type: array
-      description: The list of roaming computers (origin IDs) that have the tag.
-      items:
-        type: integer
-        description: An origin ID.
-        example: 12345678
-      example:
-      - 12345678
-      - 87654321
+      description: The organization ID.
+      example: 2456789
     deviceInformation:
       type: object
       description: The information about the device.
@@ -340,30 +331,59 @@ components:
         type: linux
         createdAt: '2022-04-12T23:20:50.52Z'
         modifiedAt: '2022-04-12T23:20:50.52Z'
+    addOrigins:
+      type: array
+      description: The list of roaming computers (origin IDs) that have the tag.
+      items:
+        type: integer
+        description: An origin ID.
+        example: 12345678
+      example:
+      - 12345678
+      - 87654321
     label:
       type: string
       description: The display name of the device.
       example: device-one
-    organizationId:
-      type: integer
-      description: The organization ID.
-      example: 2456789
     originId:
       type: integer
       description: The unique identifier of the device.
       example: 2456
-    deviceCreatedAt:
-      type: string
-      format: date-time
-      description: 'The date and time (timestamp) that Umbrella added the roaming computer to the organization.
-
-        The timestamp is an ISO 8601 formatted string. For example: `2023-04-12T23:20:50.52Z`.'
-      example: '2022-04-12T23:20:50.52Z'
-    type:
-      type: string
-      description: The device type.
-      example: macOS
+    removeOrigins:
+      type: array
+      description: The list of roaming computers (origin IDs) that have the tag removed.
+      items:
+        type: integer
+        description: An origin Id.
+        example: 12345678
+      example:
+      - 12345678
+      - 87654321
+    tagId:
+      type: integer
+      description: The unique ID of the tag.
+      example: 12345678
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   parameters:
+    tagId:
+      name: tagId
+      in: path
+      description: The ID of the tag.
+      required: true
+      schema:
+        type: integer
+      example: 2
     limitTagDevices:
       name: limit
       description: The number of roaming computers with the tag ID to return from the collection in the response.
@@ -383,30 +403,7 @@ components:
       in: query
       required: false
       example: 2
-    tagId:
-      name: tagId
-      in: path
-      description: The ID of the tag.
-      required: true
-      schema:
-        type: integer
-      example: 2
   requestBodies:
-    addOrigins:
-      description: 'Add the tag to the roaming computers. Provide a list of roaming computer origin IDs.
-
-        The request body can include at most 500 origin IDs.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              addOrigins:
-                $ref: '#/components/schemas/addOrigins'
-          example:
-            addOrigins:
-            - 12321231
-            - 123134314
     removeOrigins:
       description: 'Remove the tag on the roaming computers. Provide a list of roaming computer origin IDs.
 
@@ -422,18 +419,21 @@ components:
             removeOrigins:
             - 12321231
             - 123134314
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
+    addOrigins:
+      description: 'Add the tag to the roaming computers. Provide a list of roaming computer origin IDs.
+
+        The request body can include at most 500 origin IDs.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              addOrigins:
+                $ref: '#/components/schemas/addOrigins'
+          example:
+            addOrigins:
+            - 12321231
+            - 123134314
   securitySchemes:
     oauthFlow:
       type: oauth2

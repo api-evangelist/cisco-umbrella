@@ -65,14 +65,8 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InvalidRequest:
-      description: Invalid request
+    ServerError:
+      description: Server error
       content:
         application/json:
           schema:
@@ -83,8 +77,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ServerError:
-      description: Server error
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InvalidRequest:
+      description: Invalid request
       content:
         application/json:
           schema:
@@ -100,28 +100,7 @@ components:
         If there is a next page, this header includes a link with relation type
 
         `next` to the next page.'
-  parameters:
-    limit:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: The maximum number of items to return in the collection.
-    offset:
-      in: query
-      name: offset
-      schema:
-        type: integer
-      description: The number of items to skip before starting to collect the result set.
   schemas:
-    Error:
-      type: object
-      description: The error message returned in the response.
-      properties:
-        message:
-          type: string
     ApplicationCategory:
       type: object
       description: The application category information.
@@ -143,6 +122,27 @@ components:
       example:
         items:
         - name: Security
+    Error:
+      type: object
+      description: The error message returned in the response.
+      properties:
+        message:
+          type: string
+  parameters:
+    offset:
+      in: query
+      name: offset
+      schema:
+        type: integer
+      description: The number of items to skip before starting to collect the result set.
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: The maximum number of items to return in the collection.
   securitySchemes:
     oauthFlow:
       type: oauth2

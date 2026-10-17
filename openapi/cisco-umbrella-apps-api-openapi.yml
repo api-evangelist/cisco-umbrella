@@ -324,68 +324,46 @@ paths:
         '500':
           $ref: '#/components/responses/500Error'
 components:
-  responses:
-    500Error:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    404Error:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    400Error:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    403Error:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    limitParam:
-      name: limit
-      in: query
-      description: The maximum number of records to return in the collection.
-      required: false
-      schema:
-        type: string
-    offsetParam:
-      name: offset
-      schema:
-        type: string
-      in: query
-      description: A number that represents the index into the collection.
-      required: false
   schemas:
+    AppsCollection:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The application's internal CloudLock ID.
+        app:
+          $ref: '#/components/schemas/App'
+        scope_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeCategory'
+          description: The list of application scope category.
+        classification:
+          $ref: '#/components/schemas/Classification'
+        detected_at:
+          type: string
+          description: The time when the app was detected, specified as a timestamp in UTC.
+        users_count:
+          type: integer
+          description: The number of users that have the application installed.
+        admins_count:
+          type: integer
+          description: The number of administrators that have the application installed.
+    ScopeCategory:
+      type: object
+      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
+
+        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
+
+        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
+      properties:
+        title:
+          type: string
+          description: 'The categories title, for example: `Basic Information`.'
+        category_id:
+          type: string
+          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
+          example: FDATA
     App:
       type: object
       description: The information about the application.
@@ -413,12 +391,22 @@ components:
           description: The community trust rating score.
         vendor:
           $ref: '#/components/schemas/Vendor'
-    Vendor:
+    Classification:
       type: object
       properties:
-        name:
+        method:
           type: string
-          description: 'The name of the vendor. For example: google.'
+          description: 'The method where the classification was changed. Possible values are: manual, policy.'
+        reason:
+          type: string
+          description: The reason for the classification.
+        type:
+          type: string
+          description: 'Application''s classification type. Possible values are: unclassified, trusted, restricted, banned.'
+        updated_at:
+          type: string
+          description: The classification's last update time, specified as a timestamp in UTC.
+      description: The application's classification resource.
     AccessScope:
       type: object
       properties:
@@ -436,61 +424,73 @@ components:
         url:
           type: string
           description: 'The url to the access scope. For example: ''https://www.googleapis.com/auth/userinfo.email''.'
-    ScopeCategory:
-      type: object
-      description: 'The scope categories resource returns information on the access scopes, which exist per each category.
-
-        Scope category strings: `FDATA` (full data access), `BINFO` (basic info), `LACES` (limited access to data and files),
-
-        `PINFO` (payment information), and `INBO`X (access inbox or contact information).'
-      properties:
-        title:
-          type: string
-          description: 'The categories title, for example: `Basic Information`.'
-        category_id:
-          type: string
-          description: 'The category id. For example: `FDATA`, `BINFO`, `LACES`, and `PINFO`.'
-          example: FDATA
-    AppsCollection:
+    Vendor:
       type: object
       properties:
-        id:
+        name:
           type: string
-          description: The application's internal CloudLock ID.
-        app:
-          $ref: '#/components/schemas/App'
-        scope_categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeCategory'
-          description: The list of application scope category.
-        classification:
-          $ref: '#/components/schemas/Classification'
-        detected_at:
-          type: string
-          description: The time when the app was detected, specified as a timestamp in UTC.
-        users_count:
-          type: integer
-          description: The number of users that have the application installed.
-        admins_count:
-          type: integer
-          description: The number of administrators that have the application installed.
-    Classification:
-      type: object
-      properties:
-        method:
-          type: string
-          description: 'The method where the classification was changed. Possible values are: manual, policy.'
-        reason:
-          type: string
-          description: The reason for the classification.
-        type:
-          type: string
-          description: 'Application''s classification type. Possible values are: unclassified, trusted, restricted, banned.'
-        updated_at:
-          type: string
-          description: The classification's last update time, specified as a timestamp in UTC.
-      description: The application's classification resource.
+          description: 'The name of the vendor. For example: google.'
+  responses:
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    403Error:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    401Error:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404Error:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      description: The maximum number of records to return in the collection.
+      required: false
+      schema:
+        type: string
+    offsetParam:
+      name: offset
+      schema:
+        type: string
+      in: query
+      description: A number that represents the index into the collection.
+      required: false
 x-provenance:
   method: harvested
   first_party: true

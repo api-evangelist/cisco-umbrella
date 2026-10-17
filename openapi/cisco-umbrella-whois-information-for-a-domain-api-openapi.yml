@@ -893,22 +893,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    401Error:
-      description: Unauthorized
+    403Error:
+      description: Forbidden
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -935,20 +921,6 @@ components:
             properties:
               message:
                 type: string
-    403Error:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     400Error:
       description: Bad Request
       headers:
@@ -963,11 +935,47 @@ components:
             properties:
               message:
                 type: string
+    401Error:
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   schemas:
-    moreDataAvailable:
-      type: boolean
-      description: Specifies whether more samples are available for the destination.
-      example: true
     WhoisDomain:
       type: object
       description: A standard WHOIS response record for a single domain.
@@ -1228,6 +1236,16 @@ components:
         administrativeContactPostalCode: '94043'
         zoneContactCountry: ''
         billingContactState: ''
+    moreDataAvailable:
+      type: boolean
+      description: Specifies whether more samples are available for the destination.
+      example: true
+    offset:
+      type: integer
+      description: The place to start reading in the collection.
+      format: int64
+      default: 0
+      example: 5
     limit:
       type: integer
       description: The maximum number of records to include in the response.
@@ -1250,13 +1268,60 @@ components:
           type: boolean
           description: Specifies whether the domain name is current.
           example: true
-    offset:
-      type: integer
-      description: The place to start reading in the collection.
-      format: int64
-      default: 0
-      example: 5
   parameters:
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: 'The number of items to return in the response from the collection. The default limit is 10.
+
+        Increase the limit to request a larger set of data.'
+      schema:
+        type: integer
+        default: 10
+      example: 25
+    domain:
+      name: domain
+      in: path
+      required: true
+      description: The domain name without wildcards and including the top-level domain (TLD).
+      schema:
+        type: string
+      example: store.cisco.com
+    stop:
+      name: stop
+      in: query
+      required: false
+      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
+
+        Filter for data that appears before this time.
+
+        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
+      schema:
+        type: string
+      example: now
+    offsetParam:
+      name: offset
+      in: query
+      required: false
+      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
+      schema:
+        type: integer
+        default: 0
+      example: 2
+    sortFieldParam:
+      name: sortField
+      in: query
+      required: false
+      description: 'Valid values are: `created`, `updated`, `expires`, or `domainname`.'
+      schema:
+        type: string
+        enum:
+        - created
+        - updated
+        - expires
+        - domainname
+      example: created
     start:
       name: start
       in: query
@@ -1277,71 +1342,6 @@ components:
       schema:
         type: string
       example: -1days
-    stop:
-      name: stop
-      in: query
-      required: false
-      description: 'Point in time in the past expressed as a timestamp in milliseconds or relative time.
-
-        Filter for data that appears before this time.
-
-        Valid formats: stop=-1days, stop=now, stop=1509642000000. The maximum time range is 30 days.'
-      schema:
-        type: string
-      example: now
-    sortFieldParam:
-      name: sortField
-      in: query
-      required: false
-      description: 'Valid values are: `created`, `updated`, `expires`, or `domainname`.'
-      schema:
-        type: string
-        enum:
-        - created
-        - updated
-        - expires
-        - domainname
-      example: created
-    domain:
-      name: domain
-      in: path
-      required: true
-      description: The domain name without wildcards and including the top-level domain (TLD).
-      schema:
-        type: string
-      example: store.cisco.com
-    limitParam:
-      name: limit
-      in: query
-      required: false
-      description: 'The number of items to return in the response from the collection. The default limit is 10.
-
-        Increase the limit to request a larger set of data.'
-      schema:
-        type: integer
-        default: 10
-      example: 25
-    offsetParam:
-      name: offset
-      in: query
-      required: false
-      description: A number that represents an index in the collection. By default, the offset is 0 (the first record).
-      schema:
-        type: integer
-        default: 0
-      example: 2
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

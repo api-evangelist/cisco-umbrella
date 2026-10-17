@@ -768,6 +768,96 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   schemas:
+    secretParameter:
+      type: string
+      example: 123Secret
+      description: The secret of the PSK credentials. Ensure that you save the secret. The secret is not provided at any other time.
+    authentication:
+      type: object
+      description: The authentication context of the client.
+      properties:
+        type:
+          type: string
+          enum:
+          - PSK
+          example: PSK
+          readOnly: true
+        parameters:
+          $ref: '#/components/schemas/parameters'
+    TunnelResourceObjectWithSecret:
+      type: object
+      description: The properties of the tunnel resource object.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: The tunnel resource ID. Use this ID as a reference for subsequent requests.
+          example: 1122321
+        uri:
+          type: string
+          description: Resource URI
+          readOnly: true
+          example: /tunnels/1122321
+        name:
+          type: string
+          description: 'Display the name of the tunnel. The tunnel name is required, cannot exceed 50 characters in length,
+
+            and can''t have any special characters other than spaces and hyphens.'
+          example: Site01Tunnel
+        siteOriginId:
+          type: integer
+          description: The Site origin ID that is associated with the tunnel.
+          example: 123456
+        client:
+          $ref: '#/components/schemas/TunnelClientMetadataWithSecret'
+        transport:
+          type: object
+          properties:
+            protocol:
+              description: The tunnel transport protocol. The default transport protocol is IPSec.
+              type: string
+              enum:
+              - IPSec
+              readOnly: true
+              example: IPSec
+        serviceType:
+          $ref: '#/components/schemas/serviceType'
+        networkCIDRs:
+          $ref: '#/components/schemas/networkCIDRs'
+        meta:
+          type: object
+          description: The metadata for the tunnel object, related to service internals.
+          readOnly: true
+        createdAt:
+          type: string
+          description: The date and time (timestamp) when the tunnel was created.
+          format: date-time
+          readOnly: true
+          example: '2018-06-13T16:07:07.222Z'
+        modifiedAt:
+          $ref: '#/components/schemas/modifiedAt'
+      example:
+        id: 1122321
+        uri: /tunnels/1122321
+        name: Site01Tunnel
+        siteOriginId: 123456
+        client:
+          deviceType: ASA
+          authentication:
+            type: PSK
+            parameters:
+              id: admin@2561066-237952254-umbrella.com
+              modifiedAt: '2018-06-13T16:07:07.222Z'
+              secret: secretkey123
+        transport:
+          protocol: IPSec
+        serviceType: SIG
+        networkCIDRs:
+        - 123.111.222.25/24
+        - 111.222.39.1/32
+        meta: {}
+        createdAt: '2018-06-13T16:07:07.222Z'
+        modifiedAt: '2018-06-13T16:07:07.222Z'
     TunnelResourceObjectWithState:
       type: object
       description: 'Get the information about the tunnel in the organization.
@@ -1012,30 +1102,6 @@ components:
           example: '2018-06-13T16:07:07.222Z'
         modifiedAt:
           $ref: '#/components/schemas/modifiedAt'
-    modifiedAt:
-      type: string
-      format: date-time
-      readOnly: true
-      example: '2018-06-13T16:07:07.222Z'
-      description: The data and time (timestamp) when the tunnel was updated.
-    secretParameter:
-      type: string
-      example: 123Secret
-      description: The secret of the PSK credentials. Ensure that you save the secret. The secret is not provided at any other time.
-    ikeState:
-      type: string
-      readOnly: true
-      description: "IKE SA State:\n  * CREATED\n  * CONNECTING\n  * ESTABLISHED\n  * PASSIVE\n  * REKEYING\n  * REKEYED\n  * DELETING\n  * DESTROYING\n"
-      enum:
-      - CREATED
-      - CONNECTING
-      - ESTABLISHED
-      - PASSIVE
-      - REKEYING
-      - REKEYED
-      - DELETING
-      - DESTROYING
-      example: ESTABLISHED
     ipsecState:
       type: string
       readOnly: true
@@ -1053,133 +1119,40 @@ components:
       - DELETED
       - DESTROYING
       example: INSTALLED
-    authentication:
+    ikeState:
+      type: string
+      readOnly: true
+      description: "IKE SA State:\n  * CREATED\n  * CONNECTING\n  * ESTABLISHED\n  * PASSIVE\n  * REKEYING\n  * REKEYED\n  * DELETING\n  * DESTROYING\n"
+      enum:
+      - CREATED
+      - CONNECTING
+      - ESTABLISHED
+      - PASSIVE
+      - REKEYING
+      - REKEYED
+      - DELETING
+      - DESTROYING
+      example: ESTABLISHED
+    TunnelClientMetadata:
       type: object
-      description: The authentication context of the client.
-      properties:
-        type:
-          type: string
-          enum:
-          - PSK
-          example: PSK
-          readOnly: true
-        parameters:
-          $ref: '#/components/schemas/parameters'
-    authenticationWithSecret:
-      type: object
-      description: The authentication context of the client.
-      properties:
-        type:
-          type: string
-          enum:
-          - PSK
-          example: PSK
-          readOnly: true
-        parameters:
-          $ref: '#/components/schemas/parametersWithSecret'
-    TunnelResourceObjectWithSecret:
-      type: object
-      description: The properties of the tunnel resource object.
-      properties:
-        id:
-          type: integer
-          readOnly: true
-          description: The tunnel resource ID. Use this ID as a reference for subsequent requests.
-          example: 1122321
-        uri:
-          type: string
-          description: Resource URI
-          readOnly: true
-          example: /tunnels/1122321
-        name:
-          type: string
-          description: 'Display the name of the tunnel. The tunnel name is required, cannot exceed 50 characters in length,
-
-            and can''t have any special characters other than spaces and hyphens.'
-          example: Site01Tunnel
-        siteOriginId:
-          type: integer
-          description: The Site origin ID that is associated with the tunnel.
-          example: 123456
-        client:
-          $ref: '#/components/schemas/TunnelClientMetadataWithSecret'
-        transport:
-          type: object
-          properties:
-            protocol:
-              description: The tunnel transport protocol. The default transport protocol is IPSec.
-              type: string
-              enum:
-              - IPSec
-              readOnly: true
-              example: IPSec
-        serviceType:
-          $ref: '#/components/schemas/serviceType'
-        networkCIDRs:
-          $ref: '#/components/schemas/networkCIDRs'
-        meta:
-          type: object
-          description: The metadata for the tunnel object, related to service internals.
-          readOnly: true
-        createdAt:
-          type: string
-          description: The date and time (timestamp) when the tunnel was created.
-          format: date-time
-          readOnly: true
-          example: '2018-06-13T16:07:07.222Z'
-        modifiedAt:
-          $ref: '#/components/schemas/modifiedAt'
-      example:
-        id: 1122321
-        uri: /tunnels/1122321
-        name: Site01Tunnel
-        siteOriginId: 123456
-        client:
-          deviceType: ASA
-          authentication:
-            type: PSK
-            parameters:
-              id: admin@2561066-237952254-umbrella.com
-              modifiedAt: '2018-06-13T16:07:07.222Z'
-              secret: secretkey123
-        transport:
-          protocol: IPSec
-        serviceType: SIG
-        networkCIDRs:
-        - 123.111.222.25/24
-        - 111.222.39.1/32
-        meta: {}
-        createdAt: '2018-06-13T16:07:07.222Z'
-        modifiedAt: '2018-06-13T16:07:07.222Z'
-    TunnelClientMetadataWithSecret:
-      type: object
-      description: The tunnel client's configuration metadata including the client secret.
+      description: The tunnel client's configuration metadata.
       properties:
         deviceType:
           $ref: '#/components/schemas/deviceType'
         authentication:
-          $ref: '#/components/schemas/authenticationWithSecret'
-    networkCIDRs:
-      type: array
-      description: 'Enter IPv4 ranges and CIDR addresses.
-
-        If `serviceType` is SIG, add all public and private address ranges used internally
-
-        by your organization. Overrides Umbrella''s default behavior,
-
-        which allows traffic that is destined for RFC-1918 addresses to return through the tunnel.
-
-        If `serviceType` is Private Access, this field is required.
-
-        The 0.0.0.0/0 address range is not allowed.'
-      items:
-        type: string
-        description: An IPv4 CIDR range.
-        example: 111.222.39.1/32
-      example:
-      - 123.111.222.25/24
-      - 111.222.39.1/32
-    parametersWithSecret:
+          $ref: '#/components/schemas/authentication'
+    deviceType:
+      type: string
+      description: The type of device where the tunnel originates. The default value is `other`.
+      enum:
+      - ASA
+      - FTD
+      - ISR
+      - Meraki MX
+      - Viptela cEdge
+      - Viptela vEdge
+      - other
+    parameters:
       type: object
       properties:
         id:
@@ -1189,8 +1162,6 @@ components:
           example: admin@2561066-237952254-umbrella.com
         modifiedAt:
           $ref: '#/components/schemas/modifiedAt'
-        secret:
-          $ref: '#/components/schemas/secretParameter'
     serviceType:
       type: string
       description: The type of service to associate with the tunnel. The default value is `SIG`.
@@ -1198,14 +1169,6 @@ components:
       - SIG
       - Private Access
       example: SIG
-    TunnelClientMetadata:
-      type: object
-      description: The tunnel client's configuration metadata.
-      properties:
-        deviceType:
-          $ref: '#/components/schemas/deviceType'
-        authentication:
-          $ref: '#/components/schemas/authentication'
     TunnelResourceObject:
       type: object
       description: The tunnel resource object.
@@ -1279,7 +1242,7 @@ components:
         meta: {}
         createdAt: '2018-06-13T16:07:07.222Z'
         modifiedAt: '2018-06-13T16:07:07.222Z'
-    parameters:
+    parametersWithSecret:
       type: object
       properties:
         id:
@@ -1289,18 +1252,125 @@ components:
           example: admin@2561066-237952254-umbrella.com
         modifiedAt:
           $ref: '#/components/schemas/modifiedAt'
-    deviceType:
+        secret:
+          $ref: '#/components/schemas/secretParameter'
+    modifiedAt:
       type: string
-      description: The type of device where the tunnel originates. The default value is `other`.
-      enum:
-      - ASA
-      - FTD
-      - ISR
-      - Meraki MX
-      - Viptela cEdge
-      - Viptela vEdge
-      - other
+      format: date-time
+      readOnly: true
+      example: '2018-06-13T16:07:07.222Z'
+      description: The data and time (timestamp) when the tunnel was updated.
+    authenticationWithSecret:
+      type: object
+      description: The authentication context of the client.
+      properties:
+        type:
+          type: string
+          enum:
+          - PSK
+          example: PSK
+          readOnly: true
+        parameters:
+          $ref: '#/components/schemas/parametersWithSecret'
+    networkCIDRs:
+      type: array
+      description: 'Enter IPv4 ranges and CIDR addresses.
+
+        If `serviceType` is SIG, add all public and private address ranges used internally
+
+        by your organization. Overrides Umbrella''s default behavior,
+
+        which allows traffic that is destined for RFC-1918 addresses to return through the tunnel.
+
+        If `serviceType` is Private Access, this field is required.
+
+        The 0.0.0.0/0 address range is not allowed.'
+      items:
+        type: string
+        description: An IPv4 CIDR range.
+        example: 111.222.39.1/32
+      example:
+      - 123.111.222.25/24
+      - 111.222.39.1/32
+    TunnelClientMetadataWithSecret:
+      type: object
+      description: The tunnel client's configuration metadata including the client secret.
+      properties:
+        deviceType:
+          $ref: '#/components/schemas/deviceType'
+        authentication:
+          $ref: '#/components/schemas/authenticationWithSecret'
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   responses:
+    Forbidden:
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 1
+            required:
+            - message
+            properties:
+              statusCode:
+                type: integer
+                example: 403
+                description: HTTP status code
+              message:
+                type: string
+                example: 'SIG is not enabled, please check with Cisco Support.
+
+                  You have reached the maximum number of network tunnels for this organization.
+
+                  To increase the limit, contact your administrator.
+
+                  '
+                description: Error message explaining the reason for failure
+    ServerError:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+                description: HTTP status code
+              error:
+                type: string
+                example: Internal Server Error
+                description: a brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
     Unauthorized:
       description: Unauthorized
       headers:
@@ -1325,6 +1395,71 @@ components:
               error:
                 type: string
                 example: Unauthorized
+                description: A brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
+    BadRequest:
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+                description: HTTP status code
+              error:
+                type: string
+                example: Validation Error
+                description: a brief description of the error
+              txId:
+                type: string
+                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
+                description: a unique hex number that can be used for debugging
+              validationErrors:
+                type: object
+                properties:
+                  someProperty:
+                    type: string
+                    example: must not be empty
+                    description: the name of the property failing validation.
+    NotFound:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 3
+            required:
+            - statusCode
+            - error
+            - txId
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+                description: HTTP status code
+              error:
+                type: string
+                example: Not Found
                 description: A brief description of the error
               txId:
                 type: string
@@ -1385,141 +1520,6 @@ components:
                     label:
                       type: string
                       example: Yet another example policy name
-    ServerError:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            minProperties: 3
-            required:
-            - statusCode
-            - error
-            - txId
-            properties:
-              statusCode:
-                type: integer
-                example: 500
-                description: HTTP status code
-              error:
-                type: string
-                example: Internal Server Error
-                description: a brief description of the error
-              txId:
-                type: string
-                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
-                description: a unique hex number that can be used for debugging
-    NotFound:
-      description: Not Found
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            minProperties: 3
-            required:
-            - statusCode
-            - error
-            - txId
-            properties:
-              statusCode:
-                type: integer
-                example: 404
-                description: HTTP status code
-              error:
-                type: string
-                example: Not Found
-                description: A brief description of the error
-              txId:
-                type: string
-                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
-                description: a unique hex number that can be used for debugging
-    BadRequest:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            minProperties: 3
-            required:
-            - statusCode
-            - error
-            - txId
-            properties:
-              statusCode:
-                type: integer
-                example: 400
-                description: HTTP status code
-              error:
-                type: string
-                example: Validation Error
-                description: a brief description of the error
-              txId:
-                type: string
-                example: 86e189a6-0124-47d3-a32c-25ff3f07deaf
-                description: a unique hex number that can be used for debugging
-              validationErrors:
-                type: object
-                properties:
-                  someProperty:
-                    type: string
-                    example: must not be empty
-                    description: the name of the property failing validation.
-    Forbidden:
-      description: Forbidden
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            minProperties: 1
-            required:
-            - message
-            properties:
-              statusCode:
-                type: integer
-                example: 403
-                description: HTTP status code
-              message:
-                type: string
-                example: 'SIG is not enabled, please check with Cisco Support.
-
-                  You have reached the maximum number of network tunnels for this organization.
-
-                  To increase the limit, contact your administrator.
-
-                  '
-                description: Error message explaining the reason for failure
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2

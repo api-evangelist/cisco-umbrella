@@ -123,22 +123,8 @@ paths:
           $ref: '#/components/responses/500Error'
 components:
   responses:
-    500Error:
-      description: Internal Server Error
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    404Error:
-      description: Not Found
+    400Error:
+      description: Bad Request
       headers:
         Content-Type:
           $ref: '#/components/headers/Content-Type'
@@ -165,20 +151,6 @@ components:
             properties:
               message:
                 type: string
-    400Error:
-      description: Bad Request
-      headers:
-        Content-Type:
-          $ref: '#/components/headers/Content-Type'
-        Date:
-          $ref: '#/components/headers/Date'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     401Error:
       description: Unauthorized
       headers:
@@ -193,7 +165,55 @@ components:
             properties:
               message:
                 type: string
+    404Error:
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    500Error:
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+        Date:
+          $ref: '#/components/headers/Date'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  headers:
+    Date:
+      schema:
+        type: string
+        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
+      description: The timestamp of the response.
+      example: '2023-03-14T18:34:25Z'
+    Content-Type:
+      schema:
+        type: string
+      description: The MIME content type of the response body.
+      example: application/json
   parameters:
+    domainParam:
+      name: domain
+      in: path
+      required: true
+      description: A domain name.
+      schema:
+        type: string
+      example: cisco.com
     stop:
       name: stop
       in: query
@@ -206,14 +226,6 @@ components:
       schema:
         type: string
       example: now
-    domainParam:
-      name: domain
-      in: path
-      required: true
-      description: A domain name.
-      schema:
-        type: string
-      example: cisco.com
     start:
       name: start
       in: query
@@ -234,18 +246,6 @@ components:
       schema:
         type: string
       example: -1days
-  headers:
-    Date:
-      schema:
-        type: string
-        pattern: ^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$
-      description: The timestamp of the response.
-      example: '2023-03-14T18:34:25Z'
-    Content-Type:
-      schema:
-        type: string
-      description: The MIME content type of the response body.
-      example: application/json
   securitySchemes:
     oauthFlow:
       type: oauth2
